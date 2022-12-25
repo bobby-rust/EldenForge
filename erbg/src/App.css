@@ -1,0 +1,8 @@
+/**
+ * This file is for global styles
+ */
+.header-container-lt {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+}
