@@ -9,22 +9,21 @@ import getWeapons from './getWeapons'
 import getClass from './getClass'
 
 function generateRandomBuild() {
-
     // We can pass as parameter number of each item to generate.
     // default to 16 total
     const build = {
-        "weapons": getWeapons(),
-        "armor": getArmor(),
-        "ashes": getAshes(),
-        "incants": getIncants(),
-        "shields": getShields(),
-        "sorcs": getSorcs(),
-        "spirits": getSpirits(),
-        "talismans": getTalismans(),
-        "starting_class": getClass(),
+        weapons: getWeapons(4),
+        armor: getArmor(),
+        ashes: getAshes(4),
+        incants: getIncants(4),
+        shields: getShields(),
+        sorcs: getSorcs(4),
+        spirits: getSpirits(4),
+        talismans: getTalismans(4),
+        starting_class: getClass(),
     }
 
-    return build;
+    return build
 }
 
-export default generateRandomBuild;
+export default generateRandomBuild

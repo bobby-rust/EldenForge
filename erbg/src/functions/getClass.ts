@@ -9,4 +9,4 @@ function getClass() {
     return starting_class
 }
 
-export default getClass;
+export default getClass

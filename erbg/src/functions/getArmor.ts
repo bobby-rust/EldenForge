@@ -4,7 +4,7 @@ function getArmor() {
     // Find armor
     var foundArmor = false
     const armor = []
-    const categories_found = []
+    const categories_found: string[] = []
 
     while (!foundArmor) {
         const rand_armors_idx = Math.floor(Math.random() * armors_data.count)
@@ -23,7 +23,7 @@ function getArmor() {
     }
     // End find armor
 
-    return armor;
+    return armor
 }
 
-export default getArmor;
+export default getArmor

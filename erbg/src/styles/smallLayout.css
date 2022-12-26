@@ -1,8 +1,12 @@
 .body-container-sm {
     width: 100vw;
+    height: 100%;
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-self: center;
+    align-self: center;
 }
 
 .App-sm {
@@ -14,29 +18,46 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    /* overflow: hidden; */
     height: 80vh;
+    width: 90%;
+    margin: auto;
+    justify-self: center;
+    align-self: center;
 }
 
 a {
     height: 100%;
     width: 100%;
 }
-.sorcs-sm {
+.sorcs-sm,
+.incants-sm,
+.ashes-sm {
     display: flex;
+    align-self: center;
+    justify-self: center;
+    align-items: center;
+    justify-content: center;
 }
 
 .incants-sm {
-    display: flex;
 }
-.grid-container-sm {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 0.5fr);
+.flex-container-sm {
+    display: flex;
+    /* grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    width: 90vw; */
+    width: 75vw;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     justify-self: center;
     align-self: center;
 }
 
+.flex-container-sm * {
+    width: 100%;
+}
 .button-sm {
     height: 5em;
     width: 10em;
@@ -44,21 +65,29 @@ a {
     grid-row: 1;
 }
 
-.weapons-sm {
+.btn-container {
     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-container,
+.select-menu-container-sm,
+.starting-class-sm,
+.shield-sm {
+    margin-right: 20px;
+}
+.weapons-sm {
     grid-row: 2;
     grid-column: 1;
-    justify-self: center;
-    align-self: center;
+    /* margin: auto; */
+    justify-content: center;
+    align-items: center;
 }
 
 .starting-class-sm {
-    grid-column: 1;
-    grid-row: 1;
     height: 10em;
     width: 5em;
-    justify-self: center;
-    align-self: center;
 }
 
 .sorcs-incants-sm {
@@ -71,8 +100,8 @@ a {
 }
 
 .item {
-    height: 200px;
-    width: 200px;
+    height: 135px;
+    width: 135px;
     display: flex;
     flex-direction: column;
     border: 1px solid #c7c7c7;
@@ -80,6 +109,8 @@ a {
     align-items: center;
     justify-self: center;
     align-self: center;
+    margin: 5px;
+    font-size: 12px;
 }
 
 a {
@@ -98,6 +129,9 @@ h1 {
     display: none;
 }
 
+.armor-sm,
+.incants-sm {
+}
 .armor-sm {
     display: flex;
     grid-column: 1;
@@ -131,11 +165,12 @@ h1 {
 
 .item-desc {
     display: none;
+    font-size: 8px;
 }
 
 .class-img {
     height: 10rem;
-    width: 8rem;
+    width: 7rem;
     justify-self: center;
     align-self: center;
 }
@@ -144,10 +179,11 @@ h1 {
     grid-row: 1;
     grid-column: 1;
     display: flex;
-    justify-self: center;
-    align-self: center;
+    justify-self: flex-end;
+    align-self: flex-end;
     justify-content: center;
     align-items: center;
+    width: 50%;
 }
 
 .weapons-shield-container {
@@ -187,13 +223,10 @@ h1 {
 .weapons-shield-container,
 .sorcs-incants-sm,
 .ashes-spirits-sm,
-.grid-container-sm,
 .button-class-container {
+    display: flex;
     gap: 10px;
-    justify-self: center;
-    align-self: center;
-    justify-content: center;
-    align-items: center;
+    width: 50%;
 }
 
 .starting-class-sm {
@@ -211,13 +244,16 @@ h1 {
 .sorcs-incants-sm,
 .talismans-sm,
 .ashes-spirits-sm {
-    width: 100%;
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     justify-self: center;
     align-self: center;
+}
+
+.spirits-sm {
+    justify-content: center;
+    align-items: center;
 }
 
 .button-class-container {
@@ -228,14 +264,39 @@ h1 {
 .ashes-sm,
 .talismans-sm {
     display: flex;
-    margin: auto;
+    /* margin: auto; */
 }
 
 .talismans-sm .item {
     display: flex;
-    margin: auto;
 }
 
 .item span {
     text-align: center;
+}
+
+.select-menu-container-sm {
+    display: grid;
+    grid-template-rows: repeat(2, 0.5fr);
+    grid-template-columns: repeat(3, 0.5fr);
+    gap: 10px;
+}
+
+.flex-row-1,
+.flex-row-2,
+.flex-row-3 {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+    justify-self: center;
+    align-self: center;
+}
+
+.flex-row-3 {
+    flex-wrap: wrap;
+}
+
+.form {
+    display: flex;
 }

@@ -9,13 +9,14 @@ import Sorceries from '../components/Sorceries'
 import Ashes from '../components/Ashes'
 import Spirits from '../components/Spirits'
 import '../styles/smallLayout.css'
+import SelectMenu from '../components/SelectMenu'
 
-function SmallLayout(props) {
+function SmallLayout(props: any) {
     return (
         <div className='layout-wrapper-sm'>
             <div className='body-container-sm'>
-                <div className='grid-container-sm'>
-                    <div className='button-class-container'>
+                <div className='form'>
+                    <div className='btn-container'>
                         <Button
                             className='button-sm'
                             onClick={props.generateNewBuild}
@@ -23,14 +24,26 @@ function SmallLayout(props) {
                         >
                             GENERATE NEW BUILD
                         </Button>
-                        <div className='starting-class-sm'>
-                            <StartingClass
-                                starting_class={props.build['starting_class']}
-                                size={props.size}
-                            />
-                        </div>
                     </div>
-                    <div className='weapons-shield-container'>
+                    <div className='select-menu-container-sm'>
+                        <SelectMenu />
+                    </div>
+                    <div className='starting-class-sm'>
+                        <StartingClass
+                            starting_class={props.build['starting_class']}
+                            size={props.size}
+                        />
+                    </div>
+                    <div className='shield-sm'>
+                        <Shield
+                            items={props.build['shields']}
+                            color={props.color}
+                            size={props.size}
+                        />
+                    </div>
+                </div>
+                <div className='flex-container-sm'>
+                    <div className='flex-row-1'>
                         <div className='weapons-sm'>
                             <Weapons
                                 weapons={props.build['weapons']}
@@ -38,52 +51,52 @@ function SmallLayout(props) {
                                 size={props.size}
                             />
                         </div>
-                        <div className='shield-sm'>
-                            <Shield
-                                items={props.build['shields']}
+
+                        <div className='sorcs-sm'>
+                            <Sorceries
+                                items={props.build['sorcs']}
                                 color={props.color}
                                 size={props.size}
                             />
                         </div>
                     </div>
-                    <div className='armor-sm'>
-                        <Armors
-                            items={props.build['armor']}
-                            color={props.color}
-                            size={props.size}
-                        />
-                    </div>
-                    <div className='sorcs-incants-sm'>
-                        <div className='sorcs-sm'>
-                            <Sorceries
-                                items={props.build['sorcs']}
+                    <div className='flex-row-2'>
+                        <div className='armor-sm'>
+                            <Armors
+                                items={props.build['armor']}
                                 color={props.color}
+                                size={props.size}
                             />
                         </div>
                         <div className='incants-sm'>
                             <Incantations
                                 items={props.build['incants']}
                                 color={props.color}
+                                size={props.size}
                             />
                         </div>
                     </div>
-                    <div className='talismans-sm'>
-                        <Talismans
-                            items={props.build['talismans']}
-                            color={props.color}
-                        />
-                    </div>
-                    <div className='ashes-spirits-sm'>
+                    <div className='flex-row-3'>
+                        <div className='talismans-sm'>
+                            <Talismans
+                                items={props.build['talismans']}
+                                color={props.color}
+                                size={props.size}
+                            />
+                        </div>
+
                         <div className='ashes-sm'>
                             <Ashes
                                 items={props.build['ashes']}
                                 color={props.color}
+                                size={props.size}
                             />
                         </div>
                         <div className='spirits-sm'>
                             <Spirits
                                 items={props.build['spirits']}
                                 color={props.color}
+                                size={props.size}
                             />
                         </div>
                     </div>

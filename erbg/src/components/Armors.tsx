@@ -6,7 +6,7 @@ import { BuildSetProps, BuildItem } from '../types/ItemTypes'
 function Armors(props: BuildSetProps) {
     return (
         <>
-            {props.items.map((currArmor: BuildItem) => {
+            {props.items.map((currArmor: BuildItem, idx: number) => {
                 return (
                     <Item
                         key={v4()}
