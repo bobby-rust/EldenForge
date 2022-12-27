@@ -1,9 +1,9 @@
 import { v4 } from 'uuid'
-import React from 'react'
+import { memo } from 'react'
 import Item from './Item'
 import { BuildProps, BuildItem } from '../types/ItemTypes'
 
-function Sorceries(props: BuildProps) {
+const Sorceries = memo((props: BuildProps) => {
     return (
         <>
             <h1>Sorceries</h1>
@@ -20,6 +20,6 @@ function Sorceries(props: BuildProps) {
             })}
         </>
     )
-}
+})
 
 export default Sorceries

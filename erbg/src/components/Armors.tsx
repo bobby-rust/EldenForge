@@ -1,8 +1,9 @@
 import Item from './Item'
 import { v4 } from 'uuid'
 import { BuildProps, BuildItem } from '../types/ItemTypes'
+import { memo } from 'react'
 
-function Armors(props: BuildProps) {
+const Armors = memo((props: BuildProps) => {
     return (
         <>
             {props.items.map((currArmor: BuildItem) => {
@@ -18,6 +19,6 @@ function Armors(props: BuildProps) {
             })}
         </>
     )
-}
+})
 
 export default Armors

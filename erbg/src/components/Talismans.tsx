@@ -1,8 +1,9 @@
 import Item from './Item'
 import { v4 } from 'uuid'
 import { BuildProps, BuildItem } from '../types/ItemTypes'
+import { memo } from 'react'
 
-function Talismans(props: BuildProps) {
+const Talismans = memo((props: BuildProps) => {
     return (
         <>
             <h1>Talismans</h1>
@@ -19,6 +20,6 @@ function Talismans(props: BuildProps) {
             })}
         </>
     )
-}
+})
 
 export default Talismans

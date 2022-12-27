@@ -1,9 +1,9 @@
 import Item from './Item'
 import { v4 } from 'uuid'
-import React from 'react'
 import { BuildItem, BuildProps } from '../types/ItemTypes'
+import { memo } from 'react'
 
-function Spirits(props: BuildProps) {
+const Spirits = memo((props: BuildProps) => {
     return (
         <>
             {/* <h2>Spirits</h2> */}
@@ -20,6 +20,6 @@ function Spirits(props: BuildProps) {
             })}
         </>
     )
-}
+})
 
 export default Spirits

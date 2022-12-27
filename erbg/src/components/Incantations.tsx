@@ -2,8 +2,8 @@ import Item from './Item'
 import { v4 } from 'uuid'
 import React from 'react'
 import { BuildItem, BuildProps } from '../types/ItemTypes'
-
-function Incantations(props: BuildProps) {
+import { memo } from 'react'
+const Incantations = memo((props: BuildProps) => {
     return (
         <>
             <h1>Incantations</h1>
@@ -20,6 +20,6 @@ function Incantations(props: BuildProps) {
             })}
         </>
     )
-}
+})
 
 export default Incantations

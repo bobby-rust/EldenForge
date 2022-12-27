@@ -75,6 +75,9 @@ function App() {
 
         const { type, payload } = action
 
+        console.log("type: ", type, "payload: ", payload)
+        console.log("Action: ", action)
+        console.log("Actionpayload:", action.payload)
         switch(type) {
             case "WEAPONS":
                 return {...state, weapons: payload}

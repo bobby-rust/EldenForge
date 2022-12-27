@@ -1,4 +1,6 @@
-function StartingClass(props) {
+import { memo } from 'react'
+
+const StartingClass = memo((props: any) => {
     return (
         <>
             {/* <h2 className='item-title'>{props.starting_class.name}</h2> */}
@@ -10,6 +12,6 @@ function StartingClass(props) {
             <p className='item-desc'>{props.starting_class.description}</p>
         </>
     )
-}
+})
 
 export default StartingClass

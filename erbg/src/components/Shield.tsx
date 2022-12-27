@@ -1,9 +1,9 @@
 import { v4 } from 'uuid'
-import React from 'react'
 import { BuildItem, BuildProps } from '../types/ItemTypes'
 import Item from './Item'
+import { memo } from 'react'
 
-function Shields(props: BuildProps) {
+const Shields = memo((props: BuildProps) => {
     return (
         <div>
             <h1>Shield</h1>
@@ -20,6 +20,6 @@ function Shields(props: BuildProps) {
             })}
         </div>
     )
-}
+})
 
 export default Shields
