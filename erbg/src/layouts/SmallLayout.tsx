@@ -10,6 +10,7 @@ import Ashes from '../components/Ashes'
 import Spirits from '../components/Spirits'
 import '../styles/smallLayout.css'
 import SelectMenu from '../components/SelectMenu'
+import { getNewItem } from '../functions/getNewItem'
 
 function SmallLayout(props: any) {
     return (
@@ -39,6 +40,7 @@ function SmallLayout(props: any) {
                             items={props.build['shields']}
                             color={props.color}
                             size={props.size}
+                            getNewItem={getNewItem}
                         />
                     </div>
                 </div>
@@ -46,9 +48,10 @@ function SmallLayout(props: any) {
                     <div className='flex-row-1'>
                         <div className='weapons-sm'>
                             <Weapons
-                                weapons={props.build['weapons']}
+                                items={props.build['weapons']}
                                 color={props.color}
                                 size={props.size}
+                                getNewItem={getNewItem}
                             />
                         </div>
 
@@ -57,6 +60,7 @@ function SmallLayout(props: any) {
                                 items={props.build['sorcs']}
                                 color={props.color}
                                 size={props.size}
+                                getNewItem={getNewItem}
                             />
                         </div>
                     </div>
@@ -66,6 +70,7 @@ function SmallLayout(props: any) {
                                 items={props.build['armor']}
                                 color={props.color}
                                 size={props.size}
+                                getNewItem={getNewItem}
                             />
                         </div>
                         <div className='incants-sm'>
@@ -73,6 +78,7 @@ function SmallLayout(props: any) {
                                 items={props.build['incants']}
                                 color={props.color}
                                 size={props.size}
+                                getNewItem={getNewItem}
                             />
                         </div>
                     </div>
@@ -82,6 +88,7 @@ function SmallLayout(props: any) {
                                 items={props.build['talismans']}
                                 color={props.color}
                                 size={props.size}
+                                getNewItem={getNewItem}
                             />
                         </div>
 
@@ -90,6 +97,7 @@ function SmallLayout(props: any) {
                                 items={props.build['ashes']}
                                 color={props.color}
                                 size={props.size}
+                                getNewItem={getNewItem}
                             />
                         </div>
                         <div className='spirits-sm'>
@@ -97,6 +105,7 @@ function SmallLayout(props: any) {
                                 items={props.build['spirits']}
                                 color={props.color}
                                 size={props.size}
+                                getNewItem={getNewItem}
                             />
                         </div>
                     </div>

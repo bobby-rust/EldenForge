@@ -6,3 +6,30 @@
     justify-self: center;
     align-self: center;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald&family=Poppins&family=Unbounded:wght@800&family=Cormorant+Garamond:wght@500&display=swap');
+
+.App {
+    font-family: 'Cormorant Garamond';
+    z-index: -99;
+}
+
+/**
+ * Scrollbar
+*/
+::-webkit-scrollbar {
+    background-color: #202324;
+    color: #aba499;
+}
+
+::-webkit-scrollbar-corner {
+    background-color: #181a1b;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #454a4d;
+}
+/**
+ * End scrollbar
+*/

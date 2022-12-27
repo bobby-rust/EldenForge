@@ -1,9 +1,8 @@
 import Item from './Item'
 import { v4 } from 'uuid'
-import React from 'react'
-import { BuildSetProps, BuildItem } from '../types/ItemTypes'
+import { BuildProps, BuildItem } from '../types/ItemTypes'
 
-function Talismans(props: BuildSetProps) {
+function Talismans(props: BuildProps) {
     return (
         <>
             <h1>Talismans</h1>
@@ -14,6 +13,7 @@ function Talismans(props: BuildSetProps) {
                         color={props.color}
                         key={v4()}
                         size={props.size}
+                        getNewItem={() => props.getNewItem(talisman.id)}
                     />
                 )
             })}

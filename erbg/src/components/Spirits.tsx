@@ -1,9 +1,9 @@
 import Item from './Item'
 import { v4 } from 'uuid'
 import React from 'react'
-import { BuildItem, BuildSetProps } from '../types/ItemTypes'
+import { BuildItem, BuildProps } from '../types/ItemTypes'
 
-function Spirits(props: BuildSetProps) {
+function Spirits(props: BuildProps) {
     return (
         <>
             {/* <h2>Spirits</h2> */}
@@ -14,6 +14,7 @@ function Spirits(props: BuildSetProps) {
                         color={props.color}
                         key={v4()}
                         size={props.size}
+                        getNewItem={() => props.getNewItem(spirit.id)}
                     />
                 )
             })}

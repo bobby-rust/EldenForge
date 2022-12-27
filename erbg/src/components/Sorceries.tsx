@@ -1,9 +1,9 @@
 import { v4 } from 'uuid'
 import React from 'react'
 import Item from './Item'
-import { BuildSetProps, BuildItem } from '../types/ItemTypes'
+import { BuildProps, BuildItem } from '../types/ItemTypes'
 
-function Sorceries(props: BuildSetProps) {
+function Sorceries(props: BuildProps) {
     return (
         <>
             <h1>Sorceries</h1>
@@ -14,6 +14,7 @@ function Sorceries(props: BuildSetProps) {
                         color={props.color}
                         key={v4()}
                         size={props.size}
+                        getNewItem={() => props.getNewItem(sorc.id)}
                     />
                 )
             })}

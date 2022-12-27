@@ -1,4 +1,5 @@
 import React from 'react'
+import '../App.css'
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 type HeaderProps = {

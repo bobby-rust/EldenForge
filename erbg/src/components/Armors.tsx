@@ -1,18 +1,19 @@
 import Item from './Item'
 import { v4 } from 'uuid'
-import React from 'react'
-import { BuildSetProps, BuildItem } from '../types/ItemTypes'
+import { BuildProps, BuildItem } from '../types/ItemTypes'
 
-function Armors(props: BuildSetProps) {
+function Armors(props: BuildProps) {
+    console.log(props)
     return (
         <>
-            {props.items.map((currArmor: BuildItem, idx: number) => {
+            {props.items.map((currArmor: BuildItem) => {
                 return (
                     <Item
                         key={v4()}
                         item={currArmor}
                         color={props.color}
                         size={props.size}
+                        getNewItem={() => props.getNewItem(currArmor.id)}
                     />
                 )
             })}

@@ -7,20 +7,22 @@ import getSpirits from './getSpirits'
 import getTalismans from './getTalismans'
 import getWeapons from './getWeapons'
 import getClass from './getClass'
+import { getNewItem } from '../functions/getNewItem'
 
 function generateRandomBuild() {
     // We can pass as parameter number of each item to generate.
     // default to 16 total
     const build = {
-        weapons: getWeapons(4),
+        weapons: getWeapons(1),
         armor: getArmor(),
-        ashes: getAshes(4),
-        incants: getIncants(4),
+        ashes: getAshes(1),
+        incants: getIncants(1),
         shields: getShields(),
-        sorcs: getSorcs(4),
-        spirits: getSpirits(4),
-        talismans: getTalismans(4),
+        sorcs: getSorcs(1),
+        spirits: getSpirits(1),
+        talismans: getTalismans(1),
         starting_class: getClass(),
+        getNewItem: getNewItem,
     }
 
     return build

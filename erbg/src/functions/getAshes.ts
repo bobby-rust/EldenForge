@@ -1,12 +1,12 @@
 import ashes_data from '../data/ashes_data.json'
+import { AshesDataObject } from '../types/ItemTypes'
 
 function getAshes(numAshes: number) {
     let foundAshes = false
-    const ashes = []
-
+    const ashes: AshesDataObject[] = []
     while (!foundAshes) {
         const rand_Ashes_idx = Math.floor(Math.random() * ashes_data.count)
-        const randAshes = ashes_data.data[rand_Ashes_idx]
+        const randAshes: AshesDataObject = ashes_data.data[rand_Ashes_idx]
 
         let valid_Ashes = true
 

@@ -1,9 +1,9 @@
 import Item from './Item'
 import { v4 } from 'uuid'
 import React from 'react'
-import { BuildItem, BuildSetProps } from '../types/ItemTypes'
+import { BuildItem, BuildProps } from '../types/ItemTypes'
 
-function Incantations(props: BuildSetProps) {
+function Incantations(props: BuildProps) {
     return (
         <>
             <h1>Incantations</h1>
@@ -14,6 +14,7 @@ function Incantations(props: BuildSetProps) {
                         color={props.color}
                         key={v4()}
                         size={props.size}
+                        getNewItem={() => props.getNewItem(incant.id)}
                     />
                 )
             })}

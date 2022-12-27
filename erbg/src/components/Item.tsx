@@ -1,15 +1,26 @@
 import React from 'react'
-import { BuildItemProps } from '../types/ItemTypes'
+import { BuildItem } from '../types/ItemTypes'
 
-function Item(props: BuildItemProps) {
+type ItemProps = {
+    item: BuildItem
+    getNewItem: () => void
+    color: string
+    size: string
+}
+
+function Item(props: ItemProps) {
     /**
      * This is a generic component
      * Any styling on this component should remain generic
      * i.e. NOT specific to any layout or theme
      */
+
     return (
         <div className='item'>
-            <span>{props.item.name}</span>
+            <div className='item-name-container'>
+                <span>{props.item.name}</span>
+            </div>
+            <button onClick={props.getNewItem}>Respin</button>
             <a
                 href={`https://eldenring.wiki.fextralife.com/${props.item.name}`}
                 rel='noreferrer'
@@ -22,10 +33,13 @@ function Item(props: BuildItemProps) {
                         className='item-img'
                         src={props.item.image}
                         alt={props.item.name + ' img'}
+                        loading='lazy'
                     />
                 )}
             </a>
-            <p className='item-desc'>{props.item.description}</p>
+            <div className='item-desc-container'>
+                <p className='item-desc'>{props.item.description}</p>
+            </div>
         </div>
     )
 }
