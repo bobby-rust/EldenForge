@@ -27,7 +27,7 @@ function SmallLayout(props: any) {
                         </Button>
                     </div>
                     <div className='select-menu-container-sm'>
-                        <SelectMenu />
+                        <SelectMenu buildNums={props.buildNums} buildNumsDispatch={props.buildNumsDispatch} />
                     </div>
                     <div className='starting-class-sm'>
                         <StartingClass

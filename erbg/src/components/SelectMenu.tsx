@@ -7,44 +7,10 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 const SELECT_WIDTH: number = 130
 
-export default function SelectMenu() {
-    const [numWeapons, setNumWeapons] = React.useState('')
-    const [numAshes, setNumAshes] = React.useState('')
-    const [numSpirits, setNumSpirits] = React.useState('')
-    const [numTalis, setNumTalis] = React.useState('')
-    const [numSorcs, setNumSorcs] = React.useState('')
-    const [numIncants, setNumIncants] = React.useState('')
-    const [numShields, setNumShields] = React.useState('')
-
-    const handleChangeNumWeapons = (event: SelectChangeEvent) => {
-        setNumWeapons(event.target.value as string)
-        console.log('Number of weapons selected: ', numWeapons)
-    }
-    const handleChangeNumAshes = (event: SelectChangeEvent) => {
-        setNumAshes(event.target.value as string)
-        console.log('Number of ashes selected: ', numAshes)
-    }
-    const handleChangeNumSpirits = (event: SelectChangeEvent) => {
-        setNumSpirits(event.target.value as string)
-        console.log('Number of spirits selected: ', numSpirits)
-    }
-    const handleChangeNumTalis = (event: SelectChangeEvent) => {
-        setNumTalis(event.target.value as string)
-        console.log('Number of talismans selected: ', numTalis)
-    }
-    const handleChangeNumSorcs = (event: SelectChangeEvent) => {
-        setNumSorcs(event.target.value as string)
-        console.log('Number of sorceries selected: ', numSorcs)
-    }
-    const handleChangeNumIncants = (event: SelectChangeEvent) => {
-        setNumIncants(event.target.value as string)
-        console.log('Number of incants selected: ', numIncants)
-    }
-    const handleChangeNumShields = (event: SelectChangeEvent) => {
-        setNumShields(event.target.value as string)
-        console.log('Number of shields selected: ', numShields)
-    }
-
+export default function SelectMenu(props: any) {
+    /**
+     * Need to pass buildNums and the dispatch func.
+     */
     return (
         <>
             <Box sx={{ minWidth: SELECT_WIDTH }}>
@@ -55,9 +21,9 @@ export default function SelectMenu() {
                     <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
-                        value={numWeapons}
+                        value={props.buildNums.weapons}
                         label='Weapons'
-                        onChange={handleChangeNumWeapons}
+                        onChange={(event: SelectChangeEvent) => props.buildNumsDispatch({type: "WEAPONS", num: event.target.value})}
                     >
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
@@ -72,9 +38,9 @@ export default function SelectMenu() {
                     <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
-                        value={numAshes}
+                        value={props.buildNums.ashes}
                         label='Ashes'
-                        onChange={handleChangeNumAshes}
+                        onChange={(event: SelectChangeEvent) => props.buildNumsDispatch({type: "ASHES", num: event.target.value})}
                     >
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
@@ -91,9 +57,9 @@ export default function SelectMenu() {
                     <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
-                        value={numSpirits}
+                        value={props.buildNums.spirits}
                         label='Spirits'
-                        onChange={handleChangeNumSpirits}
+                        onChange={(event: SelectChangeEvent) => props.buildNumsDispatch({type: "SPIRITS", num: event.target.value})}
                     >
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
@@ -110,9 +76,9 @@ export default function SelectMenu() {
                     <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
-                        value={numTalis}
+                        value={props.buildNums.talis}
                         label='Talismans'
-                        onChange={handleChangeNumTalis}
+                        onChange={(event: SelectChangeEvent) => props.buildNumsDispatch({type: "TALIS", num: event.target.value})}
                     >
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
@@ -129,9 +95,9 @@ export default function SelectMenu() {
                     <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
-                        value={numSorcs}
+                        value={props.buildNums.sorcs}
                         label='Sorceries'
-                        onChange={handleChangeNumSorcs}
+                        onChange={(event: SelectChangeEvent) => props.buildNumsDispatch({type: "SORCS", num: event.target.value})}
                     >
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
@@ -148,9 +114,9 @@ export default function SelectMenu() {
                     <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
-                        value={numSorcs}
+                        value={props.buildNums.incants}
                         label='Incantations'
-                        onChange={handleChangeNumIncants}
+                        onChange={(event: SelectChangeEvent) => props.buildNumsDispatch({type: "INCANTS", num: event.target.value})}
                     >
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>

@@ -1,4 +1,3 @@
-import React from 'react'
 import '../App.css'
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
@@ -31,7 +30,7 @@ function Header(props: HeaderProps) {
                     checked={props.colorButtonState}
                     onstyle='dark'
                     offstyle='light'
-                    style='border'
+                    // style='border'
                     width={90}
                     onChange={props.handleColorChange}
                 />
@@ -42,7 +41,7 @@ function Header(props: HeaderProps) {
                     checked={props.layoutButtonState}
                     onstyle='dark'
                     offstyle='light'
-                    style='border'
+                    // style='border'
                     width={90}
                     onChange={props.handleLayoutChange}
                 />

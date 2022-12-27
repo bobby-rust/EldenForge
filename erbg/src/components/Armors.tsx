@@ -3,7 +3,6 @@ import { v4 } from 'uuid'
 import { BuildProps, BuildItem } from '../types/ItemTypes'
 
 function Armors(props: BuildProps) {
-    console.log(props)
     return (
         <>
             {props.items.map((currArmor: BuildItem) => {

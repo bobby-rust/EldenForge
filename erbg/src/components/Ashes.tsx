@@ -1,6 +1,5 @@
 import Item from './Item'
 import { v4 } from 'uuid'
-import React from 'react'
 import { BuildItem, BuildProps } from '../types/ItemTypes'
 
 function Ashes(props: BuildProps) {
