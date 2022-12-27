@@ -11,107 +11,112 @@ import Spirits from '../components/Spirits'
 import '../styles/smallLayout.css'
 import SelectMenu from '../components/SelectMenu'
 import { getNewItem } from '../functions/getNewItem'
+import { Box, Paper, Grid, styled } from '@mui/material'
 
 function SmallLayout(props: any) {
     return (
         <div className='layout-wrapper-sm'>
-            <div className='body-container-sm'>
-                <div className='form'>
-                    <div className='btn-container'>
-                        <Button
-                            className='button-sm'
-                            onClick={props.generateNewBuild}
-                            variant='danger'
-                        >
-                            GENERATE NEW BUILD
-                        </Button>
-                    </div>
-                    <div className='select-menu-container-sm'>
-                        <SelectMenu buildNums={props.buildNums} buildNumsDispatch={props.buildNumsDispatch} />
-                    </div>
-                    <div className='starting-class-sm'>
-                        <StartingClass
-                            starting_class={props.build['starting_class']}
-                            size={props.size}
-                        />
-                    </div>
-                    <div className='shield-sm'>
-                        <Shield
-                            items={props.build['shields']}
-                            color={props.color}
-                            size={props.size}
-                            getNewItem={getNewItem}
-                        />
-                    </div>
-                </div>
-                <div className='flex-container-sm'>
-                    <div className='flex-row-1'>
-                        <div className='weapons-sm'>
-                            <Weapons
-                                items={props.build['weapons']}
+                <Box>
+                    <Grid container spacing={2} direction='row' columns={12}>
+                        <Grid item xs={12}>
+                            <div className='form-container'>
+                                <SelectMenu buildNums={props.buildNums} buildNumsDispatch={props.buildNumsDispatch} />
+                                <StartingClass
+                                    starting_class={props.build['starting_class']}
+                                    size={props.size}
+                                    />
+                                <Button
+                                    className='button-sm'
+                                    onClick={props.generateNewBuild}
+                                    variant='danger'
+                                    >
+                                    GENERATE NEW BUILD
+                                </Button>
+                            </div>
+                        </Grid>
+                        </Grid>
+                        <Grid container direction='row' spacing={2}>
+                            <Grid item xs={2}>
+                                <div className='weapons-container'>
+                                <Weapons
+                                    items={props.build['weapons']}
+                                    color={props.color}
+                                    size={props.size}
+                                    getNewItem={getNewItem}
+                                    />
+                                    </div>
+                                </Grid>
+                        <Grid item xs={2}>
+                                <Armors
+                                    items={props.build['armor']}
+                                    color={props.color}
+                                    size={props.size}
+                                    getNewItem={getNewItem}
+                                    />
+                                    </Grid>
+                        <Grid item xs={2}>
+                            <Shield
+                                items={props.build['shields']}
                                 color={props.color}
                                 size={props.size}
                                 getNewItem={getNewItem}
-                            />
-                        </div>
-
-                        <div className='sorcs-sm'>
+                                />
+                        </Grid>
+                    <Grid item xs={2}>
+                    <div className='sorcs-container'>
                             <Sorceries
                                 items={props.build['sorcs']}
                                 color={props.color}
                                 size={props.size}
                                 getNewItem={getNewItem}
-                            />
-                        </div>
-                    </div>
-                    <div className='flex-row-2'>
-                        <div className='armor-sm'>
-                            <Armors
-                                items={props.build['armor']}
-                                color={props.color}
-                                size={props.size}
-                                getNewItem={getNewItem}
-                            />
-                        </div>
-                        <div className='incants-sm'>
+                                />
+
+                       </div>
+                       </Grid>
+                       <Grid item xs={2}>
+                       <div className='incants-container'>
                             <Incantations
                                 items={props.build['incants']}
                                 color={props.color}
                                 size={props.size}
                                 getNewItem={getNewItem}
-                            />
-                        </div>
-                    </div>
-                    <div className='flex-row-3'>
-                        <div className='talismans-sm'>
+                                />
+                                </div>
+                                </Grid>
+                            <Grid item xs={2}>
+                                <div className='talis-container'>
                             <Talismans
                                 items={props.build['talismans']}
                                 color={props.color}
                                 size={props.size}
                                 getNewItem={getNewItem}
-                            />
-                        </div>
-
-                        <div className='ashes-sm'>
+                                />
+                                </div>
+                                </Grid>
+                                <Grid item xs={2}>
+                                <div className='ashes-container'>
                             <Ashes
                                 items={props.build['ashes']}
                                 color={props.color}
                                 size={props.size}
                                 getNewItem={getNewItem}
-                            />
-                        </div>
-                        <div className='spirits-sm'>
+                                />
+                                </div>
+                                </Grid>
+                                <Grid item xs={2}>
+                        <div className='spirits-container'>
                             <Spirits
                                 items={props.build['spirits']}
                                 color={props.color}
                                 size={props.size}
                                 getNewItem={getNewItem}
-                            />
-                        </div>
+                                />
+                                
+                                </div>
+                                </Grid>
+                                </Grid>
+                    </Box>
                     </div>
-                </div>
-            </div>
-        </div>
     )
 }
 
