@@ -7,6 +7,7 @@ import getSpirits from "./getSpirits";
 import getTalismans from "./getTalismans";
 import getWeapons from "./getWeapons";
 import getClass from "./getClass";
+import { BuildItem, VALID_BUILD_ITEM_CATEGORIES } from "../types/ItemTypes";
 
 function generateRandomBuild(
     t_weapons: number,
@@ -27,29 +28,102 @@ function generateRandomBuild(
         shields: getShields(t_shields),
         sorcs: getSorcs(t_sorcs),
         spirits: getSpirits(t_spirits),
-        talismans: getTalismans(t_talismans),
+        talis: getTalismans(t_talismans),
         starting_class: getClass(),
-        rerollItem: rerollItem,
+        // rerollItem: rerollItem,
     };
 
     return build;
 }
 
-const rerollItem = (id: string, build: any, category: string) => {
-    /**
-     * Creates a new build object given an id of one item to change
-     * And updates the build state
-     *
-     * @param id the id to change
-     * @param build the build object to search
-     * @param category the type of object being searched for, i.e. "WEAPONS", "ARMOR", etc.
-     * @return a new build object with the object that has
-     *  the id given changed to a new item from the same category
-     */
-    console.log("You sent me id: ", id);
-    console.log("You sent me build: ", build);
-    console.log("You sent me category: ", category);
-    console.log("returning a new build object :)");
-};
+function createNewBuild(
+    oldState: any,
+    id: string,
+    newItem: BuildItem,
+    category: string
+) {
+    // const newState = structuredClone(oldState);
+    var newState = Object.assign({}, oldState);
+    newState[category] = [];
+    oldState[category].map((item: BuildItem) => {
+        if (item.id === id) {
+            newState[category].push(newItem);
+        } else {
+            newState[category].push(item);
+        }
+    });
+    return newState;
+}
 
-export { generateRandomBuild, rerollItem };
+function getNewItem(t_id: string, state: any, type: string) {
+    switch (type) {
+        case "WEAPONS":
+            const newWeapon = getWeapons(1);
+            const newStateWep = createNewBuild(
+                state,
+                t_id,
+                newWeapon[0],
+                type.toLowerCase()
+            );
+            return newStateWep;
+        // TODO: Implement armor reroll.
+        case "ASHES":
+            const newAsh = getAshes(1);
+            const newStateAsh = createNewBuild(
+                state,
+                t_id,
+                newAsh[0],
+                type.toLowerCase()
+            );
+            return newStateAsh;
+        case "INCANTS":
+            const newIncant = getIncants(1);
+            const newStateInc = createNewBuild(
+                state,
+                t_id,
+                newIncant[0],
+                type.toLowerCase()
+            );
+            return newStateInc;
+        case "SORCS":
+            const newSorc = getSorcs(1);
+            const newStateSorc = createNewBuild(
+                state,
+                t_id,
+                newSorc[0],
+                type.toLowerCase()
+            );
+            return newStateSorc;
+        case "SPIRITS":
+            const newSpirit = getSpirits(1);
+            const newStateSp = createNewBuild(
+                state,
+                t_id,
+                newSpirit[0],
+                type.toLowerCase()
+            );
+            return newStateSp;
+        case "TALIS":
+            const newTalis = getTalismans(1);
+            const newStateTalis = createNewBuild(
+                state,
+                t_id,
+                newTalis[0],
+                type.toLowerCase()
+            );
+            return newStateTalis;
+        case "SHIELDS":
+            const newShield = getShields(1);
+            const newStateSh = createNewBuild(
+                state,
+                t_id,
+                newShield[0],
+                type.toLowerCase()
+            );
+            return newStateSh;
+        default:
+            return state;
+    }
+}
+
+export { generateRandomBuild, getNewItem };

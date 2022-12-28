@@ -53,22 +53,23 @@ type BuildItem = {
     // in the global state for each category
     id: string;
     name: string;
-    image: string;
+    image: any;
     description: string;
     // only armor has categories for now
     // potentially many other item types could have a category
-    category?: string;
-    buildDispatch?: (id: string, build: any, category: string) => void;
+    category?: any;
+    buildDispatch?: (action: Object) => void;
 };
 
 type BuildProps = {
-    items: BuildItem[];
+    build: any;
     color: string;
     size: string;
-    buildDispatch: (id: string, build: any, category: string) => void;
+    buildDispatch: (action: Object) => void;
 };
 
 enum VALID_BUILD_ITEM_CATEGORIES {
+    FULLBUILD = "FULLBUILD",
     WEAPONS = "WEAPONS",
     ASHES = "ASHES",
     INCANTS = "INCANTS",
@@ -93,10 +94,22 @@ interface buildNumsState {
     shields: number;
 }
 
-interface rerollItemAction {
-    type: VALID_BUILD_ITEM_CATEGORIES;
-    id: string;
-    build: BuildItem[];
+interface buildAction {
+    type: any;
+    id: string | null;
+    build: any;
+}
+
+interface buildState {
+    weapons: BuildItem[];
+    armor: BuildItem[];
+    sorcs: BuildItem[];
+    incants: BuildItem[];
+    ashes: BuildItem[];
+    spirits: BuildItem[];
+    talismans: BuildItem[];
+    shields: BuildItem[];
+    starting_class: BuildItem;
 }
 
 export type {
@@ -113,5 +126,6 @@ export type {
     VALID_BUILD_ITEM_CATEGORIES,
     buildNumsAction,
     buildNumsState,
-    rerollItemAction,
+    buildAction,
+    buildState,
 };

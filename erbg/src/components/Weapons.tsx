@@ -6,7 +6,7 @@ import { memo } from "react";
 const Weapons = memo((props: BuildProps) => {
     return (
         <>
-            {props.items.map((weapon: BuildItem) => {
+            {props.build["weapons"].map((weapon: BuildItem) => {
                 return (
                     <Item
                         item={weapon}
@@ -14,11 +14,10 @@ const Weapons = memo((props: BuildProps) => {
                         key={v4()}
                         size={props.size}
                         buildDispatch={() =>
-                            props.buildDispatch(
-                                weapon.id,
-                                props.items,
-                                "WEAPONS"
-                            )
+                            props.buildDispatch({
+                                id: weapon.id,
+                                type: "WEAPONS",
+                            })
                         }
                     />
                 );

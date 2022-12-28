@@ -7,7 +7,7 @@ const Sorceries = memo((props: BuildProps) => {
     return (
         <>
             <h1>Sorceries</h1>
-            {props.items.map((sorc: BuildItem) => {
+            {props.build["sorcs"].map((sorc: BuildItem) => {
                 return (
                     <Item
                         item={sorc}
@@ -15,7 +15,10 @@ const Sorceries = memo((props: BuildProps) => {
                         key={v4()}
                         size={props.size}
                         buildDispatch={() =>
-                            props.buildDispatch(sorc.id, props.items, "SORCS")
+                            props.buildDispatch({
+                                id: sorc.id,
+                                type: "SORCS",
+                            })
                         }
                     />
                 );

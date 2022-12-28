@@ -7,7 +7,7 @@ const Talismans = memo((props: BuildProps) => {
     return (
         <>
             <h1>Talismans</h1>
-            {props.items.map((talisman: BuildItem) => {
+            {props.build["talis"].map((talisman: BuildItem) => {
                 return (
                     <Item
                         item={talisman}
@@ -15,11 +15,10 @@ const Talismans = memo((props: BuildProps) => {
                         key={v4()}
                         size={props.size}
                         buildDispatch={() =>
-                            props.buildDispatch(
-                                talisman.id,
-                                props.items,
-                                "TALIS"
-                            )
+                            props.buildDispatch({
+                                id: talisman.id,
+                                type: "TALIS",
+                            })
                         }
                     />
                 );

@@ -7,7 +7,7 @@ const Ashes = memo((props: BuildProps) => {
     return (
         <>
             <h1>Ashes</h1>
-            {props.items.map((ash: BuildItem) => {
+            {props.build["ashes"].map((ash: BuildItem) => {
                 return (
                     <Item
                         item={ash}
@@ -15,7 +15,10 @@ const Ashes = memo((props: BuildProps) => {
                         key={v4()}
                         size={props.size}
                         buildDispatch={() =>
-                            props.buildDispatch(ash.id, props.items, "ASHES")
+                            props.buildDispatch({
+                                id: ash.id,
+                                type: "ASHES",
+                            })
                         }
                     />
                 );

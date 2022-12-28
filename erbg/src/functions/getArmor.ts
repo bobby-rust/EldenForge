@@ -58,7 +58,7 @@ function CleanArmorData(armor: ArmorDataObject[]): BuildItem[] {
     return cleanArmor;
 }
 
-function getArmor() {
+function getArmor(category: string | null = null) {
     /**
      * This component needs to:
      *      Restructure the data into BuildItem
@@ -68,6 +68,12 @@ function getArmor() {
     var foundArmor = false;
     const armor: ArmorDataObject[] = [];
     const categories: string[] = [];
+
+    // if (category) {
+    //     switch (category) {
+    //         case ""
+    //     }
+    // }
 
     while (!foundArmor) {
         const rand_armors_idx: number = Math.floor(

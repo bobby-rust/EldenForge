@@ -13,6 +13,7 @@ import SelectMenu from "../components/SelectMenu";
 import { Box, Grid } from "@mui/material";
 
 function SmallLayout(props: any) {
+    console.log(props.build);
     return (
         <div className='layout-wrapper-sm'>
             <Box>
@@ -40,7 +41,7 @@ function SmallLayout(props: any) {
                     <Grid item xs={2}>
                         <div className='weapons-container'>
                             <Weapons
-                                items={props.build["weapons"]}
+                                build={props.build}
                                 color={props.color}
                                 size={props.size}
                                 buildDispatch={props.buildDispatch}
@@ -49,7 +50,7 @@ function SmallLayout(props: any) {
                     </Grid>
                     <Grid item xs={2}>
                         <Armors
-                            items={props.build["armor"]}
+                            build={props.build}
                             color={props.color}
                             size={props.size}
                             buildDispatch={props.buildDispatch}
@@ -57,7 +58,7 @@ function SmallLayout(props: any) {
                     </Grid>
                     <Grid item xs={2}>
                         <Shield
-                            items={props.build["shields"]}
+                            build={props.build}
                             color={props.color}
                             size={props.size}
                             buildDispatch={props.buildDispatch}
@@ -66,7 +67,7 @@ function SmallLayout(props: any) {
                     <Grid item xs={2}>
                         <div className='sorcs-container'>
                             <Sorceries
-                                items={props.build["sorcs"]}
+                                build={props.build}
                                 color={props.color}
                                 size={props.size}
                                 buildDispatch={props.buildDispatch}
@@ -76,7 +77,7 @@ function SmallLayout(props: any) {
                     <Grid item xs={2}>
                         <div className='incants-container'>
                             <Incantations
-                                items={props.build["incants"]}
+                                build={props.build}
                                 color={props.color}
                                 size={props.size}
                                 buildDispatch={props.buildDispatch}
@@ -86,7 +87,7 @@ function SmallLayout(props: any) {
                     <Grid item xs={2}>
                         <div className='talis-container'>
                             <Talismans
-                                items={props.build["talismans"]}
+                                build={props.build}
                                 color={props.color}
                                 size={props.size}
                                 buildDispatch={props.buildDispatch}
@@ -96,7 +97,7 @@ function SmallLayout(props: any) {
                     <Grid item xs={2}>
                         <div className='ashes-container'>
                             <Ashes
-                                items={props.build["ashes"]}
+                                build={props.build}
                                 color={props.color}
                                 size={props.size}
                                 buildDispatch={props.buildDispatch}
@@ -106,7 +107,7 @@ function SmallLayout(props: any) {
                     <Grid item xs={2}>
                         <div className='spirits-container'>
                             <Spirits
-                                items={props.build["spirits"]}
+                                build={props.build}
                                 color={props.color}
                                 size={props.size}
                                 buildDispatch={props.buildDispatch}

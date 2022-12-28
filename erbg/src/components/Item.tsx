@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { BuildItem } from "../types/ItemTypes";
 
 type ItemProps = {
@@ -7,7 +8,7 @@ type ItemProps = {
     size: string;
 };
 
-function Item(props: ItemProps) {
+const Item = memo((props: ItemProps) => {
     /**
      * This is a generic component
      * Any styling on this component should remain generic
@@ -40,6 +41,6 @@ function Item(props: ItemProps) {
             </div>
         </div>
     );
-}
+});
 
 export default Item;

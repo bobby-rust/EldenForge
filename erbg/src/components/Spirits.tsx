@@ -7,7 +7,7 @@ const Spirits = memo((props: BuildProps) => {
     return (
         <>
             {/* <h2>Spirits</h2> */}
-            {props.items.map((spirit: BuildItem) => {
+            {props.build["spirits"].map((spirit: BuildItem) => {
                 return (
                     <Item
                         item={spirit}
@@ -15,11 +15,10 @@ const Spirits = memo((props: BuildProps) => {
                         key={v4()}
                         size={props.size}
                         buildDispatch={() =>
-                            props.buildDispatch(
-                                spirit.id,
-                                props.items,
-                                "SPIRITS"
-                            )
+                            props.buildDispatch({
+                                id: spirit.id,
+                                type: "SPIRITS",
+                            })
                         }
                     />
                 );
