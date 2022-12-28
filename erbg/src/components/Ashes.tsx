@@ -1,7 +1,7 @@
-import Item from './Item'
-import { v4 } from 'uuid'
-import { BuildItem, BuildProps } from '../types/ItemTypes'
-import { memo } from 'react'
+import Item from "./Item";
+import { v4 } from "uuid";
+import { BuildItem, BuildProps } from "../types/ItemTypes";
+import { memo } from "react";
 
 const Ashes = memo((props: BuildProps) => {
     return (
@@ -14,12 +14,14 @@ const Ashes = memo((props: BuildProps) => {
                         color={props.color}
                         key={v4()}
                         size={props.size}
-                        getNewItem={() => props.getNewItem(ash.id)}
+                        buildDispatch={() =>
+                            props.buildDispatch(ash.id, props.items, "ASHES")
+                        }
                     />
-                )
+                );
             })}
         </>
-    )
-})
+    );
+});
 
-export default Ashes
+export default Ashes;

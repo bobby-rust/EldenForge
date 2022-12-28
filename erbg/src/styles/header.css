@@ -34,11 +34,10 @@
     border-bottom: 1px solid var(--border-dkmd);
     background-color: var(--bg-dkmd-dk);
     width: 100vw;
-    z-index: 999;
 }
 
 .logo {
-    font-family: 'Unbounded';
+    font-family: "Unbounded";
     display: inline;
     margin: auto;
     position: absolute;

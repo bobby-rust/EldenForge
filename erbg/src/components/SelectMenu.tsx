@@ -1,17 +1,20 @@
-import React from 'react'
-import Box from '@mui/material/Box'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import React from "react";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
-const SELECT_WIDTH: number = 130
+const SELECT_WIDTH: number = 130;
 
 export default function SelectMenu(props: any) {
     const handleDispatch = (event: SelectChangeEvent) => {
-        event.preventDefault()
-        props.buildNumsDispatch({type: event.target.name, payload: event.target.value})
-    }
+        event.preventDefault();
+        props.buildNumsDispatch({
+            type: event.target.name,
+            payload: event.target.value,
+        });
+    };
 
     /**
      * Need to pass buildNums and the dispatch func.
@@ -29,8 +32,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.weapons}
                         label='Weapons'
                         name='WEAPONS'
-                        onChange={handleDispatch}
-                    >
+                        onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
                         <MenuItem value={3}>3</MenuItem>
@@ -47,8 +49,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.ashes}
                         label='Ashes'
                         name='ASHES'
-                        onChange={handleDispatch}
-                    >
+                        onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
                         <MenuItem value={3}>3</MenuItem>
@@ -67,8 +68,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.spirits}
                         label='Spirits'
                         name='SPIRITS'
-                        onChange={handleDispatch}
-                    >
+                        onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
                         <MenuItem value={3}>3</MenuItem>
@@ -87,8 +87,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.talis}
                         label='Talismans'
                         name='TALIS'
-                        onChange={handleDispatch}
-                    >
+                        onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
                         <MenuItem value={3}>3</MenuItem>
@@ -107,8 +106,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.sorcs}
                         label='Sorceries'
                         name='SORCS'
-                        onChange={handleDispatch}
-                    >
+                        onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
                         <MenuItem value={3}>3</MenuItem>
@@ -127,8 +125,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.incants}
                         label='Incantations'
                         name='INCANTS'
-                        onChange={handleDispatch}
-                    >
+                        onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
                         <MenuItem value={3}>3</MenuItem>
@@ -136,7 +133,7 @@ export default function SelectMenu(props: any) {
                     </Select>
                 </FormControl>
             </Box>
-            {/* <Box sx={{ minWidth: SELECT_WIDTH }}>
+            <Box sx={{ minWidth: SELECT_WIDTH }}>
                 <FormControl fullWidth>
                     <InputLabel id='demo-simple-select-label'>
                         Shields
@@ -144,17 +141,17 @@ export default function SelectMenu(props: any) {
                     <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
-                        value={numShields}
+                        value={props.buildNums.shields}
                         label='Shields'
-                        onChange={handleChangeNumShields}
-                    >
+                        name='SHIELDS'
+                        onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
                         <MenuItem value={3}>3</MenuItem>
                         <MenuItem value={4}>4</MenuItem>
                     </Select>
                 </FormControl>
-            </Box> */}
+            </Box>
         </>
-    )
+    );
 }

@@ -1,7 +1,7 @@
-import { v4 } from 'uuid'
-import { memo } from 'react'
-import Item from './Item'
-import { BuildProps, BuildItem } from '../types/ItemTypes'
+import { v4 } from "uuid";
+import { memo } from "react";
+import Item from "./Item";
+import { BuildProps, BuildItem } from "../types/ItemTypes";
 
 const Sorceries = memo((props: BuildProps) => {
     return (
@@ -14,12 +14,14 @@ const Sorceries = memo((props: BuildProps) => {
                         color={props.color}
                         key={v4()}
                         size={props.size}
-                        getNewItem={() => props.getNewItem(sorc.id)}
+                        buildDispatch={() =>
+                            props.buildDispatch(sorc.id, props.items, "SORCS")
+                        }
                     />
-                )
+                );
             })}
         </>
-    )
-})
+    );
+});
 
-export default Sorceries
+export default Sorceries;

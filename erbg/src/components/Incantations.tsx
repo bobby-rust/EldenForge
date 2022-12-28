@@ -1,8 +1,7 @@
-import Item from './Item'
-import { v4 } from 'uuid'
-import React from 'react'
-import { BuildItem, BuildProps } from '../types/ItemTypes'
-import { memo } from 'react'
+import Item from "./Item";
+import { v4 } from "uuid";
+import { BuildItem, BuildProps } from "../types/ItemTypes";
+import { memo } from "react";
 const Incantations = memo((props: BuildProps) => {
     return (
         <>
@@ -14,12 +13,18 @@ const Incantations = memo((props: BuildProps) => {
                         color={props.color}
                         key={v4()}
                         size={props.size}
-                        getNewItem={() => props.getNewItem(incant.id)}
+                        buildDispatch={() =>
+                            props.buildDispatch(
+                                incant.id,
+                                props.items,
+                                "INCANTS"
+                            )
+                        }
                     />
-                )
+                );
             })}
         </>
-    )
-})
+    );
+});
 
-export default Incantations
+export default Incantations;

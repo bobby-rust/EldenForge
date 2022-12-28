@@ -1,7 +1,7 @@
-import { v4 } from 'uuid'
-import { BuildItem, BuildProps } from '../types/ItemTypes'
-import Item from './Item'
-import { memo } from 'react'
+import { v4 } from "uuid";
+import { BuildItem, BuildProps } from "../types/ItemTypes";
+import Item from "./Item";
+import { memo } from "react";
 
 const Shields = memo((props: BuildProps) => {
     return (
@@ -14,12 +14,18 @@ const Shields = memo((props: BuildProps) => {
                         color={props.color}
                         key={v4()}
                         size={props.size}
-                        getNewItem={() => props.getNewItem(shield.id)}
+                        buildDispatch={() =>
+                            props.buildDispatch(
+                                shield.id,
+                                props.items,
+                                "SHIELDS"
+                            )
+                        }
                     />
-                )
+                );
             })}
         </div>
-    )
-})
+    );
+});
 
-export default Shields
+export default Shields;

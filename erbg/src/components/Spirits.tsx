@@ -1,7 +1,7 @@
-import Item from './Item'
-import { v4 } from 'uuid'
-import { BuildItem, BuildProps } from '../types/ItemTypes'
-import { memo } from 'react'
+import Item from "./Item";
+import { v4 } from "uuid";
+import { BuildItem, BuildProps } from "../types/ItemTypes";
+import { memo } from "react";
 
 const Spirits = memo((props: BuildProps) => {
     return (
@@ -14,12 +14,18 @@ const Spirits = memo((props: BuildProps) => {
                         color={props.color}
                         key={v4()}
                         size={props.size}
-                        getNewItem={() => props.getNewItem(spirit.id)}
+                        buildDispatch={() =>
+                            props.buildDispatch(
+                                spirit.id,
+                                props.items,
+                                "SPIRITS"
+                            )
+                        }
                     />
-                )
+                );
             })}
         </>
-    )
-})
+    );
+});
 
-export default Spirits
+export default Spirits;

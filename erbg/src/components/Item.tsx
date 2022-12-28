@@ -1,12 +1,11 @@
-import React from 'react'
-import { BuildItem } from '../types/ItemTypes'
+import { BuildItem } from "../types/ItemTypes";
 
 type ItemProps = {
-    item: BuildItem
-    getNewItem: () => void
-    color: string
-    size: string
-}
+    item: BuildItem;
+    buildDispatch: any;
+    color: string;
+    size: string;
+};
 
 function Item(props: ItemProps) {
     /**
@@ -20,19 +19,18 @@ function Item(props: ItemProps) {
             <div className='item-name-container'>
                 <span>{props.item.name}</span>
             </div>
-            <button onClick={props.getNewItem}>Respin</button>
+            <button onClick={props.buildDispatch}>Respin</button>
             <a
                 href={`https://eldenring.wiki.fextralife.com/${props.item.name}`}
                 rel='noreferrer'
-                target='_blank'
-            >
+                target='_blank'>
                 {props.item.image === undefined ? (
                     <span>loading...</span>
                 ) : (
                     <img
                         className='item-img'
                         src={props.item.image}
-                        alt={props.item.name + ' img'}
+                        alt={props.item.name + " img"}
                         loading='lazy'
                     />
                 )}
@@ -41,7 +39,7 @@ function Item(props: ItemProps) {
                 <p className='item-desc'>{props.item.description}</p>
             </div>
         </div>
-    )
+    );
 }
 
-export default Item
+export default Item;
