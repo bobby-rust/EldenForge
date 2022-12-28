@@ -1,13 +1,13 @@
-import '../App.css'
-import BootstrapSwitchButton from 'bootstrap-switch-button-react'
+import "../App.css";
+import BootstrapSwitchButton from "bootstrap-switch-button-react";
 
 type HeaderProps = {
-    color: string
-    colorButtonState: boolean
-    layoutButtonState: boolean
-    handleColorChange: () => void
-    handleLayoutChange: () => void
-}
+    color: string;
+    colorButtonState: boolean;
+    layoutButtonState: boolean;
+    handleColorChange: () => void;
+    handleLayoutChange: () => void;
+};
 
 function Header(props: HeaderProps) {
     /**
@@ -15,7 +15,7 @@ function Header(props: HeaderProps) {
      * It remains constant through every layout and can be styled here.
      */
     return (
-        <div className={`header-container${props.color}`}>
+        <div className='header'>
             <div className='logo-container'>
                 <div className='logo-inner'>
                     <div className='logo'>
@@ -57,12 +57,11 @@ function Header(props: HeaderProps) {
                 <div className='dev-message-inner'>
                     <p className='dev-message'>
                         This tool is in development. Some features may not work.
-                        View this project on{' '}
+                        View this project on{" "}
                         <a
                             target='_blank'
                             rel='noreferrer'
-                            href='https://github.com/bobby-rust/elden-ring-random-build-generator/tree/master'
-                        >
+                            href='https://github.com/bobby-rust/elden-ring-random-build-generator/tree/master'>
                             github
                         </a>
                         .
@@ -70,7 +69,7 @@ function Header(props: HeaderProps) {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default Header
+export default Header;

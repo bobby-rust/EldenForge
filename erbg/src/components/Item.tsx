@@ -1,5 +1,8 @@
-import { memo, useMemo } from "react";
+import React, { memo } from "react";
 import { BuildItem } from "../types/ItemTypes";
+import "../styles/chatGPTStyles.css";
+import "../App.css";
+import Button from "@mui/material/Button";
 
 type ItemProps = {
     item: BuildItem;
@@ -9,6 +12,31 @@ type ItemProps = {
 };
 
 const Item = memo((props: ItemProps) => {
+    // const loadImage = (dataUrl: any) => {
+    //     return new Promise<void>((resolve, reject) => {
+    //         const imageElement = document.querySelector("img");
+    //         if (!imageElement) {
+    //             return;
+    //         }
+    //         imageElement.src = dataUrl;
+    //         resolve();
+    //     });
+    // };
+
+    // Declare a state variable for the loading state
+    // const [isLoading, setIsLoading] = React.useState(false);
+
+    // Declare a function to handle the button press
+    // const handleButtonPress = (e: any) => {
+    //     props.buildDispatch();
+    //     // Set the loading state to true
+    //     setIsLoading(true);
+    //     // Perform the image loading operation
+    //     loadImage(props.item.image).then(() => {
+    //         // Set the loading state to false when the image is finished loading
+    //         setIsLoading(false);
+    //     });
+    // };
     /**
      * This is a generic component
      * Any styling on this component should remain generic
@@ -16,26 +44,25 @@ const Item = memo((props: ItemProps) => {
      */
 
     return (
-        <div className='item'>
-            <div className='item-name-container'>
-                <span>{props.item.name}</span>
-            </div>
-            <button onClick={props.buildDispatch}>Respin</button>
+        <div className='build-item'>
+            <span className='item-name'>{props.item.name}</span>
             <a
                 href={`https://eldenring.wiki.fextralife.com/${props.item.name}`}
                 rel='noreferrer'
                 target='_blank'>
-                {props.item.image === undefined ? (
-                    <span>loading...</span>
-                ) : (
-                    <img
-                        className='item-img'
-                        src={props.item.image}
-                        alt={props.item.name + " img"}
-                        loading='lazy'
-                    />
-                )}
+                <img
+                    className='item-img'
+                    src={props.item.image}
+                    alt={props.item.name + " img"}
+                    // loading='lazy'
+                />
             </a>
+            <Button size='small' onClick={props.buildDispatch}>
+                Reroll Item
+            </Button>
+            {/* <button className='card-button' onClick={handleButtonPress}>
+                Respin
+            </button> */}
             <div className='item-desc-container'>
                 <p className='item-desc'>{props.item.description}</p>
             </div>

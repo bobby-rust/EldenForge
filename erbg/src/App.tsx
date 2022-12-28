@@ -10,14 +10,7 @@ import SmallLayout from "./layouts/SmallLayout";
 import DevMessage from "./components/DevMessage";
 import Header from "./components/Header";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-    VALID_BUILD_ITEM_CATEGORIES,
-    buildNumsAction,
-    buildNumsState,
-    BuildItem,
-    buildAction,
-    buildState,
-} from "./types/ItemTypes";
+import { buildNumsAction, buildNumsState } from "./types/ItemTypes";
 
 const App = memo(() => {
     /**
@@ -168,7 +161,6 @@ const App = memo(() => {
      * Pass the state of buildNums; this is the function called when the user generates a new build
      */
     function generateNewBuild() {
-        console.log("I felt that");
         buildDispatch({ type: "FULLBUILD" });
     }
     // End generate new build

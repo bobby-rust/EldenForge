@@ -7,7 +7,7 @@ import getSpirits from "./getSpirits";
 import getTalismans from "./getTalismans";
 import getWeapons from "./getWeapons";
 import getClass from "./getClass";
-import { BuildItem, VALID_BUILD_ITEM_CATEGORIES } from "../types/ItemTypes";
+import { BuildItem } from "../types/ItemTypes";
 
 function generateRandomBuild(
     t_weapons: number,
@@ -43,9 +43,10 @@ function createNewBuild(
     category: string
 ) {
     const newState = structuredClone(oldState);
+    console.log("New State:", newState);
     // var newState = Object.assign({}, oldState);
     newState[category] = [];
-    oldState[category].map((item: BuildItem) => {
+    oldState[category].forEach((item: BuildItem, idx: number) => {
         if (item.id === id) {
             newState[category].push(newItem);
         } else {

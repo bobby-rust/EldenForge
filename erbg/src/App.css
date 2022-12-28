@@ -7,11 +7,11 @@
     align-self: center;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Oswald&family=Poppins&family=Unbounded:wght@800&family=Cormorant+Garamond:wght@500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oswald&family=Poppins&family=Unbounded:wght@800&family=Cormorant+Garamond:wght@500&display=swap");
 
 .App {
-    font-family: 'Cormorant Garamond';
+    font-family: "Cormorant Garamond";
     z-index: -99;
 }
 
@@ -33,3 +33,13 @@
 /**
  * End scrollbar
 */
+
+/* Style the header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+}

@@ -5,7 +5,7 @@ import { memo } from "react";
 
 const Shields = memo((props: BuildProps) => {
     return (
-        <div>
+        <>
             <h1>Shield</h1>
             {props.build["shields"].map((shield: BuildItem) => {
                 return (
@@ -23,7 +23,7 @@ const Shields = memo((props: BuildProps) => {
                     />
                 );
             })}
-        </div>
+        </>
     );
 });
 
