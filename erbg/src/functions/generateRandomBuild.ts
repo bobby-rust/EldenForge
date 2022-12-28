@@ -42,8 +42,8 @@ function createNewBuild(
     newItem: BuildItem,
     category: string
 ) {
-    // const newState = structuredClone(oldState);
-    var newState = Object.assign({}, oldState);
+    const newState = structuredClone(oldState);
+    // var newState = Object.assign({}, oldState);
     newState[category] = [];
     oldState[category].map((item: BuildItem) => {
         if (item.id === id) {

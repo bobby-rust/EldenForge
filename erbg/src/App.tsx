@@ -88,13 +88,6 @@ const App = memo(() => {
          * @param action.type: the category of item to generate if its a single item or "FULLBUILD" if a full build is to be generated
          */
 
-        function CheckNull(id: string | null) {
-            if (id === null) {
-                return true;
-            }
-            return false;
-        }
-
         const { id, type } = action;
 
         switch (type) {
@@ -110,48 +103,44 @@ const App = memo(() => {
                 );
                 return newBuild;
             case "WEAPONS":
-                if (CheckNull(id)) {
+                if (!id) {
                     console.log("Please provide an id.");
                 }
-                console.log("state in dispatch:", state);
                 const newStateWep = getNewItem(id, state, "WEAPONS");
                 return newStateWep;
             case "ASHES":
-                if (CheckNull(id)) {
+                if (!id) {
                     console.log("Please provide an id.");
                 }
-                console.log("state in dispatch:", state);
                 const newStateAsh = getNewItem(id, state, "ASHES");
                 return newStateAsh;
             case "INCANTS":
-                if (CheckNull(id)) {
+                if (!id) {
                     console.log("Please provide an id.");
                 }
-                console.log("state in dispatch:", state);
                 const newStateInc = getNewItem(id, state, "INCANTS");
                 return newStateInc;
             case "SORCS":
-                if (CheckNull(id)) {
+                if (!id) {
                     console.log("Please provide an id.");
                 }
-                console.log("state in dispatch:", state);
                 const newStateSorc = getNewItem(id, state, "SORCS");
                 return newStateSorc;
             case "SPIRITS":
-                if (CheckNull(id)) {
+                if (!id) {
                     console.log("Please provide an id.");
                 }
                 const newStateSpirits = getNewItem(id, state, "SPIRITS");
                 return newStateSpirits;
             case "TALIS":
-                if (CheckNull(id)) {
+                if (!id) {
                     console.log("Please provide an id.");
                 }
                 const newStateTalis = getNewItem(id, state, "TALIS");
                 return newStateTalis;
 
             case "SHIELDS":
-                if (CheckNull(id)) {
+                if (!id) {
                     console.log("Please provide an id.");
                 }
                 const newStateShield = getNewItem(id, state, "SHIELDS");
@@ -160,28 +149,6 @@ const App = memo(() => {
                 console.log("No changes were made.");
                 return state;
         }
-
-        return state;
-
-        // Set the build using that information here
-        // switch (type) {
-        //     case "WEAPONS":
-        //         return { ...state, weapons: payload };
-        //     case "ASHES":
-        //         return { ...state, ashes: payload };
-        //     case "INCANTS":
-        //         return { ...state, incants: payload };
-        //     case "SORCS":
-        //         return { ...state, sorcs: payload };
-        //     case "SPIRITS":
-        //         return { ...state, spirits: payload };
-        //     case "TALIS":
-        //         return { ...state, talis: payload };
-        //     case "SHIELDS":
-        //         return { ...state, shields: payload };
-        //     default:
-        //         return state;
-        // }
     };
     // End reducer
 
