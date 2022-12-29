@@ -11,7 +11,6 @@
 }
 
 .App-sm {
-    height: 100%;
     width: 100vw;
     overflow-x: hidden;
 }
@@ -26,16 +25,17 @@
 .layout-wrapper-sm {
     display: flex;
     justify-content: center;
-    align-items: center;
-    overflow: auto;
-    height: 100%;
+    /* align-items: center; */
+    /* overflow: auto; */
+    /* height: 100%; */
     width: 100%;
-    /* max-height: 100vh;
-    max-width: 100vw; */
+    height: 100vh;
+    /* max-height: 100vh; */
+    /* max-width: 90vw;
     margin: auto;
     justify-self: center;
     align-self: center;
-    overflow-x: hidden;
+    overflow-x: hidden; */
 }
 
 a {
@@ -79,7 +79,7 @@ a {
 }
 
 .button-sm {
-    height: 5em;
+    height: 3rem;
     width: 15em;
     /* grid-column: 2;
     grid-row: 1;  */
@@ -125,9 +125,10 @@ a {
 }
 
 .item-name {
-    height: 20px;
+    height: 10px;
     overflow: ellipsis;
     text-align: center;
+    font-size: 12px;
 }
 .item-name-container {
     background-color: white;
@@ -173,8 +174,8 @@ a {
     align-items: center;
 }
 .item-img {
-    height: 5rem;
-    width: 5rem;
+    /* height: 5rem;
+    width: 5rem; */
     justify-self: center;
     align-self: center;
 }
@@ -223,8 +224,8 @@ h1 {
 }
 
 .class-img {
-    height: 7rem;
-    width: 5rem;
+    height: 4rem;
+    width: 2.5rem;
     justify-self: center;
     align-self: center;
 }

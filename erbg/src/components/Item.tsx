@@ -57,7 +57,15 @@ const Item = memo((props: ItemProps) => {
                     // loading='lazy'
                 />
             </a>
-            <Button size='small' onClick={props.buildDispatch}>
+            <Button
+                sx={{
+                    height: "2rem",
+                    fontSize: "8px",
+                    width: "6rem",
+                    color: "#ef8b09",
+                }}
+                size='small'
+                onClick={props.buildDispatch}>
                 Reroll Item
             </Button>
             {/* <button className='card-button' onClick={handleButtonPress}>

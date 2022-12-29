@@ -8,6 +8,7 @@ const Armors = memo((props: BuildProps) => {
 
     return (
         <>
+            <h6>Armor</h6>
             {props.build["armor"].map((currArmor: BuildItem) => {
                 const catTmp: string = currArmor.category;
                 console.log(catTmp);
@@ -19,7 +20,7 @@ const Armors = memo((props: BuildProps) => {
                 }
 
                 const category = "ARMOR." + catTmp2;
-                console.log(category);
+                console.log("Category in item:", category);
                 return (
                     <Item
                         key={v4()}

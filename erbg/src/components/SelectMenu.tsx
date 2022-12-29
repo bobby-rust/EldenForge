@@ -4,11 +4,16 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
-const SELECT_WIDTH: number = 150;
+const SELECT_WIDTH: number = 130;
 
 const BOX_THEME: Object = {
-    mx: 2,
+    mx: 1,
     minWidth: SELECT_WIDTH,
+    maxHeight: "10vw",
+};
+
+const SELECT_THEME: Object = {
+    height: "2rem",
 };
 export default function SelectMenu(props: any) {
     const handleDispatch = (event: SelectChangeEvent) => {
@@ -30,6 +35,7 @@ export default function SelectMenu(props: any) {
                         Weapons
                     </InputLabel>
                     <Select
+                        sx={SELECT_THEME}
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         value={props.buildNums.weapons}
@@ -49,6 +55,7 @@ export default function SelectMenu(props: any) {
                         Sorceries
                     </InputLabel>
                     <Select
+                        sx={SELECT_THEME}
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         value={props.buildNums.sorcs}
@@ -68,6 +75,7 @@ export default function SelectMenu(props: any) {
                         Incantations
                     </InputLabel>
                     <Select
+                        sx={SELECT_THEME}
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         value={props.buildNums.incants}
@@ -85,6 +93,7 @@ export default function SelectMenu(props: any) {
                 <FormControl fullWidth>
                     <InputLabel id='demo-simple-select-label'>Ashes</InputLabel>
                     <Select
+                        sx={SELECT_THEME}
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         value={props.buildNums.ashes}
@@ -104,6 +113,7 @@ export default function SelectMenu(props: any) {
                         Talismans
                     </InputLabel>
                     <Select
+                        sx={SELECT_THEME}
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         value={props.buildNums.talis}
@@ -123,6 +133,7 @@ export default function SelectMenu(props: any) {
                         Spirits
                     </InputLabel>
                     <Select
+                        sx={SELECT_THEME}
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         value={props.buildNums.spirits}
@@ -142,6 +153,7 @@ export default function SelectMenu(props: any) {
                         Shields
                     </InputLabel>
                     <Select
+                        sx={SELECT_THEME}
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         value={props.buildNums.shields}

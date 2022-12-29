@@ -5,7 +5,7 @@ import { memo } from "react";
 const Incantations = memo((props: BuildProps) => {
     return (
         <>
-            <h1>Incantations</h1>
+            <h6>Incantations</h6>
             {props.build["incants"].map((incant: BuildItem) => {
                 return (
                     <Item

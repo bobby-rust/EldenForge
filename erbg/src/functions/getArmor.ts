@@ -44,7 +44,7 @@ function SortArmor(armor: ArmorDataObject[]): ArmorDataObject[] {
 
 function CleanArmorData(armor: ArmorDataObject[]): BuildItem[] {
     const cleanArmor: BuildItem[] = [];
-    armor.forEach(piece => {
+    armor.forEach((piece) => {
         const currCleanArmor: BuildItem = {
             id: piece.id,
             name: piece.name,
@@ -85,10 +85,8 @@ function getArmor(type?: string) {
         if (!categories.includes(currCategory)) {
             valid_armor = true;
         }
-        let catTmp = currCategory;
         let currCategoryArr = currCategory.split(" ");
-        let catTmp2 = currCategoryArr[0].toUpperCase();
-        let category = "ARMOR." + catTmp2;
+        let category = currCategoryArr[0].toUpperCase();
         if (valid_armor) {
             console.log("armor is valid");
             if (type) {

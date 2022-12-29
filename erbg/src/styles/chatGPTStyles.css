@@ -11,10 +11,12 @@
     border-radius: 4px;
     background-color: #333;
     color: #fff;
-    font-size: 16px;
+    font-size: 12px;
     padding: 8px 16px;
     cursor: pointer;
-    margin-top: 16px;
+    margin-top: 8px;
+    height: 1rem;
+
 }
 
 /* Style the button hover state */
@@ -22,6 +24,11 @@
     background-color: #555;
 }
 
+.build-item a {
+    font-size: 12px;
+    text-decoration: none;
+    color: black;
+}
 /* Style the card */
 .build-item {
     display: flex;
@@ -32,10 +39,15 @@
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin: 5px;
-    padding: 10px;
-    height: 175px;
-    width: 150px;
+    padding: 5px;
+    height: 8rem;
+    width: 8rem;
     max-height: calc(100vh - 140px);
+}
+
+.item-img {
+    height: 3rem;
+    width: 3rem;
 }
 
 /* Style the image */

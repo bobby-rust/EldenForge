@@ -45,21 +45,24 @@ function createNewBuild(
     const newState = structuredClone(oldState);
     console.log("New State:", newState);
     // var newState = Object.assign({}, oldState);
-    newState[category] = [];
+    let cat: string[] = category.split(".");
+    let type = cat[0];
+    newState[type] = [];
+    console.log("type in createNewBuild is:", type);
     let replacedItem = false;
-    for (let i = 0; i < oldState[category].length; i++) {
-        if (oldState[category][i].id === id) {
+    for (let i = 0; i < oldState[type].length; i++) {
+        if (oldState[type][i].id === id) {
             if (!replacedItem) {
-                newState[category].push(newItem);
+                newState[type].push(newItem);
                 replacedItem = true;
             } else {
-                newState[category].push(oldState[category][i]);
+                newState[type].push(oldState[type][i]);
             }
         } else {
-            newState[category].push(oldState[category][i]);
+            newState[type].push(oldState[type][i]);
         }
     }
-
+    console.log("New state in createNewBuild:", newState);
     return newState;
 }
 
@@ -68,20 +71,41 @@ function getNewItem(t_id: string, state: any, type: string) {
         // TODO: Implement armor reroll.
         case "ARMOR.HELM":
             console.log("armor.helm was correctly hit in getNewItem");
-            const newHead = getArmor("ARMOR.HELM");
-            const newArmorHead = createNewBuild(
+            const newHead = getArmor("HELM");
+            const newHeadBuild = createNewBuild(
                 state,
                 t_id,
                 newHead[0],
                 type.toLowerCase()
             );
-            return newArmorHead;
+            return newHeadBuild;
         case "ARMOR.CHEST":
-            return state;
-        case "ARMOR.GAUNTLET":
-            return state;
-        case "ARMOR.LEGS":
-            return state;
+            const newChest = getArmor("CHEST");
+            const newChestBuild = createNewBuild(
+                state,
+                t_id,
+                newChest[0],
+                type.toLowerCase()
+            );
+            return newChestBuild;
+        case "ARMOR.GAUNTLETS":
+            const newGauntlets = getArmor("GAUNTLETS");
+            const newGauntletsBuild = createNewBuild(
+                state,
+                t_id,
+                newGauntlets[0],
+                type.toLowerCase()
+            );
+            return newGauntletsBuild;
+        case "ARMOR.LEG":
+            const newLegs = getArmor("LEG");
+            const newLegsBuild = createNewBuild(
+                state,
+                t_id,
+                newLegs[0],
+                type.toLowerCase()
+            );
+            return newLegsBuild;
         case "WEAPONS":
             const newWeapon = getWeapons(1);
             const newStateWep = createNewBuild(

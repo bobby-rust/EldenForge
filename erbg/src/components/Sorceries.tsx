@@ -6,7 +6,7 @@ import { BuildProps, BuildItem } from "../types/ItemTypes";
 const Sorceries = memo((props: BuildProps) => {
     return (
         <>
-            <h1>Sorceries</h1>
+            <h6>Sorceries</h6>
             {props.build["sorcs"].map((sorc: BuildItem) => {
                 return (
                     <Item

@@ -6,6 +6,8 @@ import { memo } from "react";
 const Weapons = memo((props: BuildProps) => {
     return (
         <>
+            <h6>Weapons</h6>
+
             {props.build["weapons"].map((weapon: BuildItem) => {
                 return (
                     <Item

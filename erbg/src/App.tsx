@@ -11,6 +11,7 @@ import DevMessage from "./components/DevMessage";
 import Header from "./components/Header";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { buildNumsAction, buildNumsState } from "./types/ItemTypes";
+import ResponsiveAppBar from "./components/AppBar";
 
 const App = memo(() => {
     /**
@@ -97,9 +98,20 @@ const App = memo(() => {
                 return newBuild;
             case "ARMOR.HELM":
                 console.log("armor.helm was hit in buildDispatch");
-                const newStateArmorHead = getNewItem(id, state, "ARMOR.HELM");
-                console.log("getNewItem returned:", newStateArmorHead);
-                return newStateArmorHead;
+                const newStateHelm = getNewItem(id, state, "ARMOR.HELM");
+                console.log("getNewItem returned:", newStateHelm);
+                return newStateHelm;
+            case "ARMOR.CHEST":
+                const newStateChest = getNewItem(id, state, "ARMOR.CHEST");
+                console.log("getNewItem returned:", newStateChest);
+                return newStateChest;
+            case "ARMOR.GAUNTLETS":
+                const newStateGaunt = getNewItem(id, state, "ARMOR.GAUNTLETS");
+                return newStateGaunt;
+            case "ARMOR.LEG":
+                console.log("dispatched leg armor");
+                const newStateLegs = getNewItem(id, state, "ARMOR.LEG");
+                return newStateLegs;
             case "WEAPONS":
                 if (!id) {
                     console.log("Please provide an id.");
@@ -237,13 +249,14 @@ const App = memo(() => {
     return (
         <div className='App'>
             <>
-                <Header
+                {/* <Header
                     color={darkMode.color}
                     handleColorChange={handleColorChange}
                     handleLayoutChange={handleLayoutChange}
                     layoutButtonState={layoutButtonState}
                     colorButtonState={colorButtonState}
-                />
+                /> */}
+                <ResponsiveAppBar />
 
                 {/* {layout.isLargeLayout && (
                 <LargeLayout
@@ -278,8 +291,8 @@ const App = memo(() => {
                         buildNumsDispatch={buildNumsDispatch}
                         buildDispatch={buildDispatch}
                     />
-                    <DevMessage />
                 </div>
+                {/* <DevMessage /> */}
                 <AnalyticsWrapper />
             </>
         </div>

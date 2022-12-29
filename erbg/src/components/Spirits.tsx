@@ -6,7 +6,7 @@ import { memo } from "react";
 const Spirits = memo((props: BuildProps) => {
     return (
         <>
-            {/* <h2>Spirits</h2> */}
+            <h6>Spirits</h6>
             {props.build["spirits"].map((spirit: BuildItem) => {
                 return (
                     <Item

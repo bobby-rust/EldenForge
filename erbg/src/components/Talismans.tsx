@@ -6,7 +6,7 @@ import { memo } from "react";
 const Talismans = memo((props: BuildProps) => {
     return (
         <>
-            <h1>Talismans</h1>
+            <h6>Talismans</h6>
             {props.build["talis"].map((talisman: BuildItem) => {
                 return (
                     <Item

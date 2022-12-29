@@ -6,7 +6,7 @@ import { memo } from "react";
 const Shields = memo((props: BuildProps) => {
     return (
         <>
-            <h1>Shield</h1>
+            <h6>Shields</h6>
             {props.build["shields"].map((shield: BuildItem) => {
                 return (
                     <Item

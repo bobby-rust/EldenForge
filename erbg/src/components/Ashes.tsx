@@ -6,7 +6,7 @@ import { memo } from "react";
 const Ashes = memo((props: BuildProps) => {
     return (
         <>
-            <h1>Ashes</h1>
+            <h6>Ashes</h6>
             {props.build["ashes"].map((ash: BuildItem) => {
                 return (
                     <Item
