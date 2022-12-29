@@ -74,11 +74,11 @@ const App = memo(() => {
          * This function gets called every time the user generates a build or an individual item
          * When an item is rerolled, a new build is created with all old values
          * the new value is searched for using the action.id parameter, and
-         * the get item function for that item type is called, with an argument of 1 if necessary
+         * the get item function for that item type is called
          * @param state: the build's state object
          * @param action.id: the id of the item to reroll or null if a full build is to be generated
-         * @param action.build: the build object
          * @param action.type: the category of item to generate if its a single item or "FULLBUILD" if a full build is to be generated
+         * @return a new state object
          */
 
         const { id, type } = action;
@@ -95,6 +95,11 @@ const App = memo(() => {
                     buildNums.shields
                 );
                 return newBuild;
+            case "ARMOR.HELM":
+                console.log("armor.helm was hit in buildDispatch");
+                const newStateArmorHead = getNewItem(id, state, "ARMOR.HELM");
+                console.log("getNewItem returned:", newStateArmorHead);
+                return newStateArmorHead;
             case "WEAPONS":
                 if (!id) {
                     console.log("Please provide an id.");

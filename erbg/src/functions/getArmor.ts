@@ -44,7 +44,7 @@ function SortArmor(armor: ArmorDataObject[]): ArmorDataObject[] {
 
 function CleanArmorData(armor: ArmorDataObject[]): BuildItem[] {
     const cleanArmor: BuildItem[] = [];
-    armor.forEach((piece, idx) => {
+    armor.forEach(piece => {
         const currCleanArmor: BuildItem = {
             id: piece.id,
             name: piece.name,
@@ -58,7 +58,7 @@ function CleanArmorData(armor: ArmorDataObject[]): BuildItem[] {
     return cleanArmor;
 }
 
-function getArmor(category: string | null = null) {
+function getArmor(type?: string) {
     /**
      * This component needs to:
      *      Restructure the data into BuildItem
@@ -68,31 +68,41 @@ function getArmor(category: string | null = null) {
     var foundArmor = false;
     const armor: ArmorDataObject[] = [];
     const categories: string[] = [];
-
-    // if (category) {
-    //     switch (category) {
-    //         case ""
-    //     }
-    // }
-
+    console.log("type in getArmor:", type);
     while (!foundArmor) {
         const rand_armors_idx: number = Math.floor(
             Math.random() * armors_data.count
         );
         const randArmorPiece: ArmorDataObject =
             armors_data.data[rand_armors_idx];
-        let category: string = randArmorPiece.category;
-        if (category === "Gauntlet") {
-            category = "Gauntlets";
+
+        let currCategory: string = randArmorPiece.category;
+
+        if (currCategory === "Gauntlet") {
+            currCategory = "Gauntlets";
         }
         let valid_armor = false;
-        if (!categories.includes(category)) {
+        if (!categories.includes(currCategory)) {
             valid_armor = true;
         }
-
+        let catTmp = currCategory;
+        let currCategoryArr = currCategory.split(" ");
+        let catTmp2 = currCategoryArr[0].toUpperCase();
+        let category = "ARMOR." + catTmp2;
         if (valid_armor) {
-            armor.push(randArmorPiece);
-            categories.push(category);
+            console.log("armor is valid");
+            if (type) {
+                console.log("type is not null");
+                if (category === type) {
+                    console.log("category is type");
+                    armor.push(randArmorPiece);
+                    console.log(armor);
+                    return armor;
+                }
+            } else {
+                armor.push(randArmorPiece);
+                categories.push(currCategory);
+            }
         }
 
         if (armor.length === 4) {

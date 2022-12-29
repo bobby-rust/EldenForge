@@ -46,18 +46,42 @@ function createNewBuild(
     console.log("New State:", newState);
     // var newState = Object.assign({}, oldState);
     newState[category] = [];
-    oldState[category].forEach((item: BuildItem, idx: number) => {
-        if (item.id === id) {
-            newState[category].push(newItem);
+    let replacedItem = false;
+    for (let i = 0; i < oldState[category].length; i++) {
+        if (oldState[category][i].id === id) {
+            if (!replacedItem) {
+                newState[category].push(newItem);
+                replacedItem = true;
+            } else {
+                newState[category].push(oldState[category][i]);
+            }
         } else {
-            newState[category].push(item);
+            newState[category].push(oldState[category][i]);
         }
-    });
+    }
+
     return newState;
 }
 
 function getNewItem(t_id: string, state: any, type: string) {
     switch (type) {
+        // TODO: Implement armor reroll.
+        case "ARMOR.HELM":
+            console.log("armor.helm was correctly hit in getNewItem");
+            const newHead = getArmor("ARMOR.HELM");
+            const newArmorHead = createNewBuild(
+                state,
+                t_id,
+                newHead[0],
+                type.toLowerCase()
+            );
+            return newArmorHead;
+        case "ARMOR.CHEST":
+            return state;
+        case "ARMOR.GAUNTLET":
+            return state;
+        case "ARMOR.LEGS":
+            return state;
         case "WEAPONS":
             const newWeapon = getWeapons(1);
             const newStateWep = createNewBuild(
@@ -67,7 +91,6 @@ function getNewItem(t_id: string, state: any, type: string) {
                 type.toLowerCase()
             );
             return newStateWep;
-        // TODO: Implement armor reroll.
         case "ASHES":
             const newAsh = getAshes(1);
             const newStateAsh = createNewBuild(
