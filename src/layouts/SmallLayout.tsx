@@ -12,10 +12,15 @@ import "../styles/smallLayout.css";
 import "../styles/chatGPTStyles.css";
 import SelectMenu from "../components/SelectMenu";
 import { Box, Grid } from "@mui/material";
-import DevMessage from "../components/DevMessage";
 
 function SmallLayout(props: any) {
     console.log(props.build);
+    // TODO: "Roll another" button in place of every empty item spot.
+    // Should be connected to the select menu.
+
+    // TODO: Different categories for different build types
+    // Magic vs Melee
+    // basically move everything into two different pages and probably make the rows horizontal instead of vertical
     return (
         <>
             <div className='layout-wrapper-sm'>
