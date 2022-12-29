@@ -106,7 +106,7 @@ export default function SelectMenu(props: any) {
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         value={props.buildNums.ashes}
-                        label='Ashes'
+                        label='Ashes of War'
                         variant={selectVariant}
                         name='ASHES'
                         onChange={handleDispatch}>
@@ -148,7 +148,7 @@ export default function SelectMenu(props: any) {
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         value={props.buildNums.spirits}
-                        label='Spirits'
+                        label='Spirit Ashes'
                         name='SPIRITS'
                         variant={selectVariant}
                         onChange={handleDispatch}>
