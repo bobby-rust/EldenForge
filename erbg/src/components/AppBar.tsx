@@ -18,7 +18,7 @@ const theme = createTheme({
     palette: {
         primary: {
             // Purple and green play nicely together.
-            main: "#454545",
+            main: "#ffffff",
         },
         secondary: {
             // This is green.A700 as hex.
@@ -54,8 +54,8 @@ function ResponsiveAppBar() {
 
     return (
         <ThemeProvider theme={theme}>
-            <AppBar position='static' sx={{ mb: "10px" }}>
-                <Container maxWidth='xl' color='#454545'>
+            <AppBar position='static' sx={{ mb: "15px" }}>
+                <Container maxWidth='xl'>
                     <Toolbar disableGutters>
                         {/* <AdbIcon
                             sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
@@ -71,7 +71,7 @@ function ResponsiveAppBar() {
                                 display: { xs: "none", md: "flex" },
                                 fontFamily: "monospace",
                                 fontWeight: 700,
-                                letterSpacing: ".3rem",
+                                letterSpacing: "0.6rem",
                                 color: "inherit",
                                 textDecoration: "none",
                                 position: "absolute",

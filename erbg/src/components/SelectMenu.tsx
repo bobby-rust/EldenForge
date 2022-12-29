@@ -16,7 +16,7 @@ const SELECT_THEME: Object = {
     height: "2rem",
 };
 
-const selectVariant = "standard";
+const selectVariant = "outlined";
 
 export default function SelectMenu(props: any) {
     const handleDispatch = (event: SelectChangeEvent) => {
@@ -98,7 +98,9 @@ export default function SelectMenu(props: any) {
             </Box>
             <Box sx={BOX_THEME}>
                 <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'>Ashes</InputLabel>
+                    <InputLabel id='demo-simple-select-label'>
+                        Ashes of War
+                    </InputLabel>
                     <Select
                         sx={SELECT_THEME}
                         labelId='demo-simple-select-label'
@@ -139,7 +141,7 @@ export default function SelectMenu(props: any) {
             <Box sx={BOX_THEME}>
                 <FormControl fullWidth>
                     <InputLabel id='demo-simple-select-label'>
-                        Spirits
+                        Spirit Ashes
                     </InputLabel>
                     <Select
                         sx={SELECT_THEME}
