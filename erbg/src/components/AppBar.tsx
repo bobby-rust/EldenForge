@@ -62,6 +62,7 @@ function ResponsiveAppBar() {
                         /> */}
                         <Typography
                             variant='h6'
+                            className='appbar-logo'
                             noWrap
                             component='a'
                             href='/'
@@ -73,6 +74,7 @@ function ResponsiveAppBar() {
                                 letterSpacing: ".3rem",
                                 color: "inherit",
                                 textDecoration: "none",
+                                position: "absolute",
                             }}>
                             ERBG
                         </Typography>
@@ -136,6 +138,7 @@ function ResponsiveAppBar() {
                                 letterSpacing: ".3rem",
                                 color: "inherit",
                                 textDecoration: "none",
+                                position: "absolute",
                             }}>
                             ERBG
                         </Typography>

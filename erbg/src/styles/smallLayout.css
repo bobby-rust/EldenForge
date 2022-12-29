@@ -22,6 +22,11 @@
     align-items: center;
     flex-direction: column;
 }
+
+.appbar-logo:hover {
+    cursor: pointer;
+    color: "#e8b608"
+}
 .layout-wrapper-sm {
     display: flex;
     justify-content: center;

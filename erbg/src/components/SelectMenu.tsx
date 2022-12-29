@@ -15,6 +15,9 @@ const BOX_THEME: Object = {
 const SELECT_THEME: Object = {
     height: "2rem",
 };
+
+const selectVariant = "standard";
+
 export default function SelectMenu(props: any) {
     const handleDispatch = (event: SelectChangeEvent) => {
         event.preventDefault();
@@ -35,12 +38,14 @@ export default function SelectMenu(props: any) {
                         Weapons
                     </InputLabel>
                     <Select
+                        MenuProps={{ disableScrollLock: true }}
                         sx={SELECT_THEME}
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         value={props.buildNums.weapons}
                         label='Weapons'
                         name='WEAPONS'
+                        variant={selectVariant}
                         onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
@@ -61,6 +66,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.sorcs}
                         label='Sorceries'
                         name='SORCS'
+                        variant={selectVariant}
                         onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
@@ -81,6 +87,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.incants}
                         label='Incantations'
                         name='INCANTS'
+                        variant={selectVariant}
                         onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
@@ -98,6 +105,7 @@ export default function SelectMenu(props: any) {
                         id='demo-simple-select'
                         value={props.buildNums.ashes}
                         label='Ashes'
+                        variant={selectVariant}
                         name='ASHES'
                         onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
@@ -119,6 +127,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.talis}
                         label='Talismans'
                         name='TALIS'
+                        variant={selectVariant}
                         onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
@@ -139,6 +148,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.spirits}
                         label='Spirits'
                         name='SPIRITS'
+                        variant={selectVariant}
                         onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
@@ -159,6 +169,7 @@ export default function SelectMenu(props: any) {
                         value={props.buildNums.shields}
                         label='Shields'
                         name='SHIELDS'
+                        variant={selectVariant}
                         onChange={handleDispatch}>
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={2}>2</MenuItem>
