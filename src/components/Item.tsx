@@ -60,7 +60,7 @@ const Item = memo((props: ItemProps) => {
             <Button
                 sx={{
                     height: "2rem",
-                    fontSize: "8px",
+                    fontSize: "12px",
                     width: "6rem",
                     color: "#ef8b09",
                 }}
