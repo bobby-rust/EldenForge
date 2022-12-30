@@ -72,7 +72,7 @@ function ResponsiveAppBar() {
                                 fontFamily: "monospace",
                                 fontWeight: 700,
                                 letterSpacing: "0.6rem",
-                                color: "inherit",
+                                color: "#ef8b09 !important",
                                 textDecoration: "none",
                                 position: "absolute",
                             }}>
