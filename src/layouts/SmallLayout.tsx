@@ -64,7 +64,7 @@ function SmallLayout(props: any) {
                                 container
                                 direction='row'
                                 columns={8}
-                                spacing={0}>
+                                spacing={6}>
                                 <Grid item xs={1}>
                                     <div className='armor-container'>
                                         <Armors

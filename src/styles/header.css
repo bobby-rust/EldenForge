@@ -53,8 +53,8 @@
     justify-self: center;
     align-self: center;
     text-shadow: 0 0 10px rgba(239, 184, 9, 0.2);
-    grid-template-rows: 1fr;
-    grid-template-columns: repeat(6, 1fr);
+    /* grid-template-rows: 1fr;
+    grid-template-columns: repeat(6, 1fr); */
 }
 /**
  * End header

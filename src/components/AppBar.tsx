@@ -54,7 +54,13 @@ function ResponsiveAppBar() {
 
     return (
         <ThemeProvider theme={theme}>
-            <AppBar position='static' sx={{ mb: "15px" }}>
+            <AppBar
+                position='static'
+                sx={{
+                    mb: "15px",
+                    boxShadow: "none",
+                    borderBottom: "1px solid rgba(0, 0, 0, 0.3)",
+                }}>
                 <Container maxWidth='xl'>
                     <Toolbar disableGutters>
                         {/* <AdbIcon
