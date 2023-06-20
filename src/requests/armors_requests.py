@@ -1,45 +1,34 @@
 import requests
 import json
 
-r_armors_pg1 = requests.get("https://eldenring.fanapis.com/api/armors?limit=500")
-r_armors_pg2 = requests.get("https://eldenring.fanapis.com/api/armors?limit=100&page=1")
-r_armors_pg3 = requests.get("https://eldenring.fanapis.com/api/armors?limit=100&page=2")
-r_armors_pg4 = requests.get("https://eldenring.fanapis.com/api/armors?limit=100&page=3")
-r_armors_pg5 = requests.get("https://eldenring.fanapis.com/api/armors?limit=100&page=4")
-r_armors_pg6 = requests.get("https://eldenring.fanapis.com/api/armors?limit=100&page=5")
+r_armors = []
 
-armors_data_dict = json.loads(r_armors_pg1.text)
-dataDict_pg2 = json.loads(r_armors_pg2.text)
-dataDict_pg3 = json.loads(r_armors_pg3.text)
-dataDict_pg4 = json.loads(r_armors_pg4.text)
-dataDict_pg5 = json.loads(r_armors_pg5.text)
-dataDict_pg6 = json.loads(r_armors_pg6.text)
+for i in range(99): # arbitrary number chosen because there should never be more than 99 pages of items of this category
+    try:
+        response = requests.get(f"https://eldenring.fanapis.com/api/armors?limit=500&page={i}")
+        if (json.loads(response.text)["count"] > 0):
+            r_armors.append(response)
+        else:
+            break
+    except requests.exceptions.InvalidURL:
+        print("Invalid URL")
+        break
+    except Exception as e:
+        print("An unhandled exception occurred: ", end="")
+        print(str(e))
+        exit()
 
-for object in dataDict_pg2["data"]:
-    armors_data_dict["data"].append(object)
-for object in dataDict_pg3["data"]:
-    armors_data_dict["data"].append(object)
-for object in dataDict_pg4["data"]:
-    armors_data_dict["data"].append(object)
-for object in dataDict_pg5["data"]:
-    armors_data_dict["data"].append(object)
-for object in dataDict_pg6["data"]:
-    armors_data_dict["data"].append(object)
+armors_data_dict = json.loads(r_armors[0].text)
 
+for response in r_armors[1:]:
+    res_dict = json.loads(response.text) # convert json response to python dict
+    for element in res_dict["data"]:
+        armors_data_dict["data"].append(element)
 
-name_list = []
+armors_data_dict["count"] = len(armors_data_dict["data"])
+print(f"Found {armors_data_dict['count']} armors.")
 
-for object in armors_data_dict['data']:
-    print(object["name"])
-    name_list.append(object["name"])
-
-for name in name_list:
-    print(name)
-
-armors_data_dict["count"] = len(name_list)
-print(len(name_list))
-
+# convert python dict to json and save as file
 data = json.dumps(armors_data_dict)
-
 with open("armors_data.json", "w") as f_data:
     f_data.write(data)

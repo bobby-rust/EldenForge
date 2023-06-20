@@ -1,36 +1,34 @@
 import requests
 import json
 
-r_weapons_pg1 = requests.get("https://eldenring.fanapis.com/api/weapons?limit=100")
-r_weapons_pg2 = requests.get("https://eldenring.fanapis.com/api/weapons?limit=100&page=1")
-r_weapons_pg3 = requests.get("https://eldenring.fanapis.com/api/weapons?limit=100&page=2")
-r_weapons_pg4 = requests.get("https://eldenring.fanapis.com/api/weapons?limit=100&page=3")
+r_weapons = []
 
-weapons_data_dict = json.loads(r_weapons_pg1.text)
-dataDict_pg2 = json.loads(r_weapons_pg2.text)
-dataDict_pg3 = json.loads(r_weapons_pg3.text)
-dataDict_pg4 = json.loads(r_weapons_pg4.text)
+for i in range(99): # arbitrary number chosen because there should never be more than 99 pages of items of this category
+    try:
+        response = requests.get(f"https://eldenring.fanapis.com/api/weapons?limit=500&page={i}")
+        if (json.loads(response.text)["count"] > 0):
+            r_weapons.append(response)
+        else:
+            break
+    except requests.exceptions.InvalidURL:
+        print("Invalid URL")
+        break
+    except Exception as e:
+        print("An unhandled exception occurred: ", end="")
+        print(str(e))
+        exit()
 
-for object in dataDict_pg2["data"]:
-    weapons_data_dict["data"].append(object)
-for object in dataDict_pg3["data"]:
-    weapons_data_dict["data"].append(object)
-for object in dataDict_pg4["data"]:
-    weapons_data_dict["data"].append(object)
+weapons_data_dict = json.loads(r_weapons[0].text)
 
-name_list = []
+for response in r_weapons[1:]:
+    res_dict = json.loads(response.text) # convert json response to python dict
+    for element in res_dict["data"]:
+        weapons_data_dict["data"].append(element)
 
-for object in weapons_data_dict['data']:
-    print(object["name"])
-    name_list.append(object["name"])
+weapons_data_dict["count"] = len(weapons_data_dict["data"])
+print(f"Found {weapons_data_dict['count']} weapons.")
 
-for name in name_list:
-    print(name)
-
-weapons_data_dict["count"] = len(name_list)
-print(len(name_list))
-
+# convert python dict to json and save as file
 data = json.dumps(weapons_data_dict)
-
 with open("weapons_data.json", "w") as f_data:
     f_data.write(data)
