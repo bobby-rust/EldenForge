@@ -1,9 +1,12 @@
 import requests
 import json
+from typing import Final
+
+MAX_PAGES: Final[int] = 99 # arbitrary number chosen because there should never be more than 99 pages of items of this category
 
 r_weapons = []
 
-for i in range(99): # arbitrary number chosen because there should never be more than 99 pages of items of this category
+for i in range(MAX_PAGES):
     try:
         response = requests.get(f"https://eldenring.fanapis.com/api/weapons?limit=500&page={i}")
         if (json.loads(response.text)["count"] > 0):
