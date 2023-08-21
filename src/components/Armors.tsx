@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import { BuildProps, BuildItem } from "../types/ItemTypes";
 import { memo } from "react";
 
-const Armors = memo((props: BuildProps) => {
+const Armors = (props: BuildProps) => {
     // TODO: get the first word of the build category from the category string
 
     return (
@@ -11,8 +11,6 @@ const Armors = memo((props: BuildProps) => {
             <h6>Armor</h6>
             {props.build["armor"].map((currArmor: BuildItem) => {
                 const catTmp: string = currArmor.category;
-                console.log(catTmp);
-                // console.log(typeof category);
                 const categoryArr = catTmp.split(" ");
                 let catTmp2 = categoryArr[0].toUpperCase();
                 if (catTmp2 === "GAUNTLET") {
@@ -20,7 +18,6 @@ const Armors = memo((props: BuildProps) => {
                 }
 
                 const category = "ARMOR." + catTmp2;
-                console.log("Category in item:", category);
                 return (
                     <Item
                         key={v4()}
@@ -38,6 +35,6 @@ const Armors = memo((props: BuildProps) => {
             })}
         </>
     );
-});
+};
 
 export default Armors;

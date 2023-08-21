@@ -1,7 +1,7 @@
 import ashes_data from "../data/ashes_data.json";
 import { AshesDataObject } from "../types/ItemTypes";
 
-function getAshes(numAshes: number) {
+function getAshes(numAshes: number, includePreviouslyRolled: any) {
     let foundAshes = false;
     const ashes: any[] = [];
     while (!foundAshes) {

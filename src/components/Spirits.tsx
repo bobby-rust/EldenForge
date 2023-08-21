@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import { BuildItem, BuildProps } from "../types/ItemTypes";
 import { memo } from "react";
 
-const Spirits = memo((props: BuildProps) => {
+const Spirits = (props: BuildProps) => {
     return (
         <>
             <h6>Spirit Ashes</h6>
@@ -25,6 +25,6 @@ const Spirits = memo((props: BuildProps) => {
             })}
         </>
     );
-});
+};
 
 export default Spirits;

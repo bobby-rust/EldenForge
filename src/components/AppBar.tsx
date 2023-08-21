@@ -1,213 +1,193 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-const theme = createTheme({
-    palette: {
-        primary: {
-            // Purple and green play nicely together.
-            main: "#ffffff",
+import "../styles/header.css";
+import {
+    InputLabel,
+    Select,
+    OutlinedInput,
+    Checkbox,
+    ListItemText,
+    SelectChangeEvent,
+} from "@mui/material";
+
+type IncludeCategories = {
+    armors: boolean;
+    ashes: boolean;
+    incantations: boolean;
+    shields: boolean;
+    sorceries: boolean;
+    spirits: boolean;
+    talismans: boolean;
+    weapons: boolean;
+    [key: string]: boolean;
+};
+
+type ResponsiveAppBarProps = {
+    includePreviouslyRolled: IncludeCategories;
+    setIncludePreviouslyRolled: React.Dispatch<React.SetStateAction<IncludeCategories>>;
+};
+
+function ResponsiveAppBar(props: ResponsiveAppBarProps) {
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+        PaperProps: {
+            style: {
+                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                width: 250,
+                fontSize: "1px",
+            },
         },
-        secondary: {
-            // This is green.A700 as hex.
-            main: "#11cb5f",
-        },
-    },
-});
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
-function ResponsiveAppBar() {
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-        null
-    );
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-        null
-    );
-
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElNav(event.currentTarget);
-    };
-    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
+    const categories: string[] = [
+        "Weapons",
+        "Armor",
+        "Ashes",
+        "Incantations",
+        "Sorceries",
+        "Spirits",
+        "Talismans",
+        "Shields",
+    ];
+
+    let categoriesToIncludePreviouslyRolled: IncludeCategories = {
+        armors: false,
+        ashes: false,
+        incantations: false,
+        shields: false,
+        sorceries: false,
+        spirits: false,
+        talismans: false,
+        weapons: false,
     };
 
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
+    const [category, setCategory] = React.useState<string[]>([]);
+
+    const handleChange = (event: SelectChangeEvent<typeof category>) => {
+        const {
+            target: { value },
+        } = event;
+
+        console.log("calling setCategory");
+        setCategory(
+            // On autofill we get a stringified value.
+            typeof value === "string" ? value.split(",") : value
+        );
+
+        for (let i = 0; i < category.length; i++) {
+            const currCat: string = category[i].toLowerCase();
+            categoriesToIncludePreviouslyRolled[currCat] = true;
+        }
+        console.log("calling setIncludePreviouslyRolled");
+        props.setIncludePreviouslyRolled(categoriesToIncludePreviouslyRolled);
     };
 
     return (
-        <ThemeProvider theme={theme}>
+        <Box sx={{ display: "flex" }}>
             <AppBar
-                position='static'
+                position="static"
                 sx={{
                     mb: "15px",
                     boxShadow: "none",
                     borderBottom: "1px solid rgba(0, 0, 0, 0.3)",
-                }}>
-                <Container maxWidth='xl'>
-                    <Toolbar disableGutters>
-                        {/* <AdbIcon
-                            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-                        /> */}
-                        <Typography
-                            variant='h6'
-                            className='appbar-logo'
-                            noWrap
-                            component='a'
-                            href='/'
-                            sx={{
-                                mr: 2,
-                                display: { xs: "none", md: "flex" },
-                                fontFamily: "monospace",
-                                fontWeight: 700,
-                                letterSpacing: "0.6rem",
-                                color: "#ef8b09 !important",
-                                textDecoration: "none",
-                                position: "absolute",
-                            }}>
-                            ERBG
-                        </Typography>
-
-                        <Box
-                            sx={{
-                                flexGrow: 1,
-                                display: { xs: "flex", md: "none" },
-                            }}>
-                            <IconButton
-                                size='large'
-                                aria-label='account of current user'
-                                aria-controls='menu-appbar'
-                                aria-haspopup='true'
-                                onClick={handleOpenNavMenu}
-                                color='inherit'>
-                                <MenuIcon />
-                            </IconButton>
-                            <Menu
-                                id='menu-appbar'
-                                anchorEl={anchorElNav}
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "left",
-                                }}
-                                open={Boolean(anchorElNav)}
-                                onClose={handleCloseNavMenu}
-                                sx={{
-                                    display: { xs: "block", md: "none" },
-                                }}>
-                                {/* {pages.map((page) => (
-                                    <MenuItem
-                                        key={page}
-                                        onClick={handleCloseNavMenu}>
-                                        <Typography textAlign='center'>
-                                            {page}
-                                        </Typography>
-                                    </MenuItem>
-                                ))} */}
-                            </Menu>
-                        </Box>
-                        <AdbIcon
-                            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-                        />
-                        <Typography
-                            variant='h5'
-                            noWrap
-                            component='a'
-                            href=''
-                            sx={{
-                                mr: 2,
-                                display: { xs: "flex", md: "none" },
-                                flexGrow: 1,
-                                fontFamily: "monospace",
-                                fontWeight: 700,
-                                letterSpacing: ".3rem",
-                                color: "inherit",
-                                textDecoration: "none",
-                                position: "absolute",
-                            }}>
-                            ERBG
-                        </Typography>
-                        <Box
-                            sx={{
-                                flexGrow: 1,
-                                display: { xs: "none", md: "flex" },
-                            }}>
-                            {/* {pages.map((page) => (
-                                <Button
-                                    key={page}
-                                    onClick={handleCloseNavMenu}
+                    backgroundColor: "white",
+                    height: "50px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                }}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <InputLabel id="demo-multiple-checkbox-label">
+                        Select to include previously rolled
+                    </InputLabel>
+                    <Select
+                        labelId="demo-multiple-checkbox-label"
+                        id="demo-multiple-checkbox"
+                        multiple
+                        displayEmpty
+                        value={category}
+                        onChange={handleChange}
+                        input={<OutlinedInput label="" />}
+                        renderValue={(selected) =>
+                            category.length >= 1 ? (
+                                selected.join(", ")
+                            ) : (
+                                <Typography
+                                    variant="caption"
                                     sx={{
-                                        my: 2,
-                                        color: "white",
-                                        display: "block",
-                                    }}>
-                                    {page}
-                                </Button> 
-                                ))}*/}
-                        </Box>
-
-                        {/* <Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title='Open settings'>
-                                <IconButton
-                                    onClick={handleOpenUserMenu}
-                                    sx={{ p: 0 }}>
-                                    <Avatar
-                                        alt='Remy Sharp'
-                                        src='/static/images/avatar/2.jpg'
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: "45px" }}
-                                id='menu-appbar'
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}>
-                                {settings.map((setting) => (
-                                    <MenuItem
-                                        key={setting}
-                                        onClick={handleCloseUserMenu}>
-                                        <Typography textAlign='center'>
-                                            {setting}
-                                        </Typography>
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </Box> */}
-                    </Toolbar>
-                </Container>
+                                        fontSize: "10px",
+                                    }}
+                                >
+                                    Select categories
+                                </Typography>
+                            )
+                        }
+                        MenuProps={MenuProps}
+                        sx={{
+                            width: "100",
+                            height: "2rem",
+                            // maxWidth: "10em",
+                            maxWidth: 100,
+                            overflow: "hidden",
+                        }}
+                    >
+                        {categories.map((cat: string) => (
+                            <MenuItem key={cat} value={cat}>
+                                <Checkbox checked={category.indexOf(cat) > -1} />
+                                <ListItemText primary={cat} />
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </Box>
+                {/* <Container
+                    maxWidth="xl"
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        // width: "100vw",
+                        height: "100%",
+                    }}
+                > */}
+                <a
+                    id="logo-anchor"
+                    href="/"
+                    style={{ textDecoration: "none", color: "#ef8b09 !important" }}
+                >
+                    <div
+                        style={{
+                            margin: 0,
+                            width: "100px",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontFamily: "monospace",
+                            fontWeight: 700,
+                            letterSpacing: "0.6rem",
+                            color: "#ef8b09 !important",
+                            textDecoration: "none",
+                            textAlign: "center",
+                            position: "absolute",
+                        }}
+                    >
+                        ERBG
+                    </div>
+                </a>
             </AppBar>
-        </ThemeProvider>
+        </Box>
     );
 }
 export default ResponsiveAppBar;

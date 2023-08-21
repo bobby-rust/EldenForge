@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import { BuildProps, BuildItem } from "../types/ItemTypes";
 import { memo } from "react";
 
-const Weapons = memo((props: BuildProps) => {
+const Weapons = (props: BuildProps) => {
     return (
         <>
             <h6>Weapons</h6>
@@ -26,6 +26,6 @@ const Weapons = memo((props: BuildProps) => {
             })}
         </>
     );
-});
+};
 
 export default Weapons;

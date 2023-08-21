@@ -3,7 +3,7 @@ import { BuildItem, BuildProps } from "../types/ItemTypes";
 import Item from "./Item";
 import { memo } from "react";
 
-const Shields = memo((props: BuildProps) => {
+const Shields = (props: BuildProps) => {
     return (
         <>
             <h6>Shields</h6>
@@ -25,6 +25,6 @@ const Shields = memo((props: BuildProps) => {
             })}
         </>
     );
-});
+};
 
 export default Shields;

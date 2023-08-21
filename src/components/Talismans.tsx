@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import { BuildProps, BuildItem } from "../types/ItemTypes";
 import { memo } from "react";
 
-const Talismans = memo((props: BuildProps) => {
+const Talismans = (props: BuildProps) => {
     return (
         <>
             <h6>Talismans</h6>
@@ -25,6 +25,6 @@ const Talismans = memo((props: BuildProps) => {
             })}
         </>
     );
-});
+};
 
 export default Talismans;

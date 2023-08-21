@@ -1,5 +1,6 @@
 import "../App.css";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
+import ResponsiveAppBar from "./AppBar";
 
 type HeaderProps = {
     color: string;
@@ -15,53 +16,52 @@ function Header(props: HeaderProps) {
      * It remains constant through every layout and can be styled here.
      */
     return (
-        <div className='header'>
-            <div className='logo-container'>
-                <div className='logo-inner'>
-                    <div className='logo'>
-                        <div className='ER'>ER</div>
-                        <div className='BG'>BG</div>
+        <div className="header">
+            <div className="logo-container">
+                <div className="logo-inner">
+                    <div className="logo">
+                        <div className="ER">ER</div>
+                        <div className="BG">BG</div>
                     </div>
                 </div>
             </div>
-            <div className='toggle-button-container'>
-                <div className='toggle-button-label'>Dark mode</div>
+            <div className="toggle-button-container">
+                <div className="toggle-button-label">Dark mode</div>
                 <BootstrapSwitchButton
                     checked={props.colorButtonState}
-                    onstyle='dark'
-                    offstyle='light'
+                    onstyle="dark"
+                    offstyle="light"
                     // style='border'
                     width={90}
                     onChange={props.handleColorChange}
                 />
             </div>
-            <div className='toggle-button-container'>
-                <div className='toggle-button-label'>Large Layout</div>
+            <div className="toggle-button-container">
+                <div className="toggle-button-label">Large Layout</div>
                 <BootstrapSwitchButton
                     checked={props.layoutButtonState}
-                    onstyle='dark'
-                    offstyle='light'
+                    onstyle="dark"
+                    offstyle="light"
                     // style='border'
                     width={90}
                     onChange={props.handleLayoutChange}
                 />
             </div>
-            <div className='title-container'>
-                <div className='title-inner'>
-                    <h1 className='header-title'>
-                        Elden Ring Random Build Generator
-                    </h1>
+            <div className="title-container">
+                <div className="title-inner">
+                    <h1 className="header-title">Elden Ring Random Build Generator</h1>
                 </div>
             </div>
-            <div className='dev-message-container'>
-                <div className='dev-message-inner'>
-                    <p className='dev-message'>
-                        This tool is in development. Some features may not work.
-                        View this project on{" "}
+            <div className="dev-message-container">
+                <div className="dev-message-inner">
+                    <p className="dev-message">
+                        This tool is in development. Some features may not work. View this project
+                        on{" "}
                         <a
-                            target='_blank'
-                            rel='noreferrer'
-                            href='https://github.com/bobby-rust/elden-ring-random-build-generator/tree/master'>
+                            target="_blank"
+                            rel="noreferrer"
+                            href="https://github.com/bobby-rust/elden-ring-random-build-generator/tree/master"
+                        >
                             github
                         </a>
                         .

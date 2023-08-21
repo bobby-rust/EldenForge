@@ -1,6 +1,6 @@
 import shields_data from "../data/shields_data.json";
 
-function getShields(numShields: number) {
+function getShields(numShields: number, includePreviouslyRolled: any) {
     // Find shields
     let foundShields = false;
     const shields = [];

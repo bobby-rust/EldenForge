@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import { BuildItem, BuildProps } from "../types/ItemTypes";
 import { memo } from "react";
 
-const Ashes = memo((props: BuildProps) => {
+const Ashes = (props: BuildProps) => {
     return (
         <>
             <h6>Ashes of War</h6>
@@ -25,6 +25,6 @@ const Ashes = memo((props: BuildProps) => {
             })}
         </>
     );
-});
+};
 
 export default Ashes;

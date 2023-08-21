@@ -1,32 +1,32 @@
-import talismans_data from '../data/talismans_data.json'
+import talismans_data from "../data/talismans_data.json";
 
-function getTalismans(numTalis: number) {
-    let foundTalis = false
-    const talismans = []
+function getTalismans(numTalis: number, includePreviouslyRolled: any) {
+    let foundTalis = false;
+    const talismans = [];
 
     while (!foundTalis) {
-        const rand_talis_idx = Math.floor(Math.random() * talismans_data.count)
-        const randTalis = talismans_data.data[rand_talis_idx]
+        const rand_talis_idx = Math.floor(Math.random() * talismans_data.count);
+        const randTalis = talismans_data.data[rand_talis_idx];
 
-        let valid_talis = true
+        let valid_talis = true;
 
         for (let i = 0; i < talismans.length; i++) {
             if (randTalis.id === talismans[i].id) {
-                valid_talis = false
+                valid_talis = false;
             }
         }
 
         if (valid_talis) {
-            talismans.push(randTalis)
+            talismans.push(randTalis);
         }
 
         if (talismans.length === numTalis) {
-            foundTalis = true
+            foundTalis = true;
         }
     }
     // End find talismans
 
-    return talismans
+    return talismans;
 }
 
-export default getTalismans
+export default getTalismans;

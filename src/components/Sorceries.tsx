@@ -3,7 +3,7 @@ import { memo } from "react";
 import Item from "./Item";
 import { BuildProps, BuildItem } from "../types/ItemTypes";
 
-const Sorceries = memo((props: BuildProps) => {
+const Sorceries = (props: BuildProps) => {
     return (
         <>
             <h6>Sorceries</h6>
@@ -25,6 +25,6 @@ const Sorceries = memo((props: BuildProps) => {
             })}
         </>
     );
-});
+};
 
 export default Sorceries;

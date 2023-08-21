@@ -30,10 +30,13 @@
     display: inline;
 }
 
+#logo-anchor {
+    color: #ef8b09 !important;
+}
 .logo {
     font-family: "Unbounded";
-    display: inline;
-    margin: auto;
+    /* display: inline; */
+    /* margin: auto; */
     /* position: absolute; */
     font-size: 32px;
     /* border-bottom: 1px solid rgba(0, 0, 0, 0.2); */

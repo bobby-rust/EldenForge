@@ -24,12 +24,7 @@ function SortArmor(armor: ArmorDataObject[]): ArmorDataObject[] {
         }
     }
 
-    if (
-        helm_idx === -1 ||
-        chest_idx === -1 ||
-        gauntlets_idx === -1 ||
-        leg_idx === -1
-    ) {
+    if (helm_idx === -1 || chest_idx === -1 || gauntlets_idx === -1 || leg_idx === -1) {
         console.log("Unable to sort armor.");
         return armor;
     }
@@ -64,17 +59,20 @@ function getArmor(type?: string) {
      *      Restructure the data into BuildItem
      *      sort the armor into head->chest->gauntlet->leg
      */
+
+    // Retrieve the data from sessionStorage
+    const storedPreviouslyRolledData = sessionStorage.getItem("rolledItems");
+    const parsedPreviouslyRolledData: any = storedPreviouslyRolledData
+        ? JSON.parse(storedPreviouslyRolledData)
+        : [];
+
     // Find armor
     var foundArmor = false;
     const armor: ArmorDataObject[] = [];
     const categories: string[] = [];
-    console.log("type in getArmor:", type);
     while (!foundArmor) {
-        const rand_armors_idx: number = Math.floor(
-            Math.random() * armors_data.count
-        );
-        const randArmorPiece: ArmorDataObject =
-            armors_data.data[rand_armors_idx];
+        const rand_armors_idx: number = Math.floor(Math.random() * armors_data.count);
+        const randArmorPiece: ArmorDataObject = armors_data.data[rand_armors_idx];
 
         let currCategory: string = randArmorPiece.category;
 
@@ -88,13 +86,9 @@ function getArmor(type?: string) {
         let currCategoryArr = currCategory.split(" ");
         let category = currCategoryArr[0].toUpperCase();
         if (valid_armor) {
-            console.log("armor is valid");
             if (type) {
-                console.log("type is not null");
                 if (category === type) {
-                    console.log("category is type");
                     armor.push(randArmorPiece);
-                    console.log(armor);
                     return armor;
                 }
             } else {
