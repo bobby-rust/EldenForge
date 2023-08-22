@@ -6,9 +6,7 @@ function getSpirits(numSpirits: number, includePreviouslyRolled: any) {
     const parsedPreviouslyRolledData: any = JSON.parse(storedPreviouslyRolledData!);
 
     if (parsedPreviouslyRolledData.spirits.length === spirits_data.data.length) {
-        alert(
-            'There are no more spirits left to roll. Please reset the rolled weapons by unchecking "Spirits" in the select menu.'
-        );
+        alert('There are no more spirits left to roll. Please reset the rolled weapons by unchecking "Spirits" in the select menu.');
         return;
     }
 

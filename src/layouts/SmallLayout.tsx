@@ -61,127 +61,63 @@ function SmallLayout(props: any) {
 
         switch (type) {
             case "FULLBUILD":
-                const newBuild = generateRandomBuild(
-                    props.buildNums.weapons,
-                    props.buildNums.ashes,
-                    props.buildNums.incants,
-                    props.buildNums.sorcs,
-                    props.buildNums.spirits,
-                    props.buildNums.talis,
-                    props.buildNums.shields,
-                    props.includePreviouslyRolled
-                );
+                const newBuild = generateRandomBuild(props.buildNums.weapons, props.buildNums.ashes, props.buildNums.incants, props.buildNums.sorcs, props.buildNums.spirits, props.buildNums.talis, props.buildNums.shields, props.includePreviouslyRolled);
 
                 return newBuild;
             case "ARMOR.HELM":
-                const newStateHelm = getNewItem(
-                    id,
-                    state,
-                    "ARMOR.HELM",
-                    props.includePreviouslyRolled.armors
-                );
+                const newStateHelm = getNewItem(id, state, "ARMOR.HELM", props.includePreviouslyRolled.armors);
                 return newStateHelm;
             case "ARMOR.CHEST":
-                const newStateChest = getNewItem(
-                    id,
-                    state,
-                    "ARMOR.CHEST",
-                    props.includePreviouslyRolled.armors
-                );
+                const newStateChest = getNewItem(id, state, "ARMOR.CHEST", props.includePreviouslyRolled.armors);
                 return newStateChest;
             case "ARMOR.GAUNTLETS":
-                const newStateGaunt = getNewItem(
-                    id,
-                    state,
-                    "ARMOR.GAUNTLETS",
-                    props.includePreviouslyRolled.armors
-                );
+                const newStateGaunt = getNewItem(id, state, "ARMOR.GAUNTLETS", props.includePreviouslyRolled.armors);
                 return newStateGaunt;
             case "ARMOR.LEG":
-                const newStateLegs = getNewItem(
-                    id,
-                    state,
-                    "ARMOR.LEG",
-                    props.includePreviouslyRolled.armors
-                );
+                const newStateLegs = getNewItem(id, state, "ARMOR.LEG", props.includePreviouslyRolled.armors);
                 return newStateLegs;
             case "WEAPONS":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
-                const newStateWep = getNewItem(
-                    id,
-                    state,
-                    "WEAPONS",
-                    props.includePreviouslyRolled.weapons
-                );
+                const newStateWep = getNewItem(id, state, "WEAPONS", props.includePreviouslyRolled.weapons);
                 return newStateWep;
             case "ASHES":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
-                const newStateAsh = getNewItem(
-                    id,
-                    state,
-                    "ASHES",
-                    props.includePreviouslyRolled.ashes
-                );
+                const newStateAsh = getNewItem(id, state, "ASHES", props.includePreviouslyRolled.ashes);
                 return newStateAsh;
             case "INCANTS":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
-                const newStateInc = getNewItem(
-                    id,
-                    state,
-                    "INCANTS",
-                    props.includePreviouslyRolled.incantations
-                );
+                const newStateInc = getNewItem(id, state, "INCANTS", props.includePreviouslyRolled.incantations);
                 return newStateInc;
             case "SORCS":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
-                const newStateSorc = getNewItem(
-                    id,
-                    state,
-                    "SORCS",
-                    props.includePreviouslyRolled.sorceries
-                );
+                const newStateSorc = getNewItem(id, state, "SORCS", props.includePreviouslyRolled.sorceries);
                 return newStateSorc;
             case "SPIRITS":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
-                const newStateSpirits = getNewItem(
-                    id,
-                    state,
-                    "SPIRITS",
-                    props.includePreviouslyRolled.spirits
-                );
+                const newStateSpirits = getNewItem(id, state, "SPIRITS", props.includePreviouslyRolled.spirits);
                 return newStateSpirits;
             case "TALIS":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
-                const newStateTalis = getNewItem(
-                    id,
-                    state,
-                    "TALIS",
-                    props.includePreviouslyRolled.talismans
-                );
+                const newStateTalis = getNewItem(id, state, "TALIS", props.includePreviouslyRolled.talismans);
                 return newStateTalis;
 
             case "SHIELDS":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
-                const newStateShield = getNewItem(
-                    id,
-                    state,
-                    "SHIELDS",
-                    props.includePreviouslyRolled.shields
-                );
+                const newStateShield = getNewItem(id, state, "SHIELDS", props.includePreviouslyRolled.shields);
                 return newStateShield;
             default:
                 console.log("No changes were made.");
@@ -216,14 +152,8 @@ function SmallLayout(props: any) {
                                         >
                                             GENERATE NEW BUILD
                                         </Button>
-                                        <StartingClass
-                                            starting_class={build["starting_class"]}
-                                            size={props.size}
-                                        />
-                                        <SelectMenu
-                                            buildNums={props.buildNums}
-                                            buildNumsDispatch={props.buildNumsDispatch}
-                                        />
+                                        <StartingClass starting_class={build["starting_class"]} size={props.size} />
+                                        <SelectMenu buildNums={props.buildNums} buildNumsDispatch={props.buildNumsDispatch} />
                                     </div>
                                 </Grid>
                             </Grid>
@@ -234,82 +164,42 @@ function SmallLayout(props: any) {
                             <Grid container direction="row" columns={8} spacing={6}>
                                 <Grid item xs={1}>
                                     <div className="armor-container">
-                                        <Armors
-                                            build={build}
-                                            color={props.color}
-                                            size={props.size}
-                                            buildDispatch={props.buildDispatch}
-                                        />
+                                        <Armors build={build} color={props.color} size={props.size} buildDispatch={buildDispatch} />
                                     </div>
                                 </Grid>
                                 <Grid item xs={1}>
                                     <div className="weapons-container">
-                                        <Weapons
-                                            build={build}
-                                            color={props.color}
-                                            size={props.size}
-                                            buildDispatch={props.buildDispatch}
-                                        />
+                                        <Weapons build={build} color={props.color} size={props.size} buildDispatch={buildDispatch} />
                                     </div>
                                 </Grid>
                                 <Grid item xs={1}>
                                     <div className="sorcs-container">
-                                        <Sorceries
-                                            build={build}
-                                            color={props.color}
-                                            size={props.size}
-                                            buildDispatch={props.buildDispatch}
-                                        />
+                                        <Sorceries build={build} color={props.color} size={props.size} buildDispatch={buildDispatch} />
                                     </div>
                                 </Grid>
                                 <Grid item xs={1}>
                                     <div className="incants-container">
-                                        <Incantations
-                                            build={build}
-                                            color={props.color}
-                                            size={props.size}
-                                            buildDispatch={props.buildDispatch}
-                                        />
+                                        <Incantations build={build} color={props.color} size={props.size} buildDispatch={buildDispatch} />
                                     </div>
                                 </Grid>
                                 <Grid item xs={1}>
                                     <div className="ashes-container">
-                                        <Ashes
-                                            build={build}
-                                            color={props.color}
-                                            size={props.size}
-                                            buildDispatch={props.buildDispatch}
-                                        />
+                                        <Ashes build={build} color={props.color} size={props.size} buildDispatch={buildDispatch} />
                                     </div>
                                 </Grid>
                                 <Grid item xs={1}>
                                     <div className="talis-container">
-                                        <Talismans
-                                            build={build}
-                                            color={props.color}
-                                            size={props.size}
-                                            buildDispatch={props.buildDispatch}
-                                        />
+                                        <Talismans build={build} color={props.color} size={props.size} buildDispatch={buildDispatch} />
                                     </div>
                                 </Grid>
                                 <Grid item xs={1}>
                                     <div className="spirits-container">
-                                        <Spirits
-                                            build={build}
-                                            color={props.color}
-                                            size={props.size}
-                                            buildDispatch={props.buildDispatch}
-                                        />
+                                        <Spirits build={build} color={props.color} size={props.size} buildDispatch={buildDispatch} />
                                     </div>
                                 </Grid>
                                 <Grid item xs={1}>
                                     <div className="shield-container">
-                                        <Shield
-                                            build={build}
-                                            color={props.color}
-                                            size={props.size}
-                                            buildDispatch={props.buildDispatch}
-                                        />
+                                        <Shield build={build} color={props.color} size={props.size} buildDispatch={buildDispatch} />
                                     </div>
                                 </Grid>
                             </Grid>
