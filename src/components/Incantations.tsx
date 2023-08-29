@@ -16,7 +16,7 @@ const Incantations = (props: BuildProps) => {
                         buildDispatch={() =>
                             props.buildDispatch({
                                 id: incant.id,
-                                type: "INCANTS",
+                                type: "INCANTATIONS",
                             })
                         }
                     />

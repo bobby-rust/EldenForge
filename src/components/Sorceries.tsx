@@ -17,7 +17,7 @@ const Sorceries = (props: BuildProps) => {
                         buildDispatch={() =>
                             props.buildDispatch({
                                 id: sorc.id,
-                                type: "SORCS",
+                                type: "SORCERIES",
                             })
                         }
                     />

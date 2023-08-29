@@ -154,26 +154,26 @@ const App = () => {
                     rolledItems
                 );
                 return newStateAsh;
-            case "INCANTS":
+            case "INCANTATIONS":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
                 const newStateInc = getNewItem(
                     id,
                     state,
-                    "INCANTS",
+                    "INCANTATIONS",
                     includePreviouslyRolled.incantations,
                     rolledItems
                 );
                 return newStateInc;
-            case "SORCS":
+            case "SORCERIES":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
                 const newStateSorc = getNewItem(
                     id,
                     state,
-                    "SORCS",
+                    "SORCERIES",
                     includePreviouslyRolled.sorceries,
                     rolledItems
                 );
@@ -190,14 +190,14 @@ const App = () => {
                     rolledItems
                 );
                 return newStateSpirits;
-            case "TALIS":
+            case "TALISMANS":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
                 const newStateTalis = getNewItem(
                     id,
                     state,
-                    "TALIS",
+                    "TALISMANS",
                     includePreviouslyRolled.talismans,
                     rolledItems
                 );

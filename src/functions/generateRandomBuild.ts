@@ -106,6 +106,7 @@ function createNewBuild(oldState: any, id: string, newItem: BuildItem, category:
     const newState = structuredClone(oldState);
     let cat: string[] = category.split(".");
     let type = cat[0];
+    console.log(type);
     newState[type] = [];
     let replacedItem = false;
     for (let i = 0; i < oldState[type].length; i++) {
@@ -169,11 +170,11 @@ function getNewItem(
             const newAsh = getAshes(1, includePreviouslyRolled, rolledItems);
             const newStateAsh = createNewBuild(state, t_id, newAsh[0], type.toLowerCase());
             return newStateAsh;
-        case "INCANTS":
+        case "INCANTATIONS":
             const newIncant = getIncants(1, includePreviouslyRolled, rolledItems);
             const newStateInc = createNewBuild(state, t_id, newIncant[0], type.toLowerCase());
             return newStateInc;
-        case "SORCS":
+        case "SORCERIES":
             const newSorc = getSorcs(1, includePreviouslyRolled, rolledItems);
             const newStateSorc = createNewBuild(state, t_id, newSorc[0], type.toLowerCase());
             return newStateSorc;
@@ -185,7 +186,7 @@ function getNewItem(
             } else {
                 return;
             }
-        case "TALIS":
+        case "TALISMANS":
             const newTalis = getTalismans(1, includePreviouslyRolled, rolledItems);
             const newStateTalis = createNewBuild(state, t_id, newTalis[0], type.toLowerCase());
             return newStateTalis;

@@ -17,7 +17,7 @@ const Talismans = (props: BuildProps) => {
                         buildDispatch={() =>
                             props.buildDispatch({
                                 id: talisman.id,
-                                type: "TALIS",
+                                type: "TALISMANS",
                             })
                         }
                     />
