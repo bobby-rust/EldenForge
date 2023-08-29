@@ -100,7 +100,19 @@ export default function IncludePreviouslyRolledMenu(props: any) {
         const keys = Object.keys(categoriesToIncludePreviouslyRolled);
 
         for (let i = 0; i < keys.length; ++i) {
-            const key: string = keys[i];
+            let key: string = keys[i];
+            if (key === "incantations") {
+                key = "incants";
+            }
+            if (key === "sorceries") {
+                key = "sorcs";
+            }
+            if (key === "armor") {
+                continue;
+            }
+            if (key === "talismans") {
+                key = "talis";
+            }
 
             if (categoriesToIncludePreviouslyRolled[key]) {
                 rolledItems[key] = [];
