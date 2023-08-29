@@ -21,22 +21,26 @@ type ClassDataObject = ItemDataObject & {
     stats: Object;
 };
 
-type SorcsIncantsDataObject = ItemDataObject & {
-    type: string;
-    cost: number;
-    slots: number;
-    effects: string;
-    requires: Object[];
-};
+type SorcsIncantsDataObject =
+    | (ItemDataObject & {
+          type: string;
+          cost: number;
+          slots: number;
+          effects: string;
+          requires: Object[];
+      })
+    | any;
 
-type WeaponsShieldsDataObject = ItemDataObject & {
-    attack: Object[];
-    defence: Object[];
-    scalesWith: Object[];
-    requiredAttributes: Object[];
-    category: string;
-    weight: number;
-};
+type WeaponsShieldsDataObject =
+    | (ItemDataObject & {
+          attack: Object[];
+          defence: Object[];
+          scalesWith: Object[];
+          requiredAttributes: Object[];
+          category: string;
+          weight: number;
+      })
+    | any;
 
 type SpiritsDataObject = ItemDataObject & {
     fpCost: string;
@@ -112,6 +116,30 @@ interface buildState {
     starting_class: BuildItem;
 }
 
+type IncludePreviouslyRolled = {
+    weapons: boolean;
+    ashes: boolean;
+    incants: boolean;
+    shields: boolean;
+    sorcs: boolean;
+    spirits: boolean;
+    talis: boolean;
+    [key: string]: boolean;
+};
+
+type RolledItems = {
+    weapons: string[];
+    // armor: string[];
+    ashes: string[];
+    incants: string[];
+    shields: string[];
+    sorcs: string[];
+    spirits: string[];
+    talis: string[];
+    starting_class: string;
+    [key: string]: string | string[];
+};
+
 export type {
     ItemDataObject,
     ArmorDataObject,
@@ -128,4 +156,6 @@ export type {
     buildNumsState,
     buildAction,
     buildState,
+    IncludePreviouslyRolled,
+    RolledItems,
 };

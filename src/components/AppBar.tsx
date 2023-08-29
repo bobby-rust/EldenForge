@@ -13,80 +13,10 @@ import {
     ListItemText,
     SelectChangeEvent,
 } from "@mui/material";
+import { RolledItems } from "../types/ItemTypes";
+import IncludePreviouslyRolledMenu from "./IncludePreviouslyRolledMenu";
 
-type IncludeCategories = {
-    armors: boolean;
-    ashes: boolean;
-    incantations: boolean;
-    shields: boolean;
-    sorceries: boolean;
-    spirits: boolean;
-    talismans: boolean;
-    weapons: boolean;
-    [key: string]: boolean;
-};
-
-type ResponsiveAppBarProps = {
-    includePreviouslyRolled: IncludeCategories;
-    setIncludePreviouslyRolled: React.Dispatch<React.SetStateAction<IncludeCategories>>;
-};
-
-function ResponsiveAppBar(props: ResponsiveAppBarProps) {
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-        PaperProps: {
-            style: {
-                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                width: 250,
-                fontSize: "1px",
-            },
-        },
-    };
-
-    const categories: string[] = [
-        "Weapons",
-        "Armor",
-        "Ashes",
-        "Incantations",
-        "Sorceries",
-        "Spirits",
-        "Talismans",
-        "Shields",
-    ];
-
-    let categoriesToIncludePreviouslyRolled: IncludeCategories = {
-        armors: false,
-        ashes: false,
-        incantations: false,
-        shields: false,
-        sorceries: false,
-        spirits: false,
-        talismans: false,
-        weapons: false,
-    };
-
-    const [category, setCategory] = React.useState<string[]>([]);
-
-    const handleChange = (event: SelectChangeEvent<typeof category>) => {
-        const {
-            target: { value },
-        } = event;
-
-        console.log("calling setCategory");
-        setCategory(
-            // On autofill we get a stringified value.
-            typeof value === "string" ? value.split(",") : value
-        );
-
-        for (let i = 0; i < category.length; i++) {
-            const currCat: string = category[i].toLowerCase();
-            categoriesToIncludePreviouslyRolled[currCat] = true;
-        }
-        console.log("calling setIncludePreviouslyRolled");
-        props.setIncludePreviouslyRolled(categoriesToIncludePreviouslyRolled);
-    };
-
+function ResponsiveAppBar(props: any) {
     return (
         <Box sx={{ display: "flex" }}>
             <AppBar
@@ -103,66 +33,10 @@ function ResponsiveAppBar(props: ResponsiveAppBarProps) {
                     flexDirection: "row",
                 }}
             >
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <InputLabel id="demo-multiple-checkbox-label">
-                        Select to include previously rolled
-                    </InputLabel>
-                    <Select
-                        labelId="demo-multiple-checkbox-label"
-                        id="demo-multiple-checkbox"
-                        multiple
-                        displayEmpty
-                        value={category}
-                        onChange={handleChange}
-                        input={<OutlinedInput label="" />}
-                        renderValue={(selected) =>
-                            category.length >= 1 ? (
-                                selected.join(", ")
-                            ) : (
-                                <Typography
-                                    variant="caption"
-                                    sx={{
-                                        fontSize: "10px",
-                                    }}
-                                >
-                                    Select categories
-                                </Typography>
-                            )
-                        }
-                        MenuProps={MenuProps}
-                        sx={{
-                            width: "100",
-                            height: "2rem",
-                            // maxWidth: "10em",
-                            maxWidth: 100,
-                            overflow: "hidden",
-                        }}
-                    >
-                        {categories.map((cat: string) => (
-                            <MenuItem key={cat} value={cat}>
-                                <Checkbox checked={category.indexOf(cat) > -1} />
-                                <ListItemText primary={cat} />
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </Box>
-                {/* <Container
-                    maxWidth="xl"
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        // width: "100vw",
-                        height: "100%",
-                    }}
-                > */}
+                {/* <IncludePreviouslyRolledMenu
+                    includePreviouslyRolled={props.includePreviouslyRolled}
+                    setIncludePreviouslyRolled={props.setIncludePreviouslyRolled}
+                /> */}
                 <a
                     id="logo-anchor"
                     href="/"

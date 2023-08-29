@@ -7,55 +7,111 @@ import getSpirits from "./getSpirits";
 import getTalismans from "./getTalismans";
 import getWeapons from "./getWeapons";
 import getClass from "./getClass";
-import { BuildItem } from "../types/ItemTypes";
+import {
+    ArmorDataObject,
+    AshesDataObject,
+    BuildItem,
+    ClassDataObject,
+    IncludePreviouslyRolled,
+    RolledItems,
+    SorcsIncantsDataObject,
+    SpiritsDataObject,
+    TalismansDataObject,
+    WeaponsShieldsDataObject,
+} from "../types/ItemTypes";
 
 function generateRandomBuild(
-    t_weapons: number,
-    t_ashes: number,
-    t_incants: number,
-    t_sorcs: number,
-    t_spirits: number,
-    t_talismans: number,
-    t_shields: number,
-    includePreviouslyRolled: any
+    numWeapons: number,
+    numAshes: number,
+    numIncants: number,
+    numSorcs: number,
+    numSpirits: number,
+    numTalismans: number,
+    numShields: number,
+    includePreviouslyRolled: IncludePreviouslyRolled
 ) {
-    /**
-     * To include previously rolled, clear sessionStorage and do not save the rolled items to sessionStorage,
-     * T exclude previously rolled, save each rolled item in sessionStorage and compare the items in sessionStorage with
-     * the items rolled, and reroll if any of them are the same
-     *
-     * Defaults to false, so sessionStorage state gets set with the build generated.
-     * A new build is rolled, and that build is compared to the one in sessionStorage for any duplicates
-     * If there is duplicates, reroll that item.
-     *
-     */
+    const rolledItemsString: string | null = sessionStorage.getItem("rolledItems");
+    let rolledItems: RolledItems;
+    if (rolledItemsString) {
+        rolledItems = JSON.parse(rolledItemsString);
+    } else {
+        rolledItems = {
+            weapons: [],
+            // armor: [],
+            ashes: [],
+            incants: [],
+            shields: [],
+            sorcs: [],
+            spirits: [],
+            talis: [],
+            starting_class: "",
+        };
+    }
 
-    // So, let's grab sessionStorage here, and pass it as parameter to each get item function,
-    // SO we need to pass includePreviouslyRolled boolean for each category to its respective getter function,
-    // and if we want to include previously rolled for that function, set sessionStorage to empty array.
-    // we only need to save the ids in sessionStorage.
+    type Build = {
+        weapons: WeaponsShieldsDataObject[];
+        armor: ArmorDataObject[];
+        ashes: AshesDataObject[];
+        incants: SorcsIncantsDataObject[];
+        shields: WeaponsShieldsDataObject[];
+        sorcs: SorcsIncantsDataObject[];
+        spirits: SpiritsDataObject[];
+        talis: TalismansDataObject[];
+        starting_class: ClassDataObject;
+        [key: string]: any;
+    };
 
     // We can pass as parameter number of each item to generate.
     // default to 16 total
-    const build = {
-        weapons: getWeapons(
-            t_weapons,
-            includePreviouslyRolled.weapons
-            // parsedPreviouslyRolledData.weapons
-        ),
-        armor: getArmor(includePreviouslyRolled.armors),
-        ashes: getAshes(t_ashes, includePreviouslyRolled.ashes),
-        incants: getIncants(t_incants, includePreviouslyRolled.incantations),
-        shields: getShields(t_shields, includePreviouslyRolled.shields),
-        sorcs: getSorcs(t_sorcs, includePreviouslyRolled.sorceries),
-        spirits: getSpirits(t_spirits, includePreviouslyRolled.spirits),
-        talis: getTalismans(t_talismans, includePreviouslyRolled.talismans),
+    const build: Build = {
+        weapons: getWeapons(numWeapons, includePreviouslyRolled.weapons, rolledItems),
+        armor: getArmor(includePreviouslyRolled.weapons, rolledItems), // Dummy value here for now `.weapons`
+        ashes: getAshes(numAshes, includePreviouslyRolled.ashes, rolledItems),
+        incants: getIncants(numIncants, includePreviouslyRolled.incants, rolledItems),
+        shields: getShields(numShields, includePreviouslyRolled.shields, rolledItems),
+        sorcs: getSorcs(numSorcs, includePreviouslyRolled.sorcs, rolledItems),
+        spirits: getSpirits(numSpirits, includePreviouslyRolled.spirits, rolledItems),
+        talis: getTalismans(numTalismans, includePreviouslyRolled.talis, rolledItems),
         starting_class: getClass(),
-        // rerollItem: rerollItem,
     };
 
     // Down here, we should update sessionStorage by adding all new items to the sessionStorage object
+    let newSessionStorage: any = structuredClone(rolledItems);
 
+    const entries = Object.entries(newSessionStorage);
+    for (let i = 0; i < entries.length; ++i) {
+        let key = entries[i][0];
+        if (key === "incantations") {
+            key = "incants";
+        }
+        if (key === "sorceries") {
+            key = "sorcs";
+        }
+        if (key === "armor") {
+            continue;
+        }
+        if (key === "talismans") {
+            key = "talis";
+        }
+
+        let value = entries[i][1];
+
+        const currBuildValues = build[key];
+        if (!currBuildValues) {
+            console.log(key);
+            console.log(currBuildValues);
+        }
+        if (Array.isArray(value)) {
+            if (!includePreviouslyRolled[key]) {
+                value = [...value, ...currBuildValues.map((obj: any) => obj.id)];
+            }
+        }
+
+        entries[i][1] = value;
+    }
+
+    newSessionStorage = Object.fromEntries(entries);
+    sessionStorage.setItem("rolledItems", JSON.stringify(newSessionStorage));
     return build;
 }
 
@@ -80,18 +136,24 @@ function createNewBuild(oldState: any, id: string, newItem: BuildItem, category:
     return newState;
 }
 
-function getNewItem(t_id: string, state: any, type: string, includePreviouslyRolled: any) {
+function getNewItem(
+    t_id: string,
+    state: any,
+    type: string,
+    includePreviouslyRolled: boolean,
+    rolledItems: object
+) {
     switch (type) {
         case "ARMOR.HELM":
-            const newHead = getArmor("HELM");
+            const newHead = getArmor(includePreviouslyRolled, rolledItems, "HELM");
             const newHeadBuild = createNewBuild(state, t_id, newHead[0], type.toLowerCase());
             return newHeadBuild;
         case "ARMOR.CHEST":
-            const newChest = getArmor("CHEST");
+            const newChest = getArmor(includePreviouslyRolled, rolledItems, "CHEST");
             const newChestBuild = createNewBuild(state, t_id, newChest[0], type.toLowerCase());
             return newChestBuild;
         case "ARMOR.GAUNTLETS":
-            const newGauntlets = getArmor("GAUNTLETS");
+            const newGauntlets = getArmor(includePreviouslyRolled, rolledItems, "GAUNTLETS");
             const newGauntletsBuild = createNewBuild(
                 state,
                 t_id,
@@ -100,13 +162,14 @@ function getNewItem(t_id: string, state: any, type: string, includePreviouslyRol
             );
             return newGauntletsBuild;
         case "ARMOR.LEG":
-            const newLegs = getArmor("LEG");
+            const newLegs = getArmor(includePreviouslyRolled, rolledItems, "LEG");
             const newLegsBuild = createNewBuild(state, t_id, newLegs[0], type.toLowerCase());
             return newLegsBuild;
         case "WEAPONS":
             const newWeapon = getWeapons(
                 1,
-                includePreviouslyRolled.weapons
+                includePreviouslyRolled,
+                rolledItems
                 // parsedPreviouslyRolledData.weapons
             );
             if (newWeapon) {
@@ -116,19 +179,19 @@ function getNewItem(t_id: string, state: any, type: string, includePreviouslyRol
                 return;
             }
         case "ASHES":
-            const newAsh = getAshes(1, includePreviouslyRolled.ashes);
+            const newAsh = getAshes(1, includePreviouslyRolled, rolledItems);
             const newStateAsh = createNewBuild(state, t_id, newAsh[0], type.toLowerCase());
             return newStateAsh;
         case "INCANTS":
-            const newIncant = getIncants(1, includePreviouslyRolled.incantations);
+            const newIncant = getIncants(1, includePreviouslyRolled, rolledItems);
             const newStateInc = createNewBuild(state, t_id, newIncant[0], type.toLowerCase());
             return newStateInc;
         case "SORCS":
-            const newSorc = getSorcs(1, includePreviouslyRolled.sorceries);
+            const newSorc = getSorcs(1, includePreviouslyRolled, rolledItems);
             const newStateSorc = createNewBuild(state, t_id, newSorc[0], type.toLowerCase());
             return newStateSorc;
         case "SPIRITS":
-            const newSpirit = getSpirits(1, includePreviouslyRolled.spirits);
+            const newSpirit = getSpirits(1, includePreviouslyRolled, rolledItems);
             if (newSpirit) {
                 const newStateSp = createNewBuild(state, t_id, newSpirit[0], type.toLowerCase());
                 return newStateSp;
@@ -136,11 +199,11 @@ function getNewItem(t_id: string, state: any, type: string, includePreviouslyRol
                 return;
             }
         case "TALIS":
-            const newTalis = getTalismans(1, includePreviouslyRolled.talismans);
+            const newTalis = getTalismans(1, includePreviouslyRolled, rolledItems);
             const newStateTalis = createNewBuild(state, t_id, newTalis[0], type.toLowerCase());
             return newStateTalis;
         case "SHIELDS":
-            const newShield = getShields(1, includePreviouslyRolled.shields);
+            const newShield = getShields(1, includePreviouslyRolled, rolledItems);
             const newStateSh = createNewBuild(state, t_id, newShield[0], type.toLowerCase());
             return newStateSh;
         default:

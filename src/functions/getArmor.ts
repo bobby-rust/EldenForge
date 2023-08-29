@@ -37,34 +37,30 @@ function SortArmor(armor: ArmorDataObject[]): ArmorDataObject[] {
     return sortedArmor;
 }
 
-function CleanArmorData(armor: ArmorDataObject[]): BuildItem[] {
-    const cleanArmor: BuildItem[] = [];
-    armor.forEach((piece) => {
-        const currCleanArmor: BuildItem = {
-            id: piece.id,
-            name: piece.name,
-            image: piece.image as string,
-            description: piece.description,
-            category: piece.category,
-        };
-        cleanArmor.push(currCleanArmor);
-    });
+// function CleanArmorData(armor: ArmorDataObject[]): BuildItem[] {
+//     const cleanArmor: BuildItem[] = [];
+//     armor.forEach((piece) => {
+//         const currCleanArmor: BuildItem = {
+//             id: piece.id,
+//             name: piece.name,
+//             image: piece.image as string,
+//             description: piece.description,
+//             category: piece.category,
+//         };
+//         cleanArmor.push(currCleanArmor);
+//     });
 
-    return cleanArmor;
-}
+//     return cleanArmor;
+// }
 
-function getArmor(type?: string) {
+function getArmor(includePreviouslyRolled: boolean, rolledItems: any, type?: string) {
     /**
      * This component needs to:
      *      Restructure the data into BuildItem
      *      sort the armor into head->chest->gauntlet->leg
      */
 
-    // Retrieve the data from sessionStorage
-    const storedPreviouslyRolledData = sessionStorage.getItem("rolledItems");
-    const parsedPreviouslyRolledData: any = storedPreviouslyRolledData
-        ? JSON.parse(storedPreviouslyRolledData)
-        : [];
+    // if (rolledItems.armor.length >= armors_data.data.length) return [];
 
     // Find armor
     var foundArmor = false;
@@ -79,13 +75,13 @@ function getArmor(type?: string) {
         if (currCategory === "Gauntlet") {
             currCategory = "Gauntlets";
         }
-        let valid_armor = false;
+        let validArmor = false;
         if (!categories.includes(currCategory)) {
-            valid_armor = true;
+            validArmor = true;
         }
         let currCategoryArr = currCategory.split(" ");
         let category = currCategoryArr[0].toUpperCase();
-        if (valid_armor) {
+        if (validArmor) {
             if (type) {
                 if (category === type) {
                     armor.push(randArmorPiece);
@@ -103,8 +99,8 @@ function getArmor(type?: string) {
     }
     // End find armor
     const sortedArmor = SortArmor(armor);
-    const cleanedArmor = CleanArmorData(sortedArmor);
-    return cleanedArmor;
+    // const cleanedArmor = CleanArmorData(sortedArmor);
+    return sortedArmor;
 }
 
 export default getArmor;

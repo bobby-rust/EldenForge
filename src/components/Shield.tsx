@@ -1,7 +1,6 @@
 import { v4 } from "uuid";
 import { BuildItem, BuildProps } from "../types/ItemTypes";
 import Item from "./Item";
-import { memo } from "react";
 
 const Shields = (props: BuildProps) => {
     return (

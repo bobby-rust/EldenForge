@@ -3,6 +3,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import IncludePreviouslyRolledMenu from "./IncludePreviouslyRolledMenu";
 
 const SELECT_WIDTH: number = 100;
 
@@ -42,6 +43,34 @@ export default function SelectMenu(props: any) {
      */
     return (
         <>
+            <Box sx={BOX_THEME}>
+                <FormControl fullWidth>
+                    {/* <InputLabel id="demo-simple-select-label">
+                        Select to include previously rolled
+                    </InputLabel> */}
+                    {/* <Select
+                        MenuProps={{ disableScrollLock: true }}
+                        sx={SELECT_THEME}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={props.buildNums.weapons}
+                        label="Weapons"
+                        name="WEAPONS"
+                        variant={selectVariant}
+                        onChange={handleDispatch}
+                    >
+                        <MenuItem value={1}>1</MenuItem>
+                        <MenuItem value={2}>2</MenuItem>
+                        <MenuItem value={3}>3</MenuItem>
+                        <MenuItem value={4}>4</MenuItem>
+                    </Select> */}
+                    <IncludePreviouslyRolledMenu
+                        includePreviouslyRolled={props.includePreviouslyRolled}
+                        setIncludePreviouslyRolled={props.setIncludePreviouslyRolled}
+                        selectTheme={SELECT_THEME}
+                    />
+                </FormControl>
+            </Box>
             <Box sx={BOX_THEME}>
                 <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Weapons</InputLabel>
