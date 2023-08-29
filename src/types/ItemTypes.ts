@@ -119,11 +119,11 @@ interface buildState {
 type IncludePreviouslyRolled = {
     weapons: boolean;
     ashes: boolean;
-    incants: boolean;
+    incantations: boolean;
     shields: boolean;
-    sorcs: boolean;
+    sorceries: boolean;
     spirits: boolean;
-    talis: boolean;
+    talismans: boolean;
     [key: string]: boolean;
 };
 
@@ -131,12 +131,12 @@ type RolledItems = {
     weapons: string[];
     // armor: string[];
     ashes: string[];
-    incants: string[];
+    incantations: string[];
     shields: string[];
-    sorcs: string[];
+    sorceries: string[];
     spirits: string[];
-    talis: string[];
-    starting_class: string;
+    talismans: string[];
+    // starting_class: string;
     [key: string]: string | string[];
 };
 

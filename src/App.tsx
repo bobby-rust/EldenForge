@@ -11,11 +11,11 @@ import ResponsiveAppBar from "./components/AppBar";
 const initialIncludePreviouslyRolled: IncludePreviouslyRolled = {
     weapons: false,
     ashes: false,
-    incants: false,
+    incantations: false,
     shields: false,
-    sorcs: false,
+    sorceries: false,
     spirits: false,
-    talis: false,
+    talismans: false,
 };
 
 const initialBuild = generateRandomBuild(2, 2, 2, 2, 2, 2, 1, initialIncludePreviouslyRolled);
@@ -25,11 +25,11 @@ const App = () => {
     const [includePreviouslyRolled, setIncludePreviouslyRolled] = React.useState({
         weapons: false,
         ashes: false,
-        incants: false,
+        incantations: false,
         shields: false,
-        sorcs: false,
+        sorceries: false,
         spirits: false,
-        talis: false,
+        talismans: false,
     });
 
     // Build quantity reducer
@@ -162,7 +162,7 @@ const App = () => {
                     id,
                     state,
                     "INCANTS",
-                    includePreviouslyRolled.incants,
+                    includePreviouslyRolled.incantations,
                     rolledItems
                 );
                 return newStateInc;
@@ -174,7 +174,7 @@ const App = () => {
                     id,
                     state,
                     "SORCS",
-                    includePreviouslyRolled.sorcs,
+                    includePreviouslyRolled.sorceries,
                     rolledItems
                 );
                 return newStateSorc;
@@ -198,7 +198,7 @@ const App = () => {
                     id,
                     state,
                     "TALIS",
-                    includePreviouslyRolled.talis,
+                    includePreviouslyRolled.talismans,
                     rolledItems
                 );
                 return newStateTalis;
@@ -224,31 +224,27 @@ const App = () => {
 
     const [build, buildDispatch] = React.useReducer(buildReducer, initialBuild);
 
-    const generateNewBuild = () => {
-        buildDispatch({ type: "FULLBUILD" });
-    };
-
     React.useEffect(() => {
         const setupSessionStorageData = {
             weapons: [],
             armor: [],
             ashes: [],
-            incants: [],
+            incantations: [],
             shields: [],
-            sorcs: [],
+            sorceries: [],
             spirits: [],
-            talis: [],
+            talismans: [],
         };
 
         // Set the initial include previously rolled state
         setIncludePreviouslyRolled({
             weapons: false,
             ashes: false,
-            incants: false,
+            incantations: false,
             shields: false,
-            sorcs: false,
+            sorceries: false,
             spirits: false,
-            talis: false,
+            talismans: false,
         });
 
         // Set the initial session storage.

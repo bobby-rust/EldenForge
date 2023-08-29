@@ -39,12 +39,11 @@ function generateRandomBuild(
             weapons: [],
             // armor: [],
             ashes: [],
-            incants: [],
+            incantations: [],
             shields: [],
-            sorcs: [],
+            sorceries: [],
             spirits: [],
-            talis: [],
-            starting_class: "",
+            talismans: [],
         };
     }
 
@@ -52,11 +51,11 @@ function generateRandomBuild(
         weapons: WeaponsShieldsDataObject[];
         armor: ArmorDataObject[];
         ashes: AshesDataObject[];
-        incants: SorcsIncantsDataObject[];
+        incantations: SorcsIncantsDataObject[];
         shields: WeaponsShieldsDataObject[];
-        sorcs: SorcsIncantsDataObject[];
+        sorceries: SorcsIncantsDataObject[];
         spirits: SpiritsDataObject[];
-        talis: TalismansDataObject[];
+        talismans: TalismansDataObject[];
         starting_class: ClassDataObject;
         [key: string]: any;
     };
@@ -67,11 +66,11 @@ function generateRandomBuild(
         weapons: getWeapons(numWeapons, includePreviouslyRolled.weapons, rolledItems),
         armor: getArmor(includePreviouslyRolled.weapons, rolledItems), // Dummy value here for now `.weapons`
         ashes: getAshes(numAshes, includePreviouslyRolled.ashes, rolledItems),
-        incants: getIncants(numIncants, includePreviouslyRolled.incants, rolledItems),
+        incantations: getIncants(numIncants, includePreviouslyRolled.incantations, rolledItems),
         shields: getShields(numShields, includePreviouslyRolled.shields, rolledItems),
-        sorcs: getSorcs(numSorcs, includePreviouslyRolled.sorcs, rolledItems),
+        sorceries: getSorcs(numSorcs, includePreviouslyRolled.sorceries, rolledItems),
         spirits: getSpirits(numSpirits, includePreviouslyRolled.spirits, rolledItems),
-        talis: getTalismans(numTalismans, includePreviouslyRolled.talis, rolledItems),
+        talismans: getTalismans(numTalismans, includePreviouslyRolled.talismans, rolledItems),
         starting_class: getClass(),
     };
 
@@ -81,18 +80,6 @@ function generateRandomBuild(
     const entries = Object.entries(newSessionStorage);
     for (let i = 0; i < entries.length; ++i) {
         let key = entries[i][0];
-        if (key === "incantations") {
-            key = "incants";
-        }
-        if (key === "sorceries") {
-            key = "sorcs";
-        }
-        if (key === "armor") {
-            continue;
-        }
-        if (key === "talismans") {
-            key = "talis";
-        }
 
         let value = entries[i][1];
 

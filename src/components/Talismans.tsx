@@ -7,7 +7,7 @@ const Talismans = (props: BuildProps) => {
     return (
         <>
             <h6>Talismans</h6>
-            {props.build["talis"].map((talisman: BuildItem) => {
+            {props.build["talismans"].map((talisman: BuildItem) => {
                 return (
                     <Item
                         item={talisman}

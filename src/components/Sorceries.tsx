@@ -7,7 +7,7 @@ const Sorceries = (props: BuildProps) => {
     return (
         <>
             <h6>Sorceries</h6>
-            {props.build["sorcs"].map((sorc: BuildItem) => {
+            {props.build["sorceries"].map((sorc: BuildItem) => {
                 return (
                     <Item
                         item={sorc}

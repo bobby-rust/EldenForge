@@ -87,34 +87,23 @@ export default function IncludePreviouslyRolledMenu(props: any) {
         } else {
             rolledItems = {
                 weapons: [],
-                // armor: [],
+                armor: [],
                 ashes: [],
-                incants: [],
+                incantations: [],
                 shields: [],
-                sorcs: [],
+                sorceries: [],
                 spirits: [],
-                talis: [],
-                starting_class: "",
+                talismans: [],
             };
         }
         const keys = Object.keys(categoriesToIncludePreviouslyRolled);
 
         for (let i = 0; i < keys.length; ++i) {
             let key: string = keys[i];
-            if (key === "incantations") {
-                key = "incants";
-            }
-            if (key === "sorceries") {
-                key = "sorcs";
-            }
-            if (key === "armor") {
-                continue;
-            }
-            if (key === "talismans") {
-                key = "talis";
-            }
 
+            console.log(key);
             if (categoriesToIncludePreviouslyRolled[key]) {
+                console.log(`setting ${key} to empty`);
                 rolledItems[key] = [];
             }
         }

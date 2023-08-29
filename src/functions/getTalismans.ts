@@ -1,7 +1,7 @@
 import talismans_data from "../data/talismans_data.json";
 
 function getTalismans(numTalis: number, includePreviouslyRolled: any, rolledItems: any) {
-    if (rolledItems.talis.length >= talismans_data.count) {
+    if (rolledItems.talismans.length >= talismans_data.count) {
         return [];
     }
 
@@ -9,12 +9,12 @@ function getTalismans(numTalis: number, includePreviouslyRolled: any, rolledItem
     const talismans = [];
 
     while (!foundTalis) {
-        if (talismans_data.count === rolledItems.talis.length + talismans.length) {
+        if (talismans_data.count === rolledItems.talismans.length + talismans.length) {
             break;
         }
         const rand_talis_idx = Math.floor(Math.random() * talismans_data.count);
         const randTalis = talismans_data.data[rand_talis_idx];
-        if (!includePreviouslyRolled && rolledItems.talis.includes(randTalis.id)) {
+        if (!includePreviouslyRolled && rolledItems.talismans.includes(randTalis.id)) {
             continue;
         }
         let valid_talis = true;

@@ -6,7 +6,7 @@ const Incantations = (props: BuildProps) => {
     return (
         <>
             <h6>Incantations</h6>
-            {props.build["incants"].map((incant: BuildItem) => {
+            {props.build["incantations"].map((incant: BuildItem) => {
                 return (
                     <Item
                         item={incant}

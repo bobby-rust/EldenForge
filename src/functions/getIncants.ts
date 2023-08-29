@@ -1,7 +1,7 @@
 import incantations_data from "../data/incantations_data.json";
 
 function getIncants(numIncants: number, includePreviouslyRolled: any, rolledItems: any) {
-    if (rolledItems.incants.length >= incantations_data.count) {
+    if (rolledItems.incantations.length >= incantations_data.count) {
         return [];
     }
 
@@ -9,7 +9,7 @@ function getIncants(numIncants: number, includePreviouslyRolled: any, rolledItem
     const incants = [];
 
     while (!foundIncants) {
-        if (incantations_data.count === rolledItems.incants.length + incants.length) {
+        if (incantations_data.count === rolledItems.incantations.length + incants.length) {
             break;
         }
         const rand_incants_idx = Math.floor(Math.random() * incantations_data.count);
@@ -23,7 +23,7 @@ function getIncants(numIncants: number, includePreviouslyRolled: any, rolledItem
             }
         }
 
-        if (!includePreviouslyRolled && rolledItems.incants.includes(randIncant.id)) {
+        if (!includePreviouslyRolled && rolledItems.incantations.includes(randIncant.id)) {
             continue;
         }
 

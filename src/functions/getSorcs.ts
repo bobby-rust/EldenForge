@@ -1,7 +1,7 @@
 import sorceries_data from "../data/sorceries_data.json";
 
 function getSorcs(numSorcs: number, includePreviouslyRolled: any, rolledItems: any) {
-    if (rolledItems.sorcs.length >= sorceries_data.count) {
+    if (rolledItems.sorceries.length >= sorceries_data.count) {
         return [];
     }
 
@@ -9,13 +9,13 @@ function getSorcs(numSorcs: number, includePreviouslyRolled: any, rolledItems: a
     const sorcs = [];
 
     while (!foundSorcs) {
-        if (sorceries_data.count === rolledItems.sorcs.length + sorcs.length) {
+        if (sorceries_data.count === rolledItems.sorceries.length + sorcs.length) {
             break;
         }
         const rand_sorcs_idx = Math.floor(Math.random() * sorceries_data.count);
         const randSorc = sorceries_data.data[rand_sorcs_idx];
 
-        if (!includePreviouslyRolled && rolledItems.sorcs.includes(randSorc.id)) {
+        if (!includePreviouslyRolled && rolledItems.sorceries.includes(randSorc.id)) {
             continue;
         }
 
