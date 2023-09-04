@@ -14,7 +14,7 @@ import {
     ClassDataObject,
     IncludePreviouslyRolled,
     RolledItems,
-    SorcsIncantsDataObject,
+    SorceriesIncantationsDataObject,
     SpiritsDataObject,
     TalismansDataObject,
     WeaponsShieldsDataObject,
@@ -51,9 +51,9 @@ function generateRandomBuild(
         weapons: WeaponsShieldsDataObject[];
         armor: ArmorDataObject[];
         ashes: AshesDataObject[];
-        incantations: SorcsIncantsDataObject[];
+        incantations: SorceriesIncantationsDataObject[];
         shields: WeaponsShieldsDataObject[];
-        sorceries: SorcsIncantsDataObject[];
+        sorceries: SorceriesIncantationsDataObject[];
         spirits: SpiritsDataObject[];
         talismans: TalismansDataObject[];
         starting_class: ClassDataObject;
@@ -84,10 +84,7 @@ function generateRandomBuild(
         let value = entries[i][1];
 
         const currBuildValues = build[key];
-        if (!currBuildValues) {
-            console.log(key);
-            console.log(currBuildValues);
-        }
+
         if (Array.isArray(value)) {
             if (!includePreviouslyRolled[key]) {
                 value = [...value, ...currBuildValues.map((obj: any) => obj.id)];
@@ -106,7 +103,6 @@ function createNewBuild(oldState: any, id: string, newItem: BuildItem, category:
     const newState = structuredClone(oldState);
     let cat: string[] = category.split(".");
     let type = cat[0];
-    console.log(type);
     newState[type] = [];
     let replacedItem = false;
     for (let i = 0; i < oldState[type].length; i++) {

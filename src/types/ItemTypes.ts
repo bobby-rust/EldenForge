@@ -21,7 +21,7 @@ type ClassDataObject = ItemDataObject & {
     stats: Object;
 };
 
-type SorcsIncantsDataObject =
+type SorceriesIncantationsDataObject =
     | (ItemDataObject & {
           type: string;
           cost: number;
@@ -76,10 +76,10 @@ enum VALID_BUILD_ITEM_CATEGORIES {
     FULLBUILD = "FULLBUILD",
     WEAPONS = "WEAPONS",
     ASHES = "ASHES",
-    INCANTS = "INCANTS",
-    SORCS = "SORCS",
+    INCANTATIONS = "INCANTATIONS",
+    SORCERIES = "SORCERIES",
     SPIRITS = "SPIRITS",
-    TALIS = "TALIS",
+    TALISMANS = "TALISMANS",
     SHIELDS = "SHIELDS",
 }
 
@@ -91,10 +91,10 @@ interface buildNumsAction {
 interface buildNumsState {
     weapons: number;
     ashes: number;
-    incants: number;
-    sorcs: number;
+    incantations: number;
+    sorceries: number;
     spirits: number;
-    talis: number;
+    talismans: number;
     shields: number;
 }
 
@@ -107,8 +107,8 @@ interface buildAction {
 interface buildState {
     weapons: BuildItem[];
     armor: BuildItem[];
-    sorcs: BuildItem[];
-    incants: BuildItem[];
+    sorceries: BuildItem[];
+    incantations: BuildItem[];
     ashes: BuildItem[];
     spirits: BuildItem[];
     talismans: BuildItem[];
@@ -145,7 +145,7 @@ export type {
     ArmorDataObject,
     AshesDataObject,
     TalismansDataObject,
-    SorcsIncantsDataObject,
+    SorceriesIncantationsDataObject,
     WeaponsShieldsDataObject,
     SpiritsDataObject,
     ClassDataObject,

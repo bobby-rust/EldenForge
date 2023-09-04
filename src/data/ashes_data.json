@@ -22,7 +22,7 @@
         {
             "id": "17f6983255fl0hzna1ak272zmag8w",
             "name": "Ash Of War: Barbaric Roar",
-            "image": null,
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ash_of_war_barbaric_roar_elden_ring_wiki_guide_200px.png",
             "description": "This Ash of War grants an armament the Heavy affinity and the following skill:\"Barbaric Roar: Let loose a bestial roar to rally the spirit and increase attack power. While active, strong attacks change to savage combo attacks.\"Usable on melee armaments (daggers, thrusting swords, and whips excepted).",
             "affinity": "Heavy",
             "skill": "Barbaric Roar"
@@ -30,7 +30,7 @@
         {
             "id": "17f6999bbdcl0hzna471b3xeg6cjip",
             "name": "Ash Of War: Blood Blade",
-            "image": null,
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ash_of_war_blood_blade_elden_ring_wiki_guide_200px.png",
             "description": "This Ash of War grants an armament the Blood affinity and the following skill:\"Blood Blade: Wound self to coat the armament with blood, then unleash an airborne blood blade that causes hemorrhaging. Can be fired in rapid succession.\"Usable on small and medium swords.",
             "affinity": "Blood",
             "skill": "Blood Blade"
@@ -78,7 +78,7 @@
         {
             "id": "17f6957156al0hznayepq0xs5o00l",
             "name": "Ash Of War: Braggart's Roar",
-            "image": null,
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ash_of_war_braggart's_roar_elden_ring_wiki_guide_200px.png",
             "description": "This Ash of War grants an armament the Heavy affinity and the following skill:\"Braggart's Roar: Declare your presence with a boastful roar. Raises attack power, defense, and stamina recovery speed.\"Usable on melee armaments (daggers, thrusting swords, and whips excepted ).",
             "affinity": "Heavy",
             "skill": "Braggart's Roar"
@@ -166,7 +166,7 @@
         {
             "id": "17f69a8f14bl0hznc9h9qokr7i72zg",
             "name": "Ash Of War: Earthshaker",
-            "image": null,
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ash_of_war_earthshaker_elden_ring_wiki_guide_200px.png",
             "description": "This Ash of War grants an armament the Heavy affinity and the following skill:\"Earthshaker: Thrust armament into the ground, then gather strength to unleash an earth-shaking shockwave. Follow up with a strong attack to swing the armament in a sweeping strike.\"Usable on greataxes, warhammers, and colossal weapons.",
             "affinity": "Heavy",
             "skill": "Earthshaker"
@@ -198,7 +198,7 @@
         {
             "id": "17f696f88b7l0hzncoms7ors9s5xn8",
             "name": "Ash Of War: Flame Of The Redmanes",
-            "image": null,
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ash_of_war_flame_of_the_redmanes_elden_ring_wiki_guide_200px.png",
             "description": "This Ash of War grants an armament the Fire affinity and the following skill:\"Flame of the Redmanes: Skill of the Redmanes, who fought alongside General Radahn. Produce a powerful burst of flames in a wide frontward arc.\"Usable on all melee armaments.",
             "affinity": "Fire",
             "skill": "Flame of the Redmanes"
@@ -246,7 +246,7 @@
         {
             "id": "17f698a21ael0hzndhz5rzpbq6s2kr",
             "name": "Ash Of War: Golden Parry",
-            "image": null,
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ash_of_war_golden_parry_elden_ring_wiki_guide_200px.png",
             "description": "This Ash of War grants an armament the Sacred affinity and the following skill:\"Golden Parry: Perform an Erdtree incantation and swing the shield to deflect enemy attacks and break their stance. Effective even at a slight distance.\"Usable on small and medium shields.",
             "affinity": "Sacred",
             "skill": "Golden Parry"
@@ -261,7 +261,7 @@
         },
         {
             "id": "17f69351ab5l0hzndrisc8jnkt6cio",
-            "name": "Ashes Of War: Golden Vow",
+            "name": "Ash Of War: Golden Vow",
             "image": "https://eldenring.fanapis.com/images/ashes/17f69351ab5l0hzndrisc8jnkt6cio.png",
             "description": "This Ash of War grants an armament the Sacred affinity and the following skill:\"Golden Vow: Skill passed down from antiquity among the knights of the capital. Raise armament aloft and pledge to honor the Erdtree in battle, granting self and nearby allies increased attack power and defense.\"Usable on all melee armaments.",
             "affinity": "Sacred",
@@ -558,7 +558,7 @@
         {
             "id": "17f694a9a1cl0hznib028gwf1bodgy",
             "name": "Ash Of War: Shield Bash",
-            "image": null,
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ash_of_war_shield_bash_elden_ring_wiki_guide_200px.png",
             "description": "This Ash of War grants no affinity to an armament, but imparts the following skill:\"Shield Bash: Brace behind shield before using bodyweight to ram foes while maintaining guarding stance. Weaker enemies will be shoved backwards, and can even be staggered.\"Usable on all shields.",
             "affinity": "Standard",
             "skill": "Shield Bash"
@@ -702,7 +702,7 @@
         {
             "id": "17f693d28cal0hznkls4roarty63j",
             "name": "Ash Of War: White Shadow's Lure",
-            "image": null,
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ash_of_war_white_shadows_lure_elden_ring_wiki_guide_200px.png",
             "description": "This Ash of War grants an armament the Occult affinity and the following skill:\"White Shadow's Lure: Hold armament in a brief, silent prayer to create a white shadow. The apparition lures in foes of human build who are not in combat, drawing their aggression. Effective on demi-humans even if they are already in a combat state.\"Usable on all melee armaments.",
             "affinity": "Occult",
             "skill": "White Shadow's Lure"

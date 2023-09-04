@@ -18,7 +18,15 @@ import IncludePreviouslyRolledMenu from "./IncludePreviouslyRolledMenu";
 
 function ResponsiveAppBar(props: any) {
     return (
-        <Box sx={{ display: "flex" }}>
+        <Box
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                textAlign: "center",
+            }}
+        >
             <AppBar
                 position="static"
                 sx={{
@@ -31,6 +39,7 @@ function ResponsiveAppBar(props: any) {
                     justifyContent: "center",
                     alignItems: "center",
                     flexDirection: "row",
+                    width: "100%",
                 }}
             >
                 {/* <IncludePreviouslyRolledMenu

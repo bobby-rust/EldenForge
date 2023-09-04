@@ -7,6 +7,8 @@ import SmallLayout from "./layouts/SmallLayout";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IncludePreviouslyRolled, buildNumsAction, buildNumsState } from "./types/ItemTypes";
 import ResponsiveAppBar from "./components/AppBar";
+import NewSmallLayout from "./refactor/NewSmallLayout";
+import Header from "./refactor/Header";
 
 const initialIncludePreviouslyRolled: IncludePreviouslyRolled = {
     weapons: false,
@@ -21,7 +23,6 @@ const initialIncludePreviouslyRolled: IncludePreviouslyRolled = {
 const initialBuild = generateRandomBuild(2, 2, 2, 2, 2, 2, 1, initialIncludePreviouslyRolled);
 
 const App = () => {
-    // An object with a boolean value for each item category
     const [includePreviouslyRolled, setIncludePreviouslyRolled] = React.useState({
         weapons: false,
         ashes: false,
@@ -46,14 +47,14 @@ const App = () => {
                 return { ...state, weapons: payload };
             case "ASHES":
                 return { ...state, ashes: payload };
-            case "INCANTS":
-                return { ...state, incants: payload };
-            case "SORCS":
-                return { ...state, sorcs: payload };
+            case "INCANTATIONS":
+                return { ...state, incantations: payload };
+            case "SORCERIES":
+                return { ...state, sorceries: payload };
             case "SPIRITS":
                 return { ...state, spirits: payload };
-            case "TALIS":
-                return { ...state, talis: payload };
+            case "TALISMANS":
+                return { ...state, talismans: payload };
             case "SHIELDS":
                 return { ...state, shields: payload };
             default:
@@ -66,10 +67,10 @@ const App = () => {
     const [buildNums, buildNumsDispatch] = React.useReducer(quantityReducer, {
         weapons: 2,
         ashes: 2,
-        incants: 2,
-        sorcs: 2,
+        incantations: 2,
+        sorceries: 2,
         spirits: 2,
-        talis: 2,
+        talismans: 2,
         shields: 1,
     });
     // End set up build numbers state
@@ -81,10 +82,6 @@ const App = () => {
     } else {
         rolledItems = {};
     }
-
-    // function generateNewBuild() {
-    //     buildDispatch({ type: "FULLBUILD" });
-    // }
 
     // Reroll item reducer
     const buildReducer = (state: any, action: any) => {
@@ -107,10 +104,10 @@ const App = () => {
                 const newBuild = generateRandomBuild(
                     buildNums.weapons,
                     buildNums.ashes,
-                    buildNums.incants,
-                    buildNums.sorcs,
+                    buildNums.incantations,
+                    buildNums.sorceries,
                     buildNums.spirits,
-                    buildNums.talis,
+                    buildNums.talismans,
                     buildNums.shields,
                     includePreviouslyRolled
                 );
@@ -194,14 +191,14 @@ const App = () => {
                 if (!id) {
                     console.log("Please provide an id.");
                 }
-                const newStateTalis = getNewItem(
+                const newStatetalismans = getNewItem(
                     id,
                     state,
                     "TALISMANS",
                     includePreviouslyRolled.talismans,
                     rolledItems
                 );
-                return newStateTalis;
+                return newStatetalismans;
 
             case "SHIELDS":
                 if (!id) {
@@ -254,117 +251,32 @@ const App = () => {
         buildDispatch({ type: "FULLBUILD" });
     }, []);
 
-    // Set up media state
-    const [mediaState, setMediaState] = React.useState({
-        isLargeMedia: window.matchMedia("(min-width: 1200px)").matches,
-    });
-    const handler = (event: any) => setMediaState({ isLargeMedia: event.matches });
-    window.matchMedia("(min-width: 1200px)").addEventListener("change", handler);
-    // End set up media state
-
-    // Set up layout state
-    const [layout, setLayout] = React.useState({
-        isLargeLayout: true,
-        size: "",
-    });
-    // End set up layout state
-
-    // Set up color button state
-    const [colorButtonState, setColorButtonState] = React.useState(true);
-    // End set up color button state
-
-    // Set up layout button state
-    const [layoutButtonState, setLayoutButtonState] = React.useState(true);
-    // End set up layout button state
-
-    // color Styling State
-    const [darkMode, setDarkMode] = React.useState({
-        isDarkMode: true,
-        color: "",
-    });
-    // End color Styling State
-
-    // Handle color change
-    function handleColorChange() {
-        setColorButtonState(!colorButtonState);
-
-        if (darkMode.isDarkMode) {
-            setDarkMode({ isDarkMode: false, color: "-lt" });
-        } else if (!darkMode.isDarkMode) {
-            setDarkMode({ isDarkMode: true, color: "" });
-        }
-    }
-    // End handle color change
-
-    // Handle layout change
-    function handleLayoutChange() {
-        setLayoutButtonState(!layoutButtonState);
-        if (layout.isLargeLayout) {
-            setLayout({ isLargeLayout: false, size: "-sm" });
-        } else if (!layout.isLargeLayout) {
-            setLayout({ isLargeLayout: true, size: "" });
-        }
-    }
-    // End handle layout change
-
-    // Handle mobile user
-    if (!mediaState.isLargeMedia) {
-        return <div className="mobile-message">Mobile support coming soon.</div>;
-    }
-    // End handle mobile user
-
     return (
         <div className="App">
             <>
-                {/* <Header
-                    color={darkMode.color}
-                    handleColorChange={handleColorChange}
-                    handleLayoutChange={handleLayoutChange}
-                    layoutButtonState={layoutButtonState}
-                    colorButtonState={colorButtonState}
-                /> */}
-                <ResponsiveAppBar
+                {/* <ResponsiveAppBar
                     includePreviouslyRolled={includePreviouslyRolled}
                     setIncludePreviouslyRolled={setIncludePreviouslyRolled}
-                />
-
-                {/* {layout.isLargeLayout && (
-                <LargeLayout
-                    color={darkMode.color}
-                    build={build}
-                    handleColorChange={handleColorChange}
-                    handleLayoutChange={handleLayoutChange}
-                    generateNewBuild={generateNewBuild}
-                    size={layout.size}
-                />
-            )}
-
-            {!layout.isLargeLayout && (
-                <SmallLayout
-                    color={darkMode.color}
-                    build={build}
-                    handleColorChange={handleColorChange}
-                    handleLayoutChange={handleLayoutChange}
-                    generateNewBuild={generateNewBuild}
-                    size={layout.size}
-                />
-            )} */}
-                <div className="App-sm">
+                /> */}
+                {/* <div className="App-sm">
                     <SmallLayout
-                        color={darkMode.color}
-                        handleColorChange={handleColorChange}
-                        handleLayoutChange={handleLayoutChange}
-                        size={layout.size}
                         buildDispatch={buildDispatch}
                         buildNums={buildNums}
                         buildNumsDispatch={buildNumsDispatch}
                         includePreviouslyRolled={includePreviouslyRolled}
                         setIncludePreviouslyRolled={setIncludePreviouslyRolled}
                         build={build}
-                        // initialBuild={initialBuild}
                     />
-                </div>
-                {/* <DevMessage /> */}
+                </div> */}
+                <Header />
+                <NewSmallLayout
+                    buildDispatch={buildDispatch}
+                    buildNums={buildNums}
+                    buildNumsDispatch={buildNumsDispatch}
+                    includePreviouslyRolled={includePreviouslyRolled}
+                    setIncludePreviouslyRolled={setIncludePreviouslyRolled}
+                    build={build}
+                />
                 <AnalyticsWrapper />
             </>
         </div>

@@ -40,10 +40,10 @@
     margin-bottom: 10px;
     padding: 5px;
     height: 10rem;
-    width: 10rem;
+    width: 40vw;
     /* max-height: calc(100vh - 140px); */
-    max-width: calc(50vw / 3);
-    max-height: calc(50vh / 3);
+    /* max-width: calc(50vw / 3);
+    max-height: calc(50vh / 3); */
 }
 
 .item-img {

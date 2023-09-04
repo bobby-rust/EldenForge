@@ -1,6 +1,5 @@
 import {
     Box,
-    InputLabel,
     Select,
     OutlinedInput,
     Typography,
@@ -8,12 +7,14 @@ import {
     Checkbox,
     ListItemText,
     SelectChangeEvent,
+    Tooltip,
+    IconButton,
 } from "@mui/material";
 import React from "react";
 import { RolledItems } from "../types/ItemTypes";
+import HelpIcon from "@mui/icons-material/Help";
 
 type IncludeCategories = {
-    // armors: boolean;
     ashes: boolean;
     incantations: boolean;
     shields: boolean;
@@ -24,23 +25,14 @@ type IncludeCategories = {
     [key: string]: boolean;
 };
 
-export default function IncludePreviouslyRolledMenu(props: any) {
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-        PaperProps: {
-            style: {
-                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                width: 250,
-                fontSize: "1px",
-            },
-        },
-    };
+const TOOLTIP_BUTTON_THEME = { width: "30px", height: "30px", borderRadius: "50%", ml: 0.5 };
+const tooltipText =
+    "The checked categories will allow items of that category to be rolled more than once. To reset rolled items, check and uncheck the box or refresh the page.";
 
+export default function IncludePreviouslyRolledMenu(props: any) {
     // This is what is shown in the select menu next to checkboxes
     const categories: string[] = [
         "Weapons",
-        // "Armor",
         "Ashes",
         "Incantations",
         "Sorceries",
@@ -50,7 +42,6 @@ export default function IncludePreviouslyRolledMenu(props: any) {
     ];
 
     let categoriesToIncludePreviouslyRolled: IncludeCategories = {
-        // armors: false,
         ashes: false,
         incantations: false,
         shields: false,
@@ -101,9 +92,7 @@ export default function IncludePreviouslyRolledMenu(props: any) {
         for (let i = 0; i < keys.length; ++i) {
             let key: string = keys[i];
 
-            console.log(key);
             if (categoriesToIncludePreviouslyRolled[key]) {
-                console.log(`setting ${key} to empty`);
                 rolledItems[key] = [];
             }
         }
@@ -111,73 +100,81 @@ export default function IncludePreviouslyRolledMenu(props: any) {
         sessionStorage.setItem("rolledItems", JSON.stringify(rolledItems));
         props.setIncludePreviouslyRolled(categoriesToIncludePreviouslyRolled);
     }, [category]);
+
     return (
-        <div>
-            <Typography
-                variant="caption"
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Box
                 sx={{
-                    width: 150,
-                    textAlign: "center",
                     display: "flex",
-                    position: "absolute",
-                    transform: "translate(5px, -10px)",
-                    fontSize: "10px",
-                    zIndex: 100,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "90%",
                 }}
             >
-                Include previously rolled
-            </Typography>
+                <Typography
+                    variant="caption"
+                    sx={{
+                        width: 150,
+                        textAlign: "center",
+                        display: "flex",
+                        ml: 2,
+                        fontSize: "12px",
+                        fontFamily: "Cormorant Garamond",
+                    }}
+                >
+                    Include Previously Rolled
+                </Typography>
+            </Box>
             <Box
                 sx={{
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    m: 1,
+                    m: 0,
+                    mb: 2,
                 }}
             >
-                {/* <InputLabel id="demo-multiple-checkbox-label">include previously rolled</InputLabel> */}
-                <Select
-                    labelId="demo-multiple-checkbox-label"
-                    id="demo-multiple-checkbox"
-                    multiple
-                    displayEmpty
-                    sx={{ ...props.selectTheme, width: 100 }}
-                    variant="outlined"
-                    value={category}
-                    onChange={handleChange}
-                    input={<OutlinedInput label="" />}
-                    renderValue={(selected) =>
-                        category.length >= 1 ? (
-                            selected.join(", ")
-                        ) : (
-                            <Typography
-                                variant="caption"
-                                sx={{
-                                    fontSize: "10px",
-                                }}
-                            >
-                                Select categories
-                            </Typography>
-                        )
-                    }
-                    MenuProps={MenuProps}
-                    // sx={{
-                    //     width: "100",
-                    //     height: "2rem",
-                    //     // maxWidth: "10em",
-                    //     maxWidth: 100,
-                    //     overflow: "hidden",
-                    // }}
-                >
-                    {categories.map((cat: string) => (
-                        <MenuItem key={cat} value={cat}>
-                            <Checkbox checked={category.indexOf(cat) > -1} />
-                            <ListItemText primary={cat} />
-                        </MenuItem>
-                    ))}
-                </Select>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Select
+                        labelId="demo-multiple-checkbox-label"
+                        id="demo-multiple-checkbox"
+                        multiple
+                        displayEmpty
+                        sx={{ height: "2rem", width: 100 }}
+                        variant="outlined"
+                        value={category}
+                        onChange={handleChange}
+                        input={<OutlinedInput label="" />}
+                        renderValue={(selected) =>
+                            category.length >= 1 ? (
+                                selected.join(", ")
+                            ) : (
+                                <Typography
+                                    variant="caption"
+                                    sx={{
+                                        fontSize: "10px",
+                                    }}
+                                >
+                                    Select categories
+                                </Typography>
+                            )
+                        }
+                    >
+                        {categories.map((cat: string) => (
+                            <MenuItem key={cat} value={cat}>
+                                <Checkbox checked={category.indexOf(cat) > -1} />
+                                <ListItemText primary={cat} />
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    <Tooltip title={tooltipText}>
+                        <IconButton sx={TOOLTIP_BUTTON_THEME}>
+                            <HelpIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
             </Box>
-        </div>
+        </Box>
     );
 }
