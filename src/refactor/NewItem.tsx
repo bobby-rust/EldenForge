@@ -70,9 +70,9 @@ export default function NewItem(props: any) {
     let name;
     props.itemType !== "ashes" ? (name = props.item.name) : (name = props.item.name.slice(11));
 
-    // useEffect(() => {
-    //     setImageLoaded(false);
-    // }, [props.item]);
+    useEffect(() => {
+        setImageLoaded(false);
+    }, [props.item.id]);
 
     return (
         <>
