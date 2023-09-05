@@ -1,71 +1,138 @@
-import React, { memo } from "react";
-import { BuildItem } from "../types/ItemTypes";
-import "../styles/chatGPTStyles.css";
-import "../App.css";
-import Button from "@mui/material/Button";
-import { Box } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
+import { useEffect, useState } from "react";
 
-type ItemProps = {
-    item: BuildItem;
-    buildDispatch: any;
-    color: string;
-    size: string;
-};
-
-const BOX_THEME = {
+const ITEM_THEME = {
+    textAlign: "center",
+    fontSize: "0.75rem",
+    border: "1px solid black",
+    borderColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: "5px",
     display: "flex",
     flexDirection: "column",
+    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    marginBottom: "10px",
-    padding: "5px",
-    height: "10rem",
+    m: 0.5,
+    p: 1,
+    height: "150px",
     "@media (min-width:0px)": {
         width: "40vw",
     },
-    "@media (min-width:900px)": {
-        width: "100%",
+    "@media (min-width:600px)": {
+        width: "20vw",
+    },
+    "@media (min-width:1200px)": {
+        width: "10vw",
+        minWidth: "130px",
+        height: "150px",
+    },
+    "@media (min-width:1900px)": {
+        height: "175px",
+    },
+    "&:hover": {
+        boxShadow: 1,
     },
 };
 
-const Item = (props: ItemProps) => {
-    /**
-     * This is a generic component
-     * Any styling on this component should remain generic
-     * i.e. NOT specific to any layout or theme
-     */
-
-    return (
-        // <div className="build-item">
-        <Box sx={BOX_THEME}>
-            <span className="item-name">{props.item.name}</span>
-            <a
-                href={`https://eldenring.wiki.fextralife.com/${props.item.name.replaceAll(
-                    " ",
-                    "+"
-                )}`}
-                rel="noreferrer"
-                target="_blank"
-            >
-                <img className="item-img" src={props.item.image} alt={props.item.name + " img"} />
-            </a>
-            <Button
-                sx={{
-                    height: "2rem",
-                    fontSize: "12px",
-                    width: "6rem",
-                    color: "#ef8b09",
-                }}
-                size="small"
-                onClick={props.buildDispatch}
-            >
-                Reroll Item
-            </Button>
-        </Box>
-    );
+const IMG_THEME = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "75px",
+    width: "75px",
 };
 
-export default Item;
+const BUTTON_THEME = {
+    fontFamily: "Cormorant Garamond",
+    color: "rgba(232, 182, 8, 1)",
+    backgroundColor: "rgba(0, 0, 0, 0.01)",
+    p: 1,
+    border: "1px solid rgba(0, 0, 0, 0.1)",
+    width: "50%",
+    height: "30px",
+    mt: 1,
+    "&:hover": {
+        borderColor: "rgba(232, 182, 8, 1)",
+    },
+};
+
+const ANCHOR_STYLES = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    textDecoration: "none",
+    color: "black",
+    maxWidth: "100%",
+};
+
+export default function NewItem(props: any) {
+    const [imageLoaded, setImageLoaded] = useState(false);
+
+    let name;
+    props.itemType !== "ashes" ? (name = props.item.name) : (name = props.item.name.slice(11));
+
+    useEffect(() => {
+        setImageLoaded(false);
+    }, [props.item.id]);
+
+    return (
+        <>
+            <Box sx={ITEM_THEME}>
+                <a
+                    style={ANCHOR_STYLES}
+                    href={`https://eldenring.wiki.fextralife.com/${props.item.name.replaceAll(
+                        " ",
+                        "+"
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                        }}
+                    >
+                        <div
+                            style={{
+                                whiteSpace: "nowrap",
+                                maxWidth: "125px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                padding: "5px",
+                            }}
+                        >
+                            {name}
+                        </div>
+                        <Box sx={IMG_THEME}>
+                            <img
+                                src={props.item.image}
+                                alt={props.item.name}
+                                style={{
+                                    ...IMG_THEME,
+                                    display: imageLoaded ? "block" : "none",
+                                }}
+                                onLoad={() => setImageLoaded(true)}
+                            />
+                            {imageLoaded ? null : (
+                                <CircularProgress sx={{ color: "rgba(0, 0, 0, 0.5)" }} />
+                            )}
+                        </Box>
+                    </Box>
+                </a>
+                <Button
+                    sx={BUTTON_THEME}
+                    onClick={() => {
+                        props.buildDispatch({
+                            id: props.item.id,
+                            type: props.itemType.toUpperCase(),
+                        });
+                    }}
+                >
+                    Reroll
+                </Button>
+            </Box>
+        </>
+    );
+}

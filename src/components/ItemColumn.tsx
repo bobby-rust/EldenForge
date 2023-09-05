@@ -7,7 +7,7 @@ import {
     SelectChangeEvent,
     Typography,
 } from "@mui/material";
-import NewItem from "./NewItem";
+import NewItem from "./Item";
 
 const SELECT_WIDTH = "80%";
 

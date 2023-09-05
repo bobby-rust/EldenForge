@@ -1,14 +1,11 @@
 import React from "react";
 import "./App.css";
-import "./styles/header.css";
 import { generateRandomBuild, getNewItem } from "./functions/generateRandomBuild";
 import AnalyticsWrapper from "./components/AnalyticsWrapper";
-import SmallLayout from "./layouts/SmallLayout";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IncludePreviouslyRolled, buildNumsAction, buildNumsState } from "./types/ItemTypes";
-import ResponsiveAppBar from "./components/AppBar";
-import NewSmallLayout from "./refactor/NewSmallLayout";
-import Header from "./refactor/Header";
+import NewSmallLayout from "./components/SmallLayout";
+import Header from "./components/Header";
 
 const initialIncludePreviouslyRolled: IncludePreviouslyRolled = {
     weapons: false,
@@ -254,20 +251,6 @@ const App = () => {
     return (
         <div className="App">
             <>
-                {/* <ResponsiveAppBar
-                    includePreviouslyRolled={includePreviouslyRolled}
-                    setIncludePreviouslyRolled={setIncludePreviouslyRolled}
-                /> */}
-                {/* <div className="App-sm">
-                    <SmallLayout
-                        buildDispatch={buildDispatch}
-                        buildNums={buildNums}
-                        buildNumsDispatch={buildNumsDispatch}
-                        includePreviouslyRolled={includePreviouslyRolled}
-                        setIncludePreviouslyRolled={setIncludePreviouslyRolled}
-                        build={build}
-                    />
-                </div> */}
                 <Header />
                 <NewSmallLayout
                     buildDispatch={buildDispatch}

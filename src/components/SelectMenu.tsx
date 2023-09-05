@@ -20,16 +20,6 @@ const SELECT_THEME: Object = {
 const selectVariant = "outlined";
 
 export default function SelectMenu(props: any) {
-    const initialBuildNums = {
-        weapons: 2,
-        ashes: 2,
-        incants: 2,
-        sorcs: 2,
-        spirits: 2,
-        talis: 2,
-        shields: 1,
-    };
-
     const handleDispatch = (event: SelectChangeEvent) => {
         event.preventDefault();
         props.buildNumsDispatch({
@@ -38,32 +28,10 @@ export default function SelectMenu(props: any) {
         });
     };
 
-    /**
-     * Need to pass buildNums and the dispatch func.
-     */
     return (
         <>
             <Box sx={BOX_THEME}>
                 <FormControl fullWidth>
-                    {/* <InputLabel id="demo-simple-select-label">
-                        Select to include previously rolled
-                    </InputLabel> */}
-                    {/* <Select
-                        MenuProps={{ disableScrollLock: true }}
-                        sx={SELECT_THEME}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={props.buildNums.weapons}
-                        label="Weapons"
-                        name="WEAPONS"
-                        variant={selectVariant}
-                        onChange={handleDispatch}
-                    >
-                        <MenuItem value={1}>1</MenuItem>
-                        <MenuItem value={2}>2</MenuItem>
-                        <MenuItem value={3}>3</MenuItem>
-                        <MenuItem value={4}>4</MenuItem>
-                    </Select> */}
                     <IncludePreviouslyRolledMenu
                         includePreviouslyRolled={props.includePreviouslyRolled}
                         setIncludePreviouslyRolled={props.setIncludePreviouslyRolled}
