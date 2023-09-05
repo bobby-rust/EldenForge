@@ -1,5 +1,6 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import IncludePreviouslyRolledMenu from "../components/IncludePreviouslyRolledMenu";
+import { useState, useEffect } from "react";
 
 const TOP_MENU_CONTAINER_THEME = {
     display: "flex",
@@ -40,6 +41,11 @@ const TYPOGRAPHY_THEME = {
 };
 
 export default function TopMenuSmall(props: any) {
+    const [imageLoaded, setImageLoaded] = useState(false);
+
+    useEffect(() => {
+        setImageLoaded(false);
+    }, [props.build.id]);
     return (
         <Box sx={TOP_MENU_CONTAINER_THEME}>
             <Box sx={{ ...BOX_THEME, mb: 2 }}>
@@ -52,9 +58,6 @@ export default function TopMenuSmall(props: any) {
                 </Button>
             </Box>
             <Box sx={{ ...BOX_THEME, justifyContent: "space-evenly" }}>
-                {/* <Typography variant="body1" sx={TYPOGRAPHY_THEME}>
-                    Select to Include Previously Rolled
-                </Typography> */}
                 <IncludePreviouslyRolledMenu
                     includePreviouslyRolled={props.includePreviouslyRolled}
                     setIncludePreviouslyRolled={props.setIncludePreviouslyRolled}
@@ -63,7 +66,15 @@ export default function TopMenuSmall(props: any) {
                     <Typography variant="body1" sx={TYPOGRAPHY_THEME}>
                         Class:{" "}
                     </Typography>
-                    <img style={props.IMG_THEME} src={props.build.image} alt="starting class" />
+                    <img
+                        style={{ ...props.IMG_THEME, display: imageLoaded ? "block" : "none" }}
+                        src={props.build.image}
+                        alt="starting class"
+                        onLoad={() => setImageLoaded(true)}
+                    />
+                    {imageLoaded ? null : (
+                        <CircularProgress sx={{ marginLeft: "5px", color: "rgba(0, 0, 0, 0.5)" }} />
+                    )}
                 </Box>
             </Box>
         </Box>

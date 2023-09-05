@@ -5,6 +5,7 @@ import TopMenuSmall from "./TopMenuSmall";
 const IMG_THEME = {
     height: "60px",
     width: "auto",
+    marginLeft: "5px",
 };
 
 export default function TopMenu(props: any) {

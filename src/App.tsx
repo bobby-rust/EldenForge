@@ -243,9 +243,6 @@ const App = () => {
 
         // Set the initial session storage.
         sessionStorage.setItem("rolledItems", JSON.stringify(setupSessionStorageData));
-
-        // Generate (and set) the initial build.
-        buildDispatch({ type: "FULLBUILD" });
     }, []);
 
     return (
