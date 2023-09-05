@@ -53,11 +53,7 @@ export default function TopMenuLarge(props: any) {
                 <Typography variant="body1" sx={{ fontFamily: "Cormorant Garamond" }}>
                     Class:{" "}
                 </Typography>
-                <img
-                    style={props.IMG_THEME}
-                    src="https://eldenring.fanapis.com/images/classes/17f69d71826l0i32gkm3ndn3kywxqj.png"
-                    alt="class img"
-                />
+                <img style={props.IMG_THEME} src={props.build.image} alt="starting class" />
             </Box>
         </Box>
     );

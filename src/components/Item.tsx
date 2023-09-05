@@ -64,7 +64,7 @@ const ANCHOR_STYLES = {
     maxWidth: "100%",
 };
 
-export default function NewItem(props: any) {
+export default function Item(props: any) {
     const [imageLoaded, setImageLoaded] = useState(false);
 
     let name;

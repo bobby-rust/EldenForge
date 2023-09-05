@@ -113,7 +113,7 @@ interface buildState {
     spirits: BuildItem[];
     talismans: BuildItem[];
     shields: BuildItem[];
-    starting_class: BuildItem;
+    startingClass: BuildItem;
 }
 
 type IncludePreviouslyRolled = {

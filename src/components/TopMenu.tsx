@@ -33,6 +33,7 @@ export default function TopMenu(props: any) {
                     setIncludePreviouslyRolled={props.setIncludePreviouslyRolled}
                     IMG_THEME={IMG_THEME}
                     buildDispatch={props.buildDispatch}
+                    build={props.build}
                 />
             ) : (
                 <TopMenuSmall
@@ -40,6 +41,7 @@ export default function TopMenu(props: any) {
                     setIncludePreviouslyRolled={props.setIncludePreviouslyRolled}
                     IMG_THEME={IMG_THEME}
                     buildDispatch={props.buildDispatch}
+                    build={props.build}
                 />
             )}
         </>

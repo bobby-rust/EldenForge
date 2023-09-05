@@ -7,7 +7,7 @@ import {
     SelectChangeEvent,
     Typography,
 } from "@mui/material";
-import NewItem from "./Item";
+import Item from "./Item";
 
 const SELECT_WIDTH = "80%";
 
@@ -110,9 +110,10 @@ export default function ItemColumn(props: any) {
                         </FormControl>
                     </Box>
 
-                    {props.build.map((item: any) => {
+                    {props.build.map((item: any, i: number) => {
                         return (
-                            <NewItem
+                            <Item
+                                key={i}
                                 item={item}
                                 itemType={props.itemType}
                                 buildDispatch={props.buildDispatch}
@@ -147,7 +148,8 @@ export default function ItemColumn(props: any) {
                                 break;
                         }
                         return (
-                            <NewItem
+                            <Item
+                                key={i}
                                 item={item}
                                 itemType={props.itemType + "." + armorType}
                                 buildDispatch={props.buildDispatch}

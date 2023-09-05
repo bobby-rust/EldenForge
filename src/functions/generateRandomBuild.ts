@@ -56,7 +56,7 @@ function generateRandomBuild(
         sorceries: SorceriesIncantationsDataObject[];
         spirits: SpiritsDataObject[];
         talismans: TalismansDataObject[];
-        starting_class: ClassDataObject;
+        startingClass: ClassDataObject;
         [key: string]: any;
     };
 
@@ -71,7 +71,7 @@ function generateRandomBuild(
         sorceries: getSorcs(numSorcs, includePreviouslyRolled.sorceries, rolledItems),
         spirits: getSpirits(numSpirits, includePreviouslyRolled.spirits, rolledItems),
         talismans: getTalismans(numTalismans, includePreviouslyRolled.talismans, rolledItems),
-        starting_class: getClass(),
+        startingClass: getClass(),
     };
 
     // Down here, we should update sessionStorage by adding all new items to the sessionStorage object

@@ -9,7 +9,7 @@ const CONTAINER_THEME = {
     flexDirection: "column",
 };
 
-export default function NewSmallLayout(props: any) {
+export default function SmallLayout(props: any) {
     return (
         <>
             <Box sx={CONTAINER_THEME}>
@@ -17,6 +17,7 @@ export default function NewSmallLayout(props: any) {
                     includePreviouslyRolled={props.includePreviouslyRolled}
                     setIncludePreviouslyRolled={props.setIncludePreviouslyRolled}
                     buildDispatch={props.buildDispatch}
+                    build={props.build.startingClass}
                 />
                 <ItemGrid
                     build={props.build}

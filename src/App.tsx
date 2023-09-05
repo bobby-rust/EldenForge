@@ -4,7 +4,7 @@ import { generateRandomBuild, getNewItem } from "./functions/generateRandomBuild
 import AnalyticsWrapper from "./components/AnalyticsWrapper";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IncludePreviouslyRolled, buildNumsAction, buildNumsState } from "./types/ItemTypes";
-import NewSmallLayout from "./components/SmallLayout";
+import SmallLayout from "./components/SmallLayout";
 import Header from "./components/Header";
 
 const initialIncludePreviouslyRolled: IncludePreviouslyRolled = {
@@ -252,7 +252,7 @@ const App = () => {
         <div className="App">
             <>
                 <Header />
-                <NewSmallLayout
+                <SmallLayout
                     buildDispatch={buildDispatch}
                     buildNums={buildNums}
                     buildNumsDispatch={buildNumsDispatch}
