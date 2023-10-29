@@ -1,6 +1,6 @@
 # Generate random Elden Ring builds 🤺
 
-![Site view]("./public/ERBG.png")
+![Site view]("/public/ERBG.png")
 
 ## Features
 
