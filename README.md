@@ -1,6 +1,6 @@
 # Generate random Elden Ring builds 🤺
 
-[![Site view](public/ERBG.png)](https://erbg.vercel.app/){:target="_blank"}
+[![Site view](public/ERBG.png)](https://erbg.vercel.app/)
 
 ## Features
 
