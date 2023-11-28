@@ -1,52 +1,10 @@
 /**
  * This file is for global styles
- */
-.header-container-lt {
-    display: flex;
-    justify-self: center;
-    align-self: center;
-}
+*/
 
 @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Oswald&family=Poppins&family=Unbounded:wght@800&family=Cormorant+Garamond:wght@500&display=swap");
 
 .App {
     font-family: "Cormorant Garamond";
-    /* height: 100%;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    position: absolute;
-    overflow: hidden;
-    width: 100%; */
-}
-
-/**
- * Scrollbar
-*/
-::-webkit-scrollbar {
-    background-color: #202324;
-    color: #aba499;
-}
-
-::-webkit-scrollbar-corner {
-    background-color: #181a1b;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: #454a4d;
-}
-/**
- * End scrollbar
-*/
-
-/* Style the header */
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
 }

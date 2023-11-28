@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import TopMenu from "./TopMenu";
 import ItemGrid from "./ItemGrid";
+import { Footer } from "./Footer";
 
 const CONTAINER_THEME = {
     display: "flex",
@@ -25,6 +26,7 @@ export default function SmallLayout(props: any) {
                     buildNums={props.buildNums}
                     buildNumsDispatch={props.buildNumsDispatch}
                 />
+                {/* <Footer /> */}
             </Box>
         </>
     );
