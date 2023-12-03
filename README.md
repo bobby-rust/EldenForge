@@ -15,4 +15,5 @@
 - Generate URLs that link to a specific build
 - Ability to select items from a list to put in each build slot
 - Individual item stats and overall build stats
-- Option to ensure Ash of War compatibility
+- Option to ensure Ash of War compatibility with generated weapons
+- Option to force rolling a seal to use incantations (In progress)
