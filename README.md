@@ -3,9 +3,10 @@
 [![Site view](public/ERBG.png)](https://erbg.vercel.app/)
 
 ## Features
-- Customize number of each item to generate
+- Customize the number of each items to generate in each category
 - Reroll individual items to get the perfect build
 - Control duplicate item rerolls by switching them on or off by category
+- Click on each item to view its wiki page
 
 ## TODO
 - Lock individual items or entire categories so they are not regenerated
