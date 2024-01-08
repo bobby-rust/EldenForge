@@ -17,3 +17,4 @@
 - Individual item stats and overall build stats
 - Option to ensure Ash of War compatibility with generated weapons
 - Option to force rolling a seal to use incantations (In progress)
+- Implement "undo" stack
