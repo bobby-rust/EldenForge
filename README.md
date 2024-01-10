@@ -18,3 +18,4 @@
 - Option to ensure Ash of War compatibility with generated weapons
 - Option to force rolling a seal to use incantations (In progress)
 - Implement "undo" stack
+- Check/Uncheck all in include previously rolled dropdown menu
