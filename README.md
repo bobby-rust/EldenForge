@@ -19,3 +19,4 @@
 - Option to force rolling a seal to use incantations (In progress)
 - Implement "undo" stack
 - Check/Uncheck all in include previously rolled dropdown menu
+- Make it easy for users to give feedback directly from the website (a text box with a send button which sends a message to me through some medium) 
