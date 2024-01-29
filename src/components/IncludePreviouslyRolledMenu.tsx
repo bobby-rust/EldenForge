@@ -70,7 +70,7 @@ export default function IncludePreviouslyRolledMenu(props: any) {
             categoriesToIncludePreviouslyRolled[currCat] =
                 !categoriesToIncludePreviouslyRolled[currCat];
         }
-
+        // console.log("getting previous session storage data");
         const rolledItemsString: string | null = sessionStorage.getItem("rolledItems");
         let rolledItems: RolledItems;
         if (rolledItemsString) {
@@ -85,6 +85,7 @@ export default function IncludePreviouslyRolledMenu(props: any) {
                 sorceries: [],
                 spirits: [],
                 talismans: [],
+                tears: [],
             };
         }
         const keys = Object.keys(categoriesToIncludePreviouslyRolled);

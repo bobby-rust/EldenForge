@@ -26,7 +26,7 @@ const CONTAINER_THEME = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    mt: 1,
+    mt: 2,
 };
 
 export default function ItemColumn(props: any) {

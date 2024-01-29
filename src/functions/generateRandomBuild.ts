@@ -7,6 +7,7 @@ import getSpirits from "./getSpirits";
 import getTalismans from "./getTalismans";
 import getWeapons from "./getWeapons";
 import getClass from "./getClass";
+import getTears from "./getTears";
 import {
     ArmorDataObject,
     AshesDataObject,
@@ -27,9 +28,13 @@ function generateRandomBuild(
     numSorcs: number,
     numSpirits: number,
     numTalismans: number,
+    numTears: number,
     numShields: number,
     includePreviouslyRolled: IncludePreviouslyRolled
 ) {
+    // sessionStorage.removeItem("rolledItems");
+    console.log("num tears: ", numTears);
+    // console.log("Getting previous session storage data");
     const rolledItemsString: string | null = sessionStorage.getItem("rolledItems");
     let rolledItems: RolledItems;
     if (rolledItemsString) {
@@ -44,6 +49,23 @@ function generateRandomBuild(
             sorceries: [],
             spirits: [],
             talismans: [],
+            tears: [],
+            // seals: [],
+        };
+    }
+
+    if (Object.keys(rolledItems).length < 9) {
+        rolledItems = {
+            weapons: [],
+            // armor: [],
+            ashes: [],
+            incantations: [],
+            shields: [],
+            sorceries: [],
+            spirits: [],
+            talismans: [],
+            tears: [],
+            // seals: [],
         };
     }
 
@@ -56,6 +78,7 @@ function generateRandomBuild(
         sorceries: SorceriesIncantationsDataObject[];
         spirits: SpiritsDataObject[];
         talismans: TalismansDataObject[];
+        tears: any;
         startingClass: ClassDataObject;
         [key: string]: any;
     };
@@ -71,9 +94,11 @@ function generateRandomBuild(
         sorceries: getSorcs(numSorcs, includePreviouslyRolled.sorceries, rolledItems),
         spirits: getSpirits(numSpirits, includePreviouslyRolled.spirits, rolledItems),
         talismans: getTalismans(numTalismans, includePreviouslyRolled.talismans, rolledItems),
+        tears: getTears(numTears, includePreviouslyRolled.tears, rolledItems),
         startingClass: getClass(),
     };
-
+    console.log("build in generate: ");
+    console.log(build);
     // Down here, we should update sessionStorage by adding all new items to the sessionStorage object
     let newSessionStorage: any = structuredClone(rolledItems);
 
@@ -186,6 +211,10 @@ function getNewItem(
             const newTalis = getTalismans(1, includePreviouslyRolled, rolledItems);
             const newStateTalis = createNewBuild(state, t_id, newTalis[0], type.toLowerCase());
             return newStateTalis;
+        case "TEARS":
+            const newTears = getTears(1, includePreviouslyRolled, rolledItems);
+            const newStateTears = createNewBuild(state, t_id, newTears[0], type.toLowerCase());
+            return newStateTears;
         case "SHIELDS":
             const newShield = getShields(1, includePreviouslyRolled, rolledItems);
             const newStateSh = createNewBuild(state, t_id, newShield[0], type.toLowerCase());

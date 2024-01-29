@@ -83,6 +83,16 @@ export default function ItemGrid(props: any) {
                         buildDispatch={props.buildDispatch}
                     />
                 </Grid>
+                <Grid item xs={4} sm={2} lg={1}>
+                    <ItemColumn
+                        buildNums={props.buildNums}
+                        buildNumsDispatch={props.buildNumsDispatch}
+                        itemType={"tears"}
+                        build={props.build.tears}
+                        buildDispatch={props.buildDispatch}
+                    />
+                </Grid>
+
             </Grid>
         </Box>
     );

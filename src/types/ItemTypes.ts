@@ -23,23 +23,23 @@ type ClassDataObject = ItemDataObject & {
 
 type SorceriesIncantationsDataObject =
     | (ItemDataObject & {
-          type: string;
-          cost: number;
-          slots: number;
-          effects: string;
-          requires: Object[];
-      })
+        type: string;
+        cost: number;
+        slots: number;
+        effects: string;
+        requires: Object[];
+    })
     | any;
 
 type WeaponsShieldsDataObject =
     | (ItemDataObject & {
-          attack: Object[];
-          defence: Object[];
-          scalesWith: Object[];
-          requiredAttributes: Object[];
-          category: string;
-          weight: number;
-      })
+        attack: Object[];
+        defence: Object[];
+        scalesWith: Object[];
+        requiredAttributes: Object[];
+        category: string;
+        weight: number;
+    })
     | any;
 
 type SpiritsDataObject = ItemDataObject & {
@@ -80,6 +80,7 @@ enum VALID_BUILD_ITEM_CATEGORIES {
     SORCERIES = "SORCERIES",
     SPIRITS = "SPIRITS",
     TALISMANS = "TALISMANS",
+    TEARS = "TEARS",
     SHIELDS = "SHIELDS",
 }
 
@@ -95,6 +96,7 @@ interface buildNumsState {
     sorceries: number;
     spirits: number;
     talismans: number;
+    tears: number;
     shields: number;
 }
 
@@ -124,6 +126,7 @@ type IncludePreviouslyRolled = {
     sorceries: boolean;
     spirits: boolean;
     talismans: boolean;
+    tears: boolean;
     [key: string]: boolean;
 };
 
@@ -136,6 +139,7 @@ type RolledItems = {
     sorceries: string[];
     spirits: string[];
     talismans: string[];
+    tears: string[];
     // starting_class: string;
     [key: string]: string | string[];
 };

@@ -15,10 +15,11 @@ const initialIncludePreviouslyRolled: IncludePreviouslyRolled = {
     sorceries: false,
     spirits: false,
     talismans: false,
+    tears: false,
 };
 
-const initialBuild = generateRandomBuild(2, 2, 2, 2, 2, 2, 1, initialIncludePreviouslyRolled);
-
+const initialBuild = generateRandomBuild(2, 2, 2, 2, 2, 2, 2, 1, initialIncludePreviouslyRolled);
+// console.log(initialBuild);
 const App = () => {
     const [includePreviouslyRolled, setIncludePreviouslyRolled] = React.useState({
         weapons: false,
@@ -28,6 +29,7 @@ const App = () => {
         sorceries: false,
         spirits: false,
         talismans: false,
+        tears: false,
     });
 
     // Build quantity reducer
@@ -52,6 +54,8 @@ const App = () => {
                 return { ...state, spirits: payload };
             case "TALISMANS":
                 return { ...state, talismans: payload };
+            case "TEARS":
+                return { ...state, tears: payload };
             case "SHIELDS":
                 return { ...state, shields: payload };
             default:
@@ -68,6 +72,7 @@ const App = () => {
         sorceries: 2,
         spirits: 2,
         talismans: 2,
+        tears: 2,
         shields: 1,
     });
     // End set up build numbers state
@@ -105,6 +110,7 @@ const App = () => {
                     buildNums.sorceries,
                     buildNums.spirits,
                     buildNums.talismans,
+                    buildNums.tears,
                     buildNums.shields,
                     includePreviouslyRolled
                 );
@@ -115,15 +121,19 @@ const App = () => {
             case "ARMOR.HELM":
                 const newStateHelm = getNewItem(id, state, "ARMOR.HELM", true, rolledItems);
                 return newStateHelm;
+
             case "ARMOR.CHEST":
                 const newStateChest = getNewItem(id, state, "ARMOR.CHEST", true, rolledItems);
                 return newStateChest;
+
             case "ARMOR.GAUNTLETS":
                 const newStateGaunt = getNewItem(id, state, "ARMOR.GAUNTLETS", true, rolledItems);
                 return newStateGaunt;
+
             case "ARMOR.LEG":
                 const newStateLegs = getNewItem(id, state, "ARMOR.LEG", true, rolledItems);
                 return newStateLegs;
+
             case "WEAPONS":
                 if (!id) {
                     console.log("Please provide an id.");
@@ -136,6 +146,7 @@ const App = () => {
                     rolledItems
                 );
                 return newStateWep;
+
             case "ASHES":
                 if (!id) {
                     console.log("Please provide an id.");
@@ -148,6 +159,7 @@ const App = () => {
                     rolledItems
                 );
                 return newStateAsh;
+
             case "INCANTATIONS":
                 if (!id) {
                     console.log("Please provide an id.");
@@ -160,6 +172,7 @@ const App = () => {
                     rolledItems
                 );
                 return newStateInc;
+
             case "SORCERIES":
                 if (!id) {
                     console.log("Please provide an id.");
@@ -172,6 +185,7 @@ const App = () => {
                     rolledItems
                 );
                 return newStateSorc;
+
             case "SPIRITS":
                 if (!id) {
                     console.log("Please provide an id.");
@@ -184,18 +198,32 @@ const App = () => {
                     rolledItems
                 );
                 return newStateSpirits;
+
             case "TALISMANS":
                 if (!id) {
                     console.log("Please provide an id.");
                 }
-                const newStatetalismans = getNewItem(
+                const newStateTalismans = getNewItem(
                     id,
                     state,
                     "TALISMANS",
                     includePreviouslyRolled.talismans,
                     rolledItems
                 );
-                return newStatetalismans;
+                return newStateTalismans;
+
+            case "TEARS":
+                if (!id) {
+                    console.log("Please provide an id.");
+                }
+                const newStateTears = getNewItem(
+                    id,
+                    state,
+                    "TEARS",
+                    includePreviouslyRolled.tears,
+                    rolledItems
+                )
+                return newStateTears;
 
             case "SHIELDS":
                 if (!id) {
@@ -209,6 +237,7 @@ const App = () => {
                     rolledItems
                 );
                 return newStateShield;
+
             default:
                 console.log("No changes were made.");
                 return state;
@@ -219,6 +248,7 @@ const App = () => {
     const [build, buildDispatch] = React.useReducer(buildReducer, initialBuild);
 
     React.useEffect(() => {
+
         const setupSessionStorageData = {
             weapons: [],
             armor: [],
@@ -228,18 +258,12 @@ const App = () => {
             sorceries: [],
             spirits: [],
             talismans: [],
+            tears: [],
+            // seals: [],
         };
-
+        console.log("setting session storage data to empty");
         // Set the initial include previously rolled state
-        setIncludePreviouslyRolled({
-            weapons: false,
-            ashes: false,
-            incantations: false,
-            shields: false,
-            sorceries: false,
-            spirits: false,
-            talismans: false,
-        });
+        setIncludePreviouslyRolled(initialIncludePreviouslyRolled);
 
         // Set the initial session storage.
         sessionStorage.setItem("rolledItems", JSON.stringify(setupSessionStorageData));

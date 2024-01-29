@@ -1,0 +1,239 @@
+{
+    "success": true,
+    "count": 29,
+    "total": 29,
+    "data": [
+        {
+            "id": "f2978cd3-1331-471d-a06d-4b9982dd0a7e",
+            "name": "Crimson Crystal Tear",
+            "type": "HP",
+            "duration": null,
+            "description": "Restores half of total HP",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/crimson_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "56e90d0b-5151-4dfe-928c-00507f420274",
+            "name": "Crimsonspill Crystal Tear",
+            "type": "HP",
+            "duration": 180,
+            "description": "Temporarily boosts max HP",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/crimsonspill_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "a4f78db3-4997-4643-b8d5-238769694f16",
+            "name": "Crimsonburst Crystal Tear",
+            "type": "HP",
+            "duration": 180,
+            "description": "Steadily restores HP over time",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/crimsonburst_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "ef5d71cc-9d24-46cf-92aa-3b34b7e59bcf",
+            "name": "Cerulean Crystal Tear",
+            "type": "FP",
+            "duration": null,
+            "description": "Restores half of total FP",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/cerulean_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "8f995efd-4c1e-4b14-a81e-637a416a922f",
+            "name": "Greenspill Crystal Tear",
+            "type": "Stamina",
+            "duration": 180,
+            "description": "Temporarily boosts max Stamina",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/greenspill_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "ece84d3d-137c-4fb4-b576-8d3af601fa04",
+            "name": "Greenburst Crystal Tear",
+            "type": "Stamina",
+            "duration": 180,
+            "description": "Temporarily boosts Stamina recovery speed",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/greenburst_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "82a4fa05-62ef-4688-96a3-da96a0c19caf",
+            "name": "Strength-Knot Crystal Tear",
+            "type": "Stats",
+            "duration": 180,
+            "description": "Temporarily boosts Strength",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/strength-knot_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "29d587f9-9d8f-41c8-84ba-3c90c420c370",
+            "name": "Dexterity-Knot Crystal Tear",
+            "type": "Stats",
+            "duration": 180,
+            "description": "Temporarily boosts Dexterity",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/dexterity-knot_crystal_tear2_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "3596587f-0a92-405e-809d-ab563035c88e",
+            "name": "Intelligence-Knot Crystal Tear",
+            "type": "Stats",
+            "duration": 180,
+            "description": "Temporarily boosts Intelligence",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/intelligence-knot_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "584ddd79-6222-4bf4-a3fb-621c899d79de",
+            "name": "Faith-Knot Crystal Tear",
+            "type": "Stats",
+            "duration": 180,
+            "description": "Temporarily boosts Faith",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/faith-knot_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "714d46e7-25fc-4bc4-bd59-2c54085188ae",
+            "name": "Opaltine Hardtear",
+            "type": "Defensive",
+            "duration": 180,
+            "description": "Temporarily boosts all damage negations",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/opaline_hardtear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "d53bf0ec-c143-419f-b006-1db69f252575",
+            "name": "Speckled Hardtear",
+            "type": "Defensive",
+            "duration": 180,
+            "description": "Temporarily boosts resistance and heals status",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/speckled_hardtear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "16b09588-a92a-4289-8ca8-1a512542fb27",
+            "name": "Leaden Hardtear",
+            "type": "Defensive",
+            "duration": 10,
+            "description": "Temporarily boosts Poise",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/leaden_hardtear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "d6dae910-8367-443d-843a-976a8218f20e",
+            "name": "Magic-Shrouding Cracked Tear",
+            "type": "Offensive / Elemental DMG",
+            "duration": 180,
+            "description": "Temporarily boosts Magic Damage",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/magic-shrouding_cracked_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "60f2ccce-601f-4822-b6d5-2bdc0586f463",
+            "name": "Flame-Shrouding Cracked Tear",
+            "type": "Offensive / Elemental DMG",
+            "duration": 180,
+            "description": "Temporarily boosts Fire Damage",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/flame-shrouding_cracked_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "cc20517f-c6d4-4222-bea3-d955a2e26686",
+            "name": "Lightning-Shrouding Cracked Tear",
+            "type": "Offensive / Elemental DMG",
+            "duration": 180,
+            "description": "Temporarily boosts Lightning Damage",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/lightning-shrouding_cracked_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "892c64d3-c697-4975-a4ea-290c40f8819b",
+            "name": "Holy-Shrouding Cracked Tear",
+            "type": "Offensive / Elemental DMG",
+            "duration": 180,
+            "description": "Temporarily boosts Holy Damage",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/holy-shrouding_cracked_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "c9740b89-d69b-4511-b6bf-bb1f7b20918b",
+            "name": "Stonebarb Cracked Tear",
+            "type": "Offensive",
+            "duration": 30,
+            "description": "Makes attacks more likely to break enemy stances",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/stonebarb_cracked_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "16f945b4-f109-47b9-9654-7669b692d2e8",
+            "name": "Spiked Cracked Tear",
+            "type": "Offensive",
+            "duration": 180,
+            "description": "Enhances charged attacks for a time",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/spiked_cracked_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "30e9e570-8ab4-4144-8073-84c4892a7fef",
+            "name": "Thorny Cracked Tear",
+            "type": "Offensive",
+            "duration": 180,
+            "description": "Makes consecutive attacks grow stronger",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/thorny_cracked_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "001c500f-18f8-404e-8ed6-5f10a5450898",
+            "name": "Twiggy Cracked Tear",
+            "type": "Defensive",
+            "duration": 180,
+            "description": "Briefly stops rune loss on death",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/twiggy_cracked_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "278599e4-7cec-402f-a0ac-4870aa96dcde",
+            "name": "Winged Crystal Tear",
+            "type": "Defensive",
+            "duration": 180,
+            "description": "Temporarily reduced Equip Load",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/winged_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "de43296d-cf05-4ad5-a87b-90d718fa3aac",
+            "name": "Windy Crystal Tear",
+            "type": "Defensive",
+            "duration": 180,
+            "description": "Enhances dodge rolls for a time",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/windy_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "ff839ac4-803e-487f-a289-4422f2fbf9fc",
+            "name": "Crimson Bubbletear",
+            "type": "HP",
+            "duration": 180,
+            "description": "Restores HP when near death",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/crimson_bubbletear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "15742ec9-a502-4163-a03f-27260e45fccf",
+            "name": "Crimsonwhorl Bubbletear",
+            "type": "HP",
+            "duration": 15,
+            "description": "Converts damage received into HP",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/crimsonwhorl-bubblecar-key-item-description.png"
+        },
+        {
+            "id": "4afb3177-4b4b-49a9-9ab4-acca3124ef08",
+            "name": "Opaltine Bubbletear",
+            "type": "Defensive",
+            "duration": 180,
+            "description": "Significantly negates next instance of damage",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/opaline_bubbletear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "26bd2c95-bacf-4484-92bd-75ce7894ce58",
+            "name": "Cerulean Hidden Tear",
+            "type": "FP",
+            "duration": 15,
+            "description": "Eliminates all FP consumption",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/cerulean_hidden_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "eff9ac65-e0d2-49f7-87e5-20c5f092dcbb",
+            "name": "Purifying Crystal Tear",
+            "type": "Boss Fight",
+            "duration": null,
+            "description": "Purifies the Lord of Blood's curse",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/purifying_crystal_tear_elden_ring_wiki_guide_200px.png"
+        },
+        {
+            "id": "31c09f86-9f19-410b-b00c-5fddff5c41aa",
+            "name": "Ruptured Crystal Tear",
+            "type": "Offensive",
+            "duration": 3,
+            "description": "Causes concoction to explode",
+            "image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ruptured_crystal_tear_elden_ring_wiki_guide_200px.png"
+        }
+    ]
+}
