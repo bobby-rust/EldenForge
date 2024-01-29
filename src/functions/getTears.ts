@@ -1,5 +1,4 @@
 import tears_data from '../data/crystal_tears.json';
-import { MAX_TEARS } from '../constants';
 
 function getTears(numtears: number, includePreviouslyRolled: any, rolledItems: any) {
     console.log("in tears (literally bc debugging)")
