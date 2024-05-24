@@ -8,6 +8,8 @@ import getTalismans from "./getTalismans";
 import getWeapons from "./getWeapons";
 import getClass from "./getClass";
 import getTears from "./getTears";
+import getSeals from "./getSeals";
+
 import {
     ArmorDataObject,
     AshesDataObject,
@@ -29,11 +31,11 @@ function generateRandomBuild(
     numSpirits: number,
     numTalismans: number,
     numTears: number,
+    numSeals: number,
     numShields: number,
     includePreviouslyRolled: IncludePreviouslyRolled
 ) {
-    // sessionStorage.removeItem("rolledItems");
-    console.log("num tears: ", numTears);
+    sessionStorage.removeItem("rolledItems");
     // console.log("Getting previous session storage data");
     const rolledItemsString: string | null = sessionStorage.getItem("rolledItems");
     let rolledItems: RolledItems;
@@ -50,7 +52,7 @@ function generateRandomBuild(
             spirits: [],
             talismans: [],
             tears: [],
-            // seals: [],
+            seals: [],
         };
     }
 
@@ -65,7 +67,7 @@ function generateRandomBuild(
             spirits: [],
             talismans: [],
             tears: [],
-            // seals: [],
+            seals: [],
         };
     }
 
@@ -79,6 +81,7 @@ function generateRandomBuild(
         spirits: SpiritsDataObject[];
         talismans: TalismansDataObject[];
         tears: any;
+        seals: any;
         startingClass: ClassDataObject;
         [key: string]: any;
     };
@@ -95,6 +98,7 @@ function generateRandomBuild(
         spirits: getSpirits(numSpirits, includePreviouslyRolled.spirits, rolledItems),
         talismans: getTalismans(numTalismans, includePreviouslyRolled.talismans, rolledItems),
         tears: getTears(numTears, includePreviouslyRolled.tears, rolledItems),
+        seals: getSeals(numSeals, includePreviouslyRolled.seals, rolledItems),
         startingClass: getClass(),
     };
     console.log("build in generate: ");
@@ -215,6 +219,12 @@ function getNewItem(
             const newTears = getTears(1, includePreviouslyRolled, rolledItems);
             const newStateTears = createNewBuild(state, t_id, newTears[0], type.toLowerCase());
             return newStateTears;
+
+        case "SEALS":
+            const newSeals = getSeals(1, includePreviouslyRolled, rolledItems);
+            const newStateSeals = createNewBuild(state, t_id, newSeals[0], type.toLowerCase());
+            return newStateSeals;
+
         case "SHIELDS":
             const newShield = getShields(1, includePreviouslyRolled, rolledItems);
             const newStateSh = createNewBuild(state, t_id, newShield[0], type.toLowerCase());

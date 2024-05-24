@@ -16,9 +16,10 @@ const initialIncludePreviouslyRolled: IncludePreviouslyRolled = {
     spirits: false,
     talismans: false,
     tears: false,
+    seals: false,
 };
 
-const initialBuild = generateRandomBuild(2, 2, 2, 2, 2, 2, 2, 1, initialIncludePreviouslyRolled);
+const initialBuild = generateRandomBuild(2, 2, 2, 2, 2, 2, 2, 2, 1, initialIncludePreviouslyRolled);
 // console.log(initialBuild);
 const App = () => {
     const [includePreviouslyRolled, setIncludePreviouslyRolled] = React.useState({
@@ -30,6 +31,7 @@ const App = () => {
         spirits: false,
         talismans: false,
         tears: false,
+        seals: false,
     });
 
     // Build quantity reducer
@@ -56,6 +58,9 @@ const App = () => {
                 return { ...state, talismans: payload };
             case "TEARS":
                 return { ...state, tears: payload };
+            case "SEALS":
+                return { ...state, tears: payload };
+
             case "SHIELDS":
                 return { ...state, shields: payload };
             default:
@@ -73,6 +78,7 @@ const App = () => {
         spirits: 2,
         talismans: 2,
         tears: 2,
+        seals: 2,
         shields: 1,
     });
     // End set up build numbers state
@@ -111,6 +117,7 @@ const App = () => {
                     buildNums.spirits,
                     buildNums.talismans,
                     buildNums.tears,
+                    buildNums.seals,
                     buildNums.shields,
                     includePreviouslyRolled
                 );
@@ -224,6 +231,19 @@ const App = () => {
                     rolledItems
                 )
                 return newStateTears;
+
+            case "SEALS":
+                if (!id) {
+                    console.log("Please provide an id.");
+                }
+                const newStateSeals = getNewItem(
+                    id,
+                    state,
+                    "SEALS",
+                    includePreviouslyRolled.seals,
+                    rolledItems
+                )
+                return newStateSeals;
 
             case "SHIELDS":
                 if (!id) {

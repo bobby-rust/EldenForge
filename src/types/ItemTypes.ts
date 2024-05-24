@@ -81,6 +81,7 @@ enum VALID_BUILD_ITEM_CATEGORIES {
     SPIRITS = "SPIRITS",
     TALISMANS = "TALISMANS",
     TEARS = "TEARS",
+    SEALS = "SEALS",
     SHIELDS = "SHIELDS",
 }
 
@@ -97,6 +98,7 @@ interface buildNumsState {
     spirits: number;
     talismans: number;
     tears: number;
+    seals: number;
     shields: number;
 }
 
@@ -115,6 +117,8 @@ interface buildState {
     spirits: BuildItem[];
     talismans: BuildItem[];
     shields: BuildItem[];
+    tears: BuildItem[];
+    seals: BuildItem[];
     startingClass: BuildItem;
 }
 
@@ -127,6 +131,7 @@ type IncludePreviouslyRolled = {
     spirits: boolean;
     talismans: boolean;
     tears: boolean;
+    seals: boolean;
     [key: string]: boolean;
 };
 
@@ -140,6 +145,7 @@ type RolledItems = {
     spirits: string[];
     talismans: string[];
     tears: string[];
+    seals: string[];
     // starting_class: string;
     [key: string]: string | string[];
 };

@@ -7,6 +7,7 @@ const GRID_CONTAINER_THEME = {
     width: "90vw",
     m: 1,
 };
+
 export default function ItemGrid(props: any) {
     return (
         <Box sx={GRID_CONTAINER_THEME}>
@@ -78,8 +79,8 @@ export default function ItemGrid(props: any) {
                     <ItemColumn
                         buildNums={props.buildNums}
                         buildNumsDispatch={props.buildNumsDispatch}
-                        itemType={"shields"}
-                        build={props.build.shields}
+                        itemType={"seals"}
+                        build={props.build.seals}
                         buildDispatch={props.buildDispatch}
                     />
                 </Grid>
@@ -92,7 +93,15 @@ export default function ItemGrid(props: any) {
                         buildDispatch={props.buildDispatch}
                     />
                 </Grid>
-
+                <Grid item xs={4} sm={2} lg={1}>
+                    <ItemColumn
+                        buildNums={props.buildNums}
+                        buildNumsDispatch={props.buildNumsDispatch}
+                        itemType={"shields"}
+                        build={props.build.shields}
+                        buildDispatch={props.buildDispatch}
+                    />
+                </Grid>
             </Grid>
         </Box>
     );

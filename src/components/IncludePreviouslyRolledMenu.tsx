@@ -86,6 +86,7 @@ export default function IncludePreviouslyRolledMenu(props: any) {
                 spirits: [],
                 talismans: [],
                 tears: [],
+                seals: [],
             };
         }
         const keys = Object.keys(categoriesToIncludePreviouslyRolled);
