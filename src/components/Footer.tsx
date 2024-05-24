@@ -3,20 +3,43 @@ import React from "react";
 const linkStyles = { textDecoration: "none" };
 
 export default function Footer() {
+	const [isMobile, setIsMobile] = React.useState(window.innerWidth < 1300);
+	const footerContainerStyles = {
+		display: "flex",
+		padding: "1rem",
+		justifyContent: "center",
+		alignItems: isMobile ? "center" : "stretch",
+		flexDirection: isMobile ? ("column" as "column") : ("row" as "row"),
+	};
+
+	const bmacStyles = {
+		// height: "100px",
+		position: !isMobile ? ("absolute" as "absolute") : ("static" as "static"),
+		marginRight: !isMobile ? "80vw" : "0",
+		// width: "100px",
+	};
+
+	React.useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 1300);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
+	React.useEffect(() => {
+		console.log("mobile is ", isMobile);
+	}, [isMobile]);
+
 	return (
-		<div
-			style={{
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				flexDirection: "column",
-				padding: "1rem",
-			}}
-		>
+		<div style={footerContainerStyles}>
 			<p
 				style={{
 					fontSize: "20px",
 					textAlign: "center",
+					width: "60vw",
 				}}
 			>
 				<b>I value your feedback!</b> If you have any comments, suggestions, or issues, please don't hesitate to reach
@@ -31,11 +54,9 @@ export default function Footer() {
 				</a>
 				.
 			</p>
-			<div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "0rem" }}>
-				<a href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
-					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff" />
-				</a>
-			</div>
+			<a style={bmacStyles} href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
+				<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff" />
+			</a>
 		</div>
 	);
 }
