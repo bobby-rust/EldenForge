@@ -1,40 +1,41 @@
-export const Footer = () => {
-    enum TextAlign {
-        Left = "left",
-        Center = "center",
-        Right = "right",
-    }
+import React from "react";
 
-    const pStyles = {
-        marginLeft: "10px",
-        marginRight: "10px",
-        fontFamily: "Montserrat, Ubuntu, sans-serif",
-        textAlign: TextAlign.Center, // ...not sure why typescript feels that this is necessary but ok
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
-    };
+const linkStyles = { textDecoration: "none" };
 
-    const mediaQueries = {
-        "@media (max-width: 480px)": {
-            fontSize: "1rem",
-        },
-        "@media (max-width: 768px)": {
-            fontSize: "14px",
-        },
-    };
-
-    return (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", textAlign: "center", maxWidth: "90vw", ...mediaQueries, borderTop: "1px solid rgba(0, 0, 0, 0.2)", boxShadow: "0px 4px 4px 2px rgba(0, 0, 0, 0.2)", }}>
-
-                <p style={{ ...pStyles }}>
-                    I would love to hear your feedback. You can submit an issue or feature request &nbsp;
-                    <a href="https://github.com/bobby-rust/erbg/issues" target="_blank" rel="noreferrer">
-                        here
-                    </a>.
-                </p>
-            </div>
-        </div>
-    );
-};
+export default function Footer() {
+	return (
+		<div
+			style={{
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				flexDirection: "column",
+				padding: "1rem",
+			}}
+		>
+			<p
+				style={{
+					fontSize: "20px",
+					textAlign: "center",
+				}}
+			>
+				<b>I value your feedback!</b> If you have any comments, suggestions, or issues, please don't hesitate to reach
+				out. You can open an issue on GitHub{"  "}
+				<a style={linkStyles} href="https://github.com/bobby-rust/erbg/issues" rel="noreferrer" target="_blank">
+					here
+				</a>{" "}
+				{"  "}
+				or send me an email at{" "}
+				<a style={linkStyles} href="mailto:erbgfeedback@gmail.com" rel="noreferrer" target="_blank">
+					erbgfeedback@gmail.com
+				</a>
+				.
+			</p>
+			<div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "0rem" }}>
+				<a href="https://www.buymeacoffee.com/bobbyrust">
+					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff" />
+				</a>
+			</div>
+		</div>
+	);
+}

@@ -36,7 +36,6 @@ function getSeals(numSeals: number, includePreviouslyRolled: any, rolledItems: a
         }
     }
     // End find seals 
-    console.log("returning: ", seals);
     return seals;
 }
 

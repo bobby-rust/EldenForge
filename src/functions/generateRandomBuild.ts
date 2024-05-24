@@ -36,7 +36,6 @@ function generateRandomBuild(
     includePreviouslyRolled: IncludePreviouslyRolled
 ) {
     sessionStorage.removeItem("rolledItems");
-    // console.log("Getting previous session storage data");
     const rolledItemsString: string | null = sessionStorage.getItem("rolledItems");
     let rolledItems: RolledItems;
     if (rolledItemsString) {
@@ -101,8 +100,6 @@ function generateRandomBuild(
         seals: getSeals(numSeals, includePreviouslyRolled.seals, rolledItems),
         startingClass: getClass(),
     };
-    console.log("build in generate: ");
-    console.log(build);
     // Down here, we should update sessionStorage by adding all new items to the sessionStorage object
     let newSessionStorage: any = structuredClone(rolledItems);
 

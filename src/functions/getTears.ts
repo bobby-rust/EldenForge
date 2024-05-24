@@ -1,12 +1,6 @@
 import tears_data from '../data/crystal_tears.json';
 
 function getTears(numtears: number, includePreviouslyRolled: any, rolledItems: any) {
-    console.log("in tears (literally bc debugging)")
-    // Retrieve the data from sessionStorage
-    // const storedPreviouslyRolledData = sessionStorage.getItem("rolledItems");
-    // const parsedPreviouslyRolledData: any = JSON.parse(storedPreviouslyRolledData!);
-    console.log("rolled items in getTears: ");
-    console.log(rolledItems);
     if (rolledItems.tears.length === tears_data.data.length) {
         return [];
     }
@@ -42,7 +36,6 @@ function getTears(numtears: number, includePreviouslyRolled: any, rolledItems: a
         }
     }
     // End find tears 
-    console.log("returning: ", tears);
     return tears;
 }
 
