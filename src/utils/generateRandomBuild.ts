@@ -89,7 +89,7 @@ function generateRandomBuild(
     // default to 16 total
     const build: Build = {
         weapons: getWeapons(numWeapons, includePreviouslyRolled.weapons, rolledItems),
-        armor: getArmor(includePreviouslyRolled.weapons, rolledItems), // Dummy value here for now `.weapons`
+        armor: getArmor(),
         ashes: getAshes(numAshes, includePreviouslyRolled.ashes, rolledItems),
         incantations: getIncants(numIncants, includePreviouslyRolled.incantations, rolledItems),
         shields: getShields(numShields, includePreviouslyRolled.shields, rolledItems),
@@ -155,15 +155,15 @@ function getNewItem(
 ) {
     switch (type) {
         case "ARMOR.HELM":
-            const newHead = getArmor(includePreviouslyRolled, rolledItems, "HELM");
+            const newHead = getArmor("HELM");
             const newHeadBuild = createNewBuild(state, t_id, newHead[0], type.toLowerCase());
             return newHeadBuild;
         case "ARMOR.CHEST":
-            const newChest = getArmor(includePreviouslyRolled, rolledItems, "CHEST");
+            const newChest = getArmor("CHEST");
             const newChestBuild = createNewBuild(state, t_id, newChest[0], type.toLowerCase());
             return newChestBuild;
         case "ARMOR.GAUNTLETS":
-            const newGauntlets = getArmor(includePreviouslyRolled, rolledItems, "GAUNTLETS");
+            const newGauntlets = getArmor("GAUNTLETS");
             const newGauntletsBuild = createNewBuild(
                 state,
                 t_id,
@@ -172,7 +172,7 @@ function getNewItem(
             );
             return newGauntletsBuild;
         case "ARMOR.LEG":
-            const newLegs = getArmor(includePreviouslyRolled, rolledItems, "LEG");
+            const newLegs = getArmor("LEG");
             const newLegsBuild = createNewBuild(state, t_id, newLegs[0], type.toLowerCase());
             return newLegsBuild;
         case "WEAPONS":
