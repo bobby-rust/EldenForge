@@ -1,5 +1,5 @@
 import armors_data from "../data/armors_data.json";
-import { ArmorDataObject, BuildItem } from "../types/ItemTypes";
+import { ArmorDataObject} from "../types/ItemTypes";
 
 function SortArmor(armor: ArmorDataObject[]): ArmorDataObject[] {
     const sortedArmor: ArmorDataObject[] = [];
@@ -53,7 +53,7 @@ function SortArmor(armor: ArmorDataObject[]): ArmorDataObject[] {
 //     return cleanArmor;
 // }
 
-function getArmor(includePreviouslyRolled: boolean, rolledItems: any, type?: string) {
+function getArmor(type?: string) {
     /**
      * This component needs to:
      *      Restructure the data into BuildItem

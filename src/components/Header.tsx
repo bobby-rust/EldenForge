@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
 
 const HEADER_THEME = {
 	borderBottom: "1px solid rgba(0, 0, 0, 0.2)",
