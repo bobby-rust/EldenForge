@@ -11,18 +11,14 @@
 
 ## TODO
 
-- Lock individual items or entire categories so they are not regenerated
-- Add randomized challenge runs
-- Add saving/editing builds to user account
-- Generate URLs that link to a specific build
-- Ability to select items from a list to put in each build slot
-- Individual item stats and overall build stats
-- Option to ensure Ash of War compatibility with generated weapons
-- [x] Add seals
-- Implement "undo" stack
-- Check/Uncheck all in include previously rolled dropdown menu
-- Make it easy for users to give feedback directly from the website (a text box with a send button which sends a message to me through some medium)
-- Backend for comment system
-- [x] Add crystal tears
-- [ ] Fix seals rolling in weapon slot
-- [ ] Fix requests to be one file
+[ ] Lock individual items or entire categories so they are not regenerated
+[ ] Add randomized challenge runs
+[ ] Add saving/editing builds to user account
+[ ] Generate URLs that link to a specific build (in progress)
+[ ] Ability to select items from a list to put in each build slot
+[ ] Individual item stats and overall build stats
+[ ] Option to ensure Ash of War compatibility with generated weapons
+[ ] Implement "undo" stack
+[ ] Check/Uncheck all in include previously rolled dropdown menu
+[ ] Fix seals rolling in weapon slot
+[ ] Fix requests to be one file
