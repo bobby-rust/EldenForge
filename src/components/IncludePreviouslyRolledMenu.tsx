@@ -26,8 +26,7 @@ type IncludeCategories = {
 };
 
 const TOOLTIP_BUTTON_THEME = { width: "30px", height: "30px", borderRadius: "50%", ml: 0.5 };
-const tooltipText =
-	"The checked categories will allow items of that category to be rolled more than once. To reset rolled items, check and uncheck the box or refresh the page.";
+const tooltipText = `The checked categories will allow items of that category to be rolled more than once. To reset rolled items, check and uncheck the box or refresh the page.`;
 
 export default function IncludePreviouslyRolledMenu(props: any) {
 	// This is what is shown in the select menu next to checkboxes
@@ -160,7 +159,7 @@ export default function IncludePreviouslyRolledMenu(props: any) {
 							</MenuItem>
 						))}
 					</Select>
-					<Tooltip title={tooltipText}>
+					<Tooltip title={<p style={{ fontSize: "14px", margin: "0.3rem" }}>{tooltipText}</p>}>
 						<IconButton sx={TOOLTIP_BUTTON_THEME}>
 							<HelpIcon />
 						</IconButton>
