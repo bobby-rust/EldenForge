@@ -1,13 +1,11 @@
 import React from "react";
 import "./App.css";
-import { generateRandomBuild, getNewItem } from "./functions/generateRandomBuild";
-import AnalyticsWrapper from "./components/AnalyticsWrapper";
+import { generateRandomBuild, getNewItem } from "./utils/generateRandomBuild";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IncludePreviouslyRolled, buildNumsAction, buildNumsState } from "./types/ItemTypes";
 import SmallLayout from "./components/SmallLayout";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-// import BmacWidget from "./components/BmacWidget";
 
 const initialIncludePreviouslyRolled: IncludePreviouslyRolled = {
 	weapons: false,
@@ -247,8 +245,6 @@ const App = () => {
 					build={build}
 				/>
 				<Footer />
-
-				<AnalyticsWrapper />
 			</>
 		</div>
 	);

@@ -9,6 +9,7 @@ function getAshes(numAshes: number, includePreviouslyRolled: any, rolledItems: a
     const ashes = [];
 
     while (!foundAshes) {
+
         if (ashes_data.count === rolledItems.ashes.length + ashes.length) {
             break;
         }

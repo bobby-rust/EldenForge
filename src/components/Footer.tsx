@@ -13,10 +13,8 @@ export default function Footer() {
 	};
 
 	const bmacStyles = {
-		// height: "100px",
 		position: !isMobile ? ("absolute" as "absolute") : ("static" as "static"),
-		marginRight: !isMobile ? "80vw" : "0",
-		// width: "100px",
+		marginRight: !isMobile ? "72vw" : "0",
 	};
 
 	React.useEffect(() => {
@@ -39,7 +37,7 @@ export default function Footer() {
 				style={{
 					fontSize: "20px",
 					textAlign: "center",
-					width: "60vw",
+					maxWidth: "50vw",
 				}}
 			>
 				<b>I value your feedback!</b> If you have any comments, suggestions, or issues, please don't hesitate to reach
