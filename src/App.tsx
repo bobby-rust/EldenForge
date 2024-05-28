@@ -1,11 +1,14 @@
 import "./App.css";
-
+import BuildGenerator from "./classes/Item";
+import { Build } from "./classes/Item";
 function App() {
-	return (
-		<div>
-			<h1>Hey</h1>
-		</div>
-	);
+	const generator = new BuildGenerator();
+	generator._includePreviouslyRolled = true;
+	const url = generator.generateUrl();
+	const build = new Build();
+	build.createBuildFromUrl(url);
+
+	return <div></div>;
 }
 
 export default App;

@@ -1,4 +1,6 @@
 type BuildNums = {
+	armors: number;
+	classes: number;
 	ashes: number;
 	tears: number;
 	incants: number;
@@ -8,6 +10,7 @@ type BuildNums = {
 	spirits: number;
 	talismans: number;
 	weapons: number;
+	[key: string]: number;
 };
 
 export default BuildNums;
