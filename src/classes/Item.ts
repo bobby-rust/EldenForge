@@ -1,7 +1,6 @@
 import { ItemType, ArmorCategory } from "../types/enums";
 import BuildNums from "../types/types";
 import data from "../data/data.json";
-import { builtinModules } from "module";
 
 /**
  * An item category has `count` items and a list of that category's items
