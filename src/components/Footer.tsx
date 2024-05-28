@@ -1,6 +1,6 @@
 import React from "react";
 
-const linkStyles = { textDecoration: "none" };
+const linkStyles = { color: "#0056B3" };
 
 export default function Footer() {
 	const [isMobile, setIsMobile] = React.useState(window.innerWidth < 1300);
