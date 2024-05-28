@@ -1,24 +1,30 @@
-# Generate random Elden Ring builds 🤺
+# React + TypeScript + Vite
 
-[![Site view](public/ERBG.png)](https://erbg.vercel.app/)
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
+Currently, two official plugins are available:
 
-- Customize the number of items to generate for each category
-- Reroll individual items to get the perfect build
-- Control duplicate item rerolls by switching them on or off by category
-- Click on each item to view its wiki page
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## TODO
+## Expanding the ESLint configuration
 
-- [ ] Lock individual items or entire categories so they are not regenerated
-- [ ] Add randomized challenge runs
-- [ ] Add saving/editing builds to user account
-- [ ] Generate URLs that link to a specific build (in progress)
-- [ ] Ability to select items from a list to put in each build slot
-- [ ] Individual item stats and overall build stats
-- [ ] Option to ensure Ash of War compatibility with generated weapons
-- [ ] Implement "undo" stack
-- [ ] Check/Uncheck all in include previously rolled dropdown menu
-- [ ] Fix seals rolling in weapon slot
-- [ ] Fix requests to be one file
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+
+- Configure the top-level `parserOptions` property like this:
+
+```js
+export default {
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
+}
+```
+
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
