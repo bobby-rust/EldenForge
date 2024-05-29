@@ -13,4 +13,4 @@ type BuildNums = {
 	[key: string]: number;
 };
 
-export default BuildNums;
+export type { BuildNums };

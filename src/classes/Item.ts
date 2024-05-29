@@ -1,5 +1,5 @@
 import { ItemType, ArmorCategory } from "../types/enums";
-import BuildNums from "../types/types";
+import { BuildNums } from "../types/types";
 import data from "../data/data.json";
 
 /**
@@ -12,6 +12,10 @@ type Category = {
 
 /**
  * The structure of the JSON data
+ * For consistency purposes, all abbreviations used here should be consistent
+ * throughout the codebase, only exception being the raw data file, which does not use abbreviations.
+ * The pluralized item categories refers to a list of
+ * that category, and singular categories refers to an individual piece of that category.
  */
 type ItemData = {
 	armors: Category;
@@ -22,6 +26,8 @@ type ItemData = {
 	shields: Category;
 	sorcs: Category;
 	weapons: Category;
+	tears: Category;
+	incants: Category;
 	[key: string]: Category;
 };
 
@@ -131,21 +137,23 @@ export class Build {
 		console.log("Initialized a new build.");
 	}
 
-	public createBuildFromUrl(url: string): Build {
-		const categories = url.split("&");
-		console.log(categories);
-		return new Build();
-	}
-
+	/**
+	 * Adds an item to `this` object.
+	 * @param type the type of item.
+	 * @param item the item to add.
+	 */
 	public addItem(type: string, item: Item | Armor) {
 		switch (type) {
+			case "classes":
+				this.addClass(item);
+				break;
 			case "weapons":
 				this.addWeapon(item);
 				break;
 			case "tears":
 				this.addTear(item);
 				break;
-			case "incantations":
+			case "incants":
 				this.addIncant(item);
 				break;
 			case "seals":
@@ -181,6 +189,10 @@ export class Build {
 						break;
 				}
 		}
+	}
+
+	private addClass(c: Item) {
+		this._class = c;
 	}
 
 	private addWeapon(weapon: Item) {
@@ -235,7 +247,7 @@ export class Build {
 /**
  * The BuildGenerator needs to generate a valid build and return a base64 encoded
  * URL parameter string of the form
- * ?&weapons=<comma_separated_indices>&armor=<comma_separated_indices>...
+ * ?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...
  *
  * This object will also keep track of the state of generated items
  * and a boolean flag `_includePreviouslyRolled`
@@ -294,13 +306,21 @@ export default class BuildGenerator {
 			const count = this._itemData[category]["count"];
 			const numItems = this._buildNums[category];
 
+			if (category === "armors") {
+				const armors = this.generateArmors();
+				armors.forEach((armor) => {
+					this.addItemToBuildMap(category, armor, rolled);
+				});
+				continue;
+			}
+
 			for (let i = 0; i < numItems; ++i) {
 				const rand = Math.floor(Math.random() * count);
 				rolled.set(category, [...(rolled.get(category) || []), rand]);
 			}
 		}
 
-		return this.createUrlFromRolledItems(rolled);
+		return this.createUrlFromBuildMap(rolled);
 	}
 
 	/**
@@ -315,10 +335,22 @@ export default class BuildGenerator {
 			const count = this._itemData[category]["count"];
 			const numItems = this._buildNums[category];
 
+			if (category === "armors") {
+				const armors = this.generateArmors();
+				armors.forEach((armor: number) => {
+					this.addItemToBuildMap(category, armor, rolled);
+				});
+				continue;
+			}
+
 			// if _previouslyRolled's category key is undefined, initialize a new set
 			const prevRolled = this._previouslyRolled.get(category) ?? new Set<number>();
 			if (prevRolled.size >= count) {
 				// there are no more valid items, break out of inner loop, go to next category
+				if (!rolled.has(category)) {
+					// ensure that the set contains an entry for each category, even if empty
+					rolled.set(category, []);
+				}
 				break;
 			}
 
@@ -329,64 +361,193 @@ export default class BuildGenerator {
 					rand = Math.floor(Math.random() * count);
 				}
 
-				/**
-				 * This is needed because Map and Set's get method can return undefined,
-				 * in which case a new Map or Set needs to be initialized in order for an item to be added
-				 */
-				(this._previouslyRolled.get(category) ?? new Set<number>()).add(rand); // add item to previously rolled
-				rolled.set(category, [...(rolled.get(category) ?? []), rand]); // add item to current rolled items
+				this.addItemToBuildMap(category, rand, rolled);
 			}
 		}
 
-		console.log(rolled);
-		return this.createUrlFromRolledItems(rolled);
+		return this.createUrlFromBuildMap(rolled);
 	}
 
-	private generateBuildFromUrl(encoded: string): Build {
-		const build = new Build();
+	private addItemToBuildMap(category: string, item: number, map: Map<string, number[]>) {
+		/**
+		 * This is needed because Map and Set's get method can return undefined,
+		 * in which case a new Map or Set needs to be initialized in order for an item to be added
+		 */
+
+		this.addItemToPreviouslyRolled(category, item);
+		map.set(category, [...(map.get(category) ?? []), item]); // add item to current rolled items
+	}
+
+	/**
+	 * Adds an item to the list of previously rolled items.
+	 * @param category the category of item
+	 * @param item the index of the item
+	 */
+	private addItemToPreviouslyRolled(category: string, item: number) {
+		const newItems = (this._previouslyRolled.get(category) ?? new Set<number>()).add(item); // add item to previously rolled
+		this._previouslyRolled.set(category, newItems);
+	}
+
+	/**
+	 * Generates a random set of armor.
+	 * @returns {number[]} the list of armor indices
+	 */
+	private generateArmors(): number[] {
+		return this._includePreviouslyRolled ? this.generateRandomArmors() : this.generateRandomUniqueArmors();
+	}
+
+	private generateRandomArmors(): number[] {
+		const armors: number[] = [];
+		const armorsData = data["armors"];
+		const count = armorsData["count"];
+		const items = armorsData["items"];
+		const armorsMap = new Map<string, number>();
+
+		while (armors.length < 4) {
+			const rand = Math.floor(Math.random() * count);
+
+			const item = items[rand];
+			if (armorsMap.has(item["category"])) {
+				continue;
+			}
+
+			armorsMap.set(item.category, rand);
+			armors.push(rand);
+		}
+
+		return armors;
+	}
+
+	private generateRandomUniqueArmors(): number[] {
+		const armors: number[] = [];
+		const armorsData = data["armors"];
+		const count = armorsData["count"];
+		const items = armorsData["items"];
+		const armorsMap = new Map<string, number>();
+
+		while (armors.length < 4 && (this._previouslyRolled.get("armors") ?? new Set<number>()).size < count) {
+			const rand = Math.floor(Math.random() * count);
+			const item = items[rand];
+
+			if (armorsMap.has(item["category"]) || (this._previouslyRolled.get("armors") ?? new Set<number>()).has(rand)) {
+				continue;
+			}
+
+			armorsMap.set(item.category, rand);
+			armors.push(rand);
+			this.addItemToPreviouslyRolled("armors", rand);
+		}
+		return armors;
+	}
+
+	/**
+	 * Generates a Build object from a base64 encoded URL.
+	 * @param encoded The base64 encoded url.
+	 * @returns {Build} A build object containing the items of `encoded`
+	 */
+	public generateBuildFromUrl(encoded: string): Build {
 		const url = this.decode(encoded);
+
 		const buildMap = this.parseBuildMapFromUrl(url);
+		const build: Build = this.parseBuildFromMap(buildMap);
 
 		return build;
 	}
 
 	/**
+	 * Parses a Build from a build map where the keys are the category
+	 * and the values are the list of indices of items for that category.
+	 * @param map the build map to parse.
+	 * @returns {Build} the Build object.
+	 */
+	private parseBuildFromMap(map: Map<string, number[]>): Build {
+		const build = new Build();
+
+		for (const [key, val] of map) {
+			console.log("Key, val: ");
+			console.log(key, val);
+			// TODO: fix bug
+			val.forEach((val: number) => {
+				if (isNaN(val)) {
+					console.log("WHY ME");
+				}
+				const item = this.getItem(key, val);
+				build.addItem(key, item);
+			});
+		}
+
+		return build;
+	}
+
+	/**
+	 * Gets a piece of armor.
+	 * @param index the index of the armor piece in armors data
+	 * @returns {Armor} the armor piece.
+	 */
+	private getArmor(index: number): Armor {
+		const armor = new Armor();
+		const itemData: any = data["armors"].items[index]; // Apparently Armors is a complex type that I cba to play around with atm.
+
+		armor.image = itemData["image"];
+		armor.index = index;
+		armor.name = itemData["name"];
+		armor.type = ItemType.Armor;
+		armor.category = itemData["category"];
+
+		return armor;
+	}
+
+	/**
+	 * Gets an item object from its type and index.
+	 * @param type the type of item
+	 * @param index the index of the item in the raw data
+	 * @returns {Item | Armor} the item.
+	 */
+	private getItem(type: string, index: number): Item | Armor {
+		if (type === "armors") {
+			return this.getArmor(index);
+		}
+
+		const item = new Item();
+		const itemData = data[type as keyof typeof data].items[index]; // Just pleasing TypeScript...
+		item.image = itemData["image"];
+		item.index = index;
+		item.name = itemData["name"];
+		item.type = type as ItemType;
+
+		return item;
+	}
+
+	/**
 	 * Parses a string of the form `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
-	 * into a Map containing categories as keys and the indices of build items as values
+	 * into a build map containing categories as keys and the indices of build items as values
 	 */
 	private parseBuildMapFromUrl(str: string): Map<string, number[]> {
-		// TODO: this function is a mess, i'll have no idea what any of this code is next time I look at it... probably try to write something better.
 		const buildMap = new Map<string, number[]>();
 
 		for (let i = 0; i < str.length; ++i) {
-			let catStart = 0;
-			let catStop = 0;
+			// If we are at an ampersand, slice out the entire category.
 			if (str[i] === "&") {
-				catStart = i + 1;
-				for (let j = i + 1; j < str.length; ++j) {
-					if (str[j] === "&") {
+				let catStart = i + 1;
+				let catStop = catStart;
+
+				for (let j = catStart; j < str.length; ++j) {
+					if (str[j] === "&" || j === str.length - 1) {
 						catStop = j; // string.slice takes up to but NOT including as second parameter
+						break;
 					}
 				}
+
+				const category = str.slice(catStart, catStop); // this is the entire category including key and values
+
+				// once we have the entire category, split by the "=" to find the name and values
+				const items = category.split("=");
+				const name = items[0];
+				const values = items[1].split(",");
+				const intVals: number[] = [];
+				values.forEach((val) => intVals.push(parseInt(val)));
+				buildMap.set(name, intVals);
 			}
-
-			const category = str.slice(catStart, catStop); // this is the entire category including key and values
-			let nameStart = catStart;
-			let nameStop = nameStart;
-
-			while (str[++nameStop] !== "="); // find = sign
-
-			const catName = str.slice(nameStart, nameStop);
-
-			// parse indices
-			let indicesStart = nameStop + 1;
-			const strIndices: string[] = category.slice(indicesStart, catStop).split(",");
-			const indices: number[] = [];
-			for (let j = 0; j < strIndices.length; ++j) {
-				indices.push(parseInt(strIndices[j]));
-			}
-
-			buildMap.set(catName, indices);
 		}
 
 		return buildMap;
@@ -409,14 +570,13 @@ export default class BuildGenerator {
 	 * @returns {string} A base64 encoded ASCII string of the form
 	 *                   `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
 	 */
-	private createUrlFromRolledItems(rolled: Map<string, number[]>): string {
-		let url = "?";
+	private createUrlFromBuildMap(rolled: Map<string, number[]>): string {
+		let url = "";
 		for (const category of rolled.keys()) {
 			url += `&${category}=`;
 
 			// IDK why TypeScript finds this necessary, rolled CLEARLY has category as we are LOOPING OVER ITS KEYS
 			const items = rolled.get(category) ?? [];
-			console.log("Items: ", items);
 			items.forEach((num, i) => {
 				url += i === items.length - 1 ? num.toString() : num.toString() + ",";
 			});

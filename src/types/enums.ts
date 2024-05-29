@@ -12,7 +12,7 @@ export enum ItemType {
 }
 
 export enum ArmorCategory {
-	Helm = "helm",
+	Helm = "Helm",
 	Chest = "Chest Armor",
 	Gauntlets = "Gauntlets",
 	Leg = "Leg Armor",

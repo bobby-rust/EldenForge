@@ -1,13 +1,14 @@
 import "./App.css";
 import BuildGenerator from "./classes/Item";
-import { Build } from "./classes/Item";
+
 function App() {
 	const generator = new BuildGenerator();
-	generator._includePreviouslyRolled = true;
-	const url = generator.generateUrl();
-	const build = new Build();
-	build.createBuildFromUrl(url);
 
+	const url = generator.generateUrl();
+	console.log("Got url: ", url);
+
+	const build = generator.generateBuildFromUrl(url);
+	console.log("Got build from URL: ", build);
 	return <div></div>;
 }
 
