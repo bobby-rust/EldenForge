@@ -41,9 +41,9 @@ export default function Footer() {
 				}}
 			>
 				<b>I value your feedback!</b> If you have any comments, suggestions, or issues, please don't hesitate to reach
-				out. You can open an issue on GitHub{"  "}
+				out. You can submit feedback on the {"  "}
 				<a style={linkStyles} href="https://github.com/bobby-rust/erbg/issues" rel="noreferrer" target="_blank">
-					here
+					GitHub issues page
 				</a>{" "}
 				{"  "}
 				or send me an email at{" "}
