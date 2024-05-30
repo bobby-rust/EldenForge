@@ -610,43 +610,22 @@ export default class BuildGenerator {
 		return build;
 	}
 
-	private getArmorFromName(name: string): Armor {
-		const armor = new Armor();
-		const items = data["armors"]["items"];
-
-		for (const currItem of items) {
-			if (currItem.name === name) {
-				armor.image = currItem.image;
-				armor.name = currItem.name;
-				armor.type = "armors" as ItemType;
-				armor.category = currItem.category as ArmorCategory;
-
-				break;
-			}
-		}
-
-		return armor;
-	}
-
-	public getItemFromName(type: string, name: string): Item | Armor {
-		if (type === "armors") {
-			return this.getArmorFromName(name);
-		}
-
-		const item = new Item();
+	/**
+	 * Gets the index of the item by its name, or -1 if the item was not found.
+	 * @param type the type of item to retrieve
+	 * @param name the name of the item
+	 * @returns {number} the index of the item in the raw data
+	 */
+	public getItemFromName(type: string, name: string): number {
 		const items = data[type as keyof typeof data]["items"];
 
-		for (const currItem of items) {
-			if (currItem.name === name) {
-				item.image = currItem.image;
-				item.name = currItem.name;
-				item.type = type as ItemType;
-
-				break;
+		items.forEach((item, i) => {
+			if (item.name === name) {
+				return i;
 			}
-		}
+		});
 
-		return item;
+		return -1;
 	}
 }
 
@@ -663,7 +642,7 @@ export class AIWrapper {
 	private _model: any = this._genAI.getGenerativeModel({ ...this._generationConfig, model: "gemini-1.5-pro" });
 	private _prompt = import.meta.env.VITE_PROMPT;
 
-	private generator = new BuildGenerator();
+	private _generator = new BuildGenerator();
 
 	constructor() {
 		console.log("New AIWrapper initialized.");
@@ -687,34 +666,33 @@ export class AIWrapper {
 	 */
 	parseResponse(): string {
 		const url = "";
-		const response = `Name=Serpent's Kiss Assassin
+		const response = `Name=Oathbound Duelist
         Vigor=40
-        Mind=18
-        Endurance=20
-        Strength=16
+        Mind=16
+        Endurance=25
+        Strength=18
         Dexterity=40
         Intelligence=9
         Faith=12
-        Arcane=40
+        Arcane=7
         Class=Samurai
-        Weapons='Hand of Malenia', 'Serpentbone Blade', 'Black Bow'
+        Weapons='Uchigatana' | 'Regalia of Eochaid'
         Helm='None'
-        Chest Armor='Raptor's Black Feathers'
+        Chest Armor='Ronin's Armor'
         Gauntlets='None'
-        Leg Armor='Malenia's Greaves'
-        Crystal Tears='Cerulean Hidden Tear', 'Greenspill Crystal Tear'
-        Incantations='None'
+        Leg Armor='Ronin's Greaves'
+        Crystal Tears='Cerulean Hidden Tear'
+        Incantations='Golden Vow' | 'Flame, Grant Me Strength'
         Sacred Seals='None'
         Shields='None'
         Sorceries='None'
         Spirit Ashes='Black Knife Tiche'
-        Talismans='Lord of Blood's Exultation', 'Rotten Winged Sword Insignia', 'Millicent's Prosthesis', 'Claw Talisman'
-        Summary=A highly mobile bleed/poison build focusing on rapid attacks and critical strikes, utilizing jump attacks and the unique benefits of Raptor's Black Feathers.
-        Strengths=High damage output, Excellent bleed/poison build up, Extremely mobile, High critcal strike damage
-        Weaknesses=Low physical defense, Reliant on dodging and mobility, Susceptible to magic damage `;
+        Talismans='Rotten Winged Sword Insignia' | 'Lord of Blood's Exultation' | 'Green Turtle Talisman' | 'Carian Filigreed Crest'
+        Summary=This build is a glass cannon bleed/Dex build that utilizes the unique combination of 'Uchigatana' and 'Regalia of Eochaid' to inflict bleed quickly with high damage output.  It uses minimal armor to maintain light equip load and prioritize dodging and mobility. The 'Black Knife Tiche' ashes supplement the player's damage and stagger enemies.
+        Strengths=Very high damage output | Extremely mobile | Good stagger potential | Can inflict bleed quickly
+        Weaknesses=Very low defense | Requires precise dodging and spacing | Susceptible to crowd control | Low FP`;
 
 		// needs to parse the response into a build map -> Map<string, number[]>
-		const buildMap: Map<string, number[]> = new Map<string, number[]>();
 
 		const responseArray = response.split("\n");
 		const mapArray: string[][] = [];
@@ -723,8 +701,60 @@ export class AIWrapper {
 			mapArray.push(currKeyValPair);
 		});
 
-		console.log(mapArray);
-
+		const buildMap = this.createBuildMap(mapArray);
+		console.log(buildMap);
 		return url;
+	}
+
+	/**
+	 * Creates a build map from an array of arrays of key, value pairs.
+	 * @param arr An array containing arrays of key, value pairs where they key is the category and the value is the name of the item.
+	 * @returns {Map<string, number[]>} a map representing a build.
+	 */
+	private createBuildMap(arr: string[][]): Map<string, number[]> {
+		const buildMap = new Map<string, number[]>();
+
+		arr.forEach((kvPair: string[]) => {
+			const key = this.parseCategoryFromResponse(kvPair[0]);
+
+			if (key === "") return;
+
+			const value = kvPair[1];
+
+			const names = value.split("|");
+			console.log(names);
+			names.forEach((name) => {
+				const item = this._generator.getItemFromName(key, name);
+				buildMap.set(key, [...(buildMap.get(key) ?? []), item]);
+			});
+		});
+
+		return buildMap;
+	}
+
+	private parseCategoryFromResponse(cat: string): string {
+		switch (cat) {
+			case "Class":
+				return "classes";
+			case "Weapons":
+				return "weapons";
+			case "Helm" || "Chest Armor" || "Leg Armor" || "Gauntlets":
+				return "armors";
+			case "Crystal Tears":
+				return "tears";
+			case "Shields" || "Sorceries" || "Talismans":
+				return cat.toLowerCase();
+			case "Incantations":
+				return "incants";
+			case "Sacred Seals":
+				return "seals";
+			case "Spirit Ashes":
+				return "spirits";
+
+			// TODO: handle ashes of war?
+			default:
+				console.log("Invalid category.");
+				return "";
+		}
 	}
 }
