@@ -39,7 +39,7 @@ type ItemData = {
  * and each item contains a link the item's wiki page
  * The item type is used to categorize the items.
  */
-class Item {
+export class Item {
 	private _type: ItemType | null = null;
 	private _name: string = "";
 	private _index: number = -1;
@@ -97,7 +97,7 @@ class Item {
  * Armor is a unique item type because it contains an additional field
  * `category` needed for generation.
  */
-class Armor extends Item {
+export class Armor extends Item {
 	/**
 	 * The armor category (helm, chest, gauntlets, leg)
 	 */
@@ -302,28 +302,25 @@ export default class BuildGenerator {
 		 * Maps the category to the indices of the items rolled for that category for the current build
 		 * This values is an array because we do not need to access numbers at arbitrary indices.
 		 */
-		const rolled: Map<string, number[]> = new Map<string, number[]>();
+		const buildMap: Map<string, number[]> = new Map<string, number[]>();
 
-		console.log("Generating random build.");
 		for (const category of Object.keys(this._itemData)) {
 			const count = this._itemData[category]["count"];
 			const numItems = this._buildNums[category];
 
 			if (category === "armors") {
 				const armors = this.generateArmors();
-				armors.forEach((armor) => {
-					this.addItemToBuildMap(category, armor, rolled);
-				});
+				armors.forEach((armor) => this.addItemToBuildMap(category, armor, buildMap));
 				continue;
 			}
 
 			for (let i = 0; i < numItems; ++i) {
 				const rand = Math.floor(Math.random() * count);
-				rolled.set(category, [...(rolled.get(category) || []), rand]);
+				this.addItemToBuildMap(category, rand, buildMap);
 			}
 		}
 
-		return this.createUrlFromBuildMap(rolled);
+		return this.createUrlFromBuildMap(buildMap);
 	}
 
 	/**
@@ -677,6 +674,7 @@ export class AIWrapper {
         Arcane=7
         Class=Samurai
         Weapons='Uchigatana' | 'Regalia of Eochaid'
+        Ashes 0f War='Ash Of War: Barrage' | 'Ash Of War: Prelate's Charge'
         Helm='None'
         Chest Armor='Ronin's Armor'
         Gauntlets='None'
@@ -715,7 +713,7 @@ export class AIWrapper {
 		const buildMap = new Map<string, number[]>();
 
 		arr.forEach((kvPair: string[]) => {
-			const key = this.parseCategoryFromResponse(kvPair[0]);
+			const key = this.translateResponseCategory(kvPair[0]);
 
 			if (key === "") return;
 
@@ -732,7 +730,13 @@ export class AIWrapper {
 		return buildMap;
 	}
 
-	private parseCategoryFromResponse(cat: string): string {
+	/**
+	 * Translates the category from the given response string into the form used by the BuildGenerator.
+	 *
+	 * @param {string} cat - The category string as received from the AI.
+	 * @return {string} The parsed category string in the form used by the BuildGenerator.
+	 */
+	private translateResponseCategory(cat: string): string {
 		switch (cat) {
 			case "Class":
 				return "classes";
@@ -740,18 +744,16 @@ export class AIWrapper {
 				return "weapons";
 			case "Helm" || "Chest Armor" || "Leg Armor" || "Gauntlets":
 				return "armors";
-			case "Crystal Tears":
-				return "tears";
 			case "Shields" || "Sorceries" || "Talismans":
 				return cat.toLowerCase();
 			case "Incantations":
 				return "incants";
-			case "Sacred Seals":
-				return "seals";
+			case "Sacred Seals" || "Crystal Tears":
+				return cat.split(" ")[1].toLowerCase();
 			case "Spirit Ashes":
 				return "spirits";
-
-			// TODO: handle ashes of war?
+			case "Ashes 0f War":
+				return "ashes";
 			default:
 				console.log("Invalid category.");
 				return "";
