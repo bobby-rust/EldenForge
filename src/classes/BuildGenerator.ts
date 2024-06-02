@@ -1,7 +1,7 @@
-import { ItemType, ArmorCategory } from "../types/enums";
 import { BuildNums } from "../types/types";
 import data from "../data/data.json";
 import { GenerationConfig, GoogleGenerativeAI } from "@google/generative-ai";
+import { ArmorCategory, ItemType } from "../types/enums";
 
 /**
  * An item category has `count` items and a list of that category's items
@@ -132,7 +132,6 @@ export class Build {
 	_sorcs: Item[] = [];
 	_spirits: Item[] = [];
 	_talismans: Item[] = [];
-	_urlParams: string = "";
 
 	constructor() {
 		console.log("Initialized a new build.");
@@ -253,9 +252,9 @@ export class Build {
  * ?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...
  *
  * This object will also keep track of the state of generated items
- * and a boolean flag `_includePreviouslyRolled`
+ * and a boolean flag `_excludePreviouslyRolled`
  * which are used to determine if generated items are valid.
- * If a generated item is not valid (i.e. _includePreviouslyRolled is false and the item has already been generated),
+ * If a generated item is not valid (i.e. _excludePreviouslyRolled is false and the item has already been generated),
  * it will keep regenerating items until a valid item is found or there are no more valid items.
  */
 export default class BuildGenerator {
@@ -265,7 +264,7 @@ export default class BuildGenerator {
 	 * The value is a Set for more efficient access of numbers
 	 */
 	_previouslyRolled: Map<string, Set<number>> = new Map<string, Set<number>>();
-	_includePreviouslyRolled: boolean = false;
+	_excludePreviouslyRolled: boolean = true;
 	_buildNums: BuildNums = {
 		armors: 4,
 		classes: 1,
@@ -286,11 +285,11 @@ export default class BuildGenerator {
 
 	/**
 	 * Generates a URL representing a build.
-	 * The build contains unique items if _includePreviouslyRolled is false.
+	 * The build contains unique items if _excludePreviouslyRolled is false.
 	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
 	 */
 	public generateUrl(): string {
-		return this._includePreviouslyRolled ? this.generateRandom() : this.generateRandomUnique();
+		return this._excludePreviouslyRolled ? this.generateRandomUnique() : this.generateRandom();
 	}
 
 	/**
@@ -324,50 +323,54 @@ export default class BuildGenerator {
 	}
 
 	/**
-	 * Generates a build of unique items (i.e., not previously rolled in prior generations)
+	 * Generates a build of unique items that have not been previously rolled.
 	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
 	 */
 	private generateRandomUnique(): string {
-		const buildMap: Map<string, number[]> = new Map<string, number[]>();
+		const uniqueBuildMap: Map<string, number[]> = new Map<string, number[]>();
 
-		console.log("Generating random unique build.");
 		for (const category of Object.keys(this._itemData)) {
-			const count = this._itemData[category]["count"];
-			const numItems = this._buildNums[category];
+			const numItems = this._itemData[category]["count"];
+			const numItemsToRoll = this._buildNums[category];
 
 			if (category === "armors") {
 				const armors = this.generateArmors();
 				armors.forEach((armor: number) => {
-					this.addItemToBuildMap(category, armor, buildMap);
+					this.addItemToBuildMap(category, armor, uniqueBuildMap);
 				});
 				continue;
 			}
 
-			// if _previouslyRolled's category key is undefined, initialize a new set
-			const prevRolled = this._previouslyRolled.get(category) ?? new Set<number>();
-			if (prevRolled.size >= count) {
-				// there are no more valid items, break out of inner loop, go to next category
-				if (!buildMap.has(category)) {
-					// ensure that the set contains an entry for each category, even if empty
-					buildMap.set(category, []);
+			const prevRolledItems = this._previouslyRolled.get(category) ?? new Set<number>();
+			if (prevRolledItems.size >= numItems) {
+				// console.log("Category: ", category);
+				// console.log("prevRolledItems: ", prevRolledItems.size);
+				// console.log("numItems: ", numItems);
+				// console.log("previouslyRolled: ", this._previouslyRolled);
+				if (!uniqueBuildMap.has(category)) {
+					uniqueBuildMap.set(category, []);
 				}
-				break;
+				continue;
 			}
 
-			for (let i = 0; i < numItems; ++i) {
-				let rand = Math.floor(Math.random() * count);
-				while (prevRolled.has(rand)) {
-					// Keep rolling until a valid item is found.
-					rand = Math.floor(Math.random() * count);
+			for (let i = 0; i < numItemsToRoll; ++i) {
+				let randomIndex = Math.floor(Math.random() * numItems);
+				while (prevRolledItems.has(randomIndex) && prevRolledItems.size < numItems) {
+					randomIndex = Math.floor(Math.random() * numItems);
 				}
+				this.addItemToBuildMap(category, randomIndex, uniqueBuildMap);
+				if (category === "seals") {
+					console.log("prevRolledItems: ", prevRolledItems);
+					console.log("Rolled item: ", randomIndex, " in category: ", category);
+					console.log("prevRolledItems: ", prevRolledItems);
+				}
+			}
 
-				this.addItemToBuildMap(category, rand, buildMap);
+			if (category === "seals") {
+				console.log("Build map current iteration: ", uniqueBuildMap);
 			}
 		}
-
-		console.log("Generated build map: ", buildMap);
-
-		return this.createUrlFromBuildMap(buildMap);
+		return this.createUrlFromBuildMap(uniqueBuildMap);
 	}
 
 	private addItemToBuildMap(category: string, item: number, map: Map<string, number[]>) {
@@ -395,7 +398,7 @@ export default class BuildGenerator {
 	 * @returns {number[]} the list of armor indices
 	 */
 	private generateArmors(): number[] {
-		return this._includePreviouslyRolled ? this.generateRandomArmors() : this.generateRandomUniqueArmors();
+		return this._excludePreviouslyRolled ? this.generateRandomUniqueArmors() : this.generateRandomArmors();
 	}
 
 	private generateRandomArmors(): number[] {
@@ -464,15 +467,15 @@ export default class BuildGenerator {
 	 */
 	private parseBuildFromMap(map: Map<string, number[]>): Build {
 		const build = new Build();
-
-		console.log("Parsing map: ", map);
+		// console.log("Parsing map: ", map);
 		for (const [key, val] of map) {
-			console.log("Key, val: ");
-			console.log(key, val);
+			// console.log("Key, val: ");
+			// console.log(key, val);
 			// TODO: fix bug
 			val.forEach((val: number) => {
 				if (isNaN(val)) {
 					console.log("WHY ME");
+					return;
 				}
 				const item = this.getItem(key, val);
 				build.addItem(key, item);
@@ -513,6 +516,9 @@ export default class BuildGenerator {
 
 		const item = new Item();
 		const itemData = data[type as keyof typeof data].items[index]; // Just pleasing TypeScript...
+		// console.log("type: ", type);
+		// console.log("index: ", index);
+		// console.log(itemData);
 		item.image = itemData["image"];
 		item.index = index;
 		item.name = itemData["name"];
@@ -700,7 +706,7 @@ export class AIWrapper {
 		});
 
 		const buildMap = this.createBuildMap(mapArray);
-		console.log(buildMap);
+		// console.log(buildMap);
 		return url;
 	}
 
@@ -720,7 +726,7 @@ export class AIWrapper {
 			const value = kvPair[1];
 
 			const names = value.split("|");
-			console.log(names);
+			// console.log(names);
 			names.forEach((name) => {
 				const item = this._generator.getItemFromName(key, name);
 				buildMap.set(key, [...(buildMap.get(key) ?? []), item]);
