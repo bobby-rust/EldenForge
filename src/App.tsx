@@ -8,7 +8,6 @@ function App() {
 	console.log("Got url: ", url);
 
 	const build = generator.generateBuildFromUrl(url);
-	// console.log("Got build from URL: ", build);
 	return <div></div>;
 }
 
