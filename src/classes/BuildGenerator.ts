@@ -104,6 +104,7 @@ export class Armor extends Item {
 	_category: ArmorCategory | null = null;
 	constructor() {
 		super();
+		this.type = ItemType.Armor;
 	}
 
 	get category(): ArmorCategory | null {
@@ -370,6 +371,7 @@ export default class BuildGenerator {
 				console.log("Build map current iteration: ", uniqueBuildMap);
 			}
 		}
+
 		return this.createUrlFromBuildMap(uniqueBuildMap);
 	}
 
@@ -605,6 +607,7 @@ export default class BuildGenerator {
 		}
 
 		url = url.slice(0, url.length); // remove last comma
+		console.log(url);
 		return this.encode(url);
 	}
 
