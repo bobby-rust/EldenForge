@@ -1,249 +1,8 @@
-import { BuildNums } from "../types/types";
-import data from "../data/data.json";
-import { GenerationConfig, GoogleGenerativeAI } from "@google/generative-ai";
-import { ArmorCategory, ItemType } from "../types/enums";
-
-/**
- * An item category has `count` items and a list of that category's items
- */
-type Category = {
-	count: number;
-	items: any[];
-};
-
-/**
- * The structure of the JSON data
- * For consistency purposes, all abbreviations used here should be consistent
- * throughout the codebase, only exception being the raw data file, which does not use abbreviations.
- * The pluralized item categories refers to a list of
- * that category, and singular categories refers to an individual piece of that category.
- */
-type ItemData = {
-	armors: Category;
-	talismans: Category;
-	spirits: Category;
-	ashes: Category;
-	classes: Category;
-	shields: Category;
-	sorcs: Category;
-	weapons: Category;
-	tears: Category;
-	incants: Category;
-	[key: string]: Category;
-};
-
-/**
- * This class represents an item that is generated.
- * It contains only the fields needed by the application.
- * The application displays the item's name, an image of the item,
- * and each item contains a link the item's wiki page
- * The item type is used to categorize the items.
- */
-export class Item {
-	private _type: ItemType | null = null;
-	private _name: string = "";
-	private _index: number = -1;
-	private _image: string = "";
-	private _wikiUrl: string = "";
-
-	/**
-	 * The type of the item (e.g., weapon, spirit, talisman, etc.).
-	 */
-	get type(): ItemType | null {
-		return this._type;
-	}
-
-	set type(type: ItemType) {
-		this._type = type;
-	}
-
-	get name(): string {
-		return this._name;
-	}
-
-	/**
-	 * The name setter automatically sets the wiki url.
-	 */
-	set name(name: string) {
-		this._name = name;
-		this._wikiUrl = "https://eldenring.wiki.fextralife.com/" + this._name.split(" ").join("+"); // or replaceAll(" ", "+") ? not sure which is more efficient
-	}
-
-	/**
-	 * The index of the item in the raw data array.
-	 */
-	get index(): number {
-		return this._index;
-	}
-
-	set index(index: number) {
-		this._index = index;
-	}
-
-	get image(): string {
-		return this._image;
-	}
-
-	set image(image: string) {
-		this._image = image;
-	}
-
-	get wikiUrl(): string {
-		return this._wikiUrl;
-	}
-}
-
-/**
- * Armor is a unique item type because it contains an additional field
- * `category` needed for generation.
- */
-export class Armor extends Item {
-	/**
-	 * The armor category (helm, chest, gauntlets, leg)
-	 */
-	_category: ArmorCategory | null = null;
-	constructor() {
-		super();
-		this.type = ItemType.Armor;
-	}
-
-	get category(): ArmorCategory | null {
-		return this._category;
-	}
-
-	set category(category: ArmorCategory) {
-		this._category = category;
-	}
-}
-
-/**
- * Represents a generated build.
- */
-export class Build {
-	_class: Item | null = null;
-	_weapons: Item[] = [];
-	_helm: Armor | null = null;
-	_chest: Armor | null = null;
-	_gauntlets: Armor | null = null;
-	_leg: Armor | null = null;
-	_tears: Item[] = [];
-	_incants: Item[] = [];
-	_seals: Item[] = [];
-	_shields: Item[] = [];
-	_sorcs: Item[] = [];
-	_spirits: Item[] = [];
-	_talismans: Item[] = [];
-
-	constructor() {
-		console.log("Initialized a new build.");
-	}
-
-	/**
-	 * Adds an item to `this` object.
-	 * @param type the type of item.
-	 * @param item the item to add.
-	 */
-	public addItem(type: string, item: Item | Armor) {
-		switch (type) {
-			case "classes":
-				this.addClass(item);
-				break;
-			case "weapons":
-				this.addWeapon(item);
-				break;
-			case "tears":
-				this.addTear(item);
-				break;
-			case "incants":
-				this.addIncant(item);
-				break;
-			case "seals":
-				this.addSeal(item);
-				break;
-			case "shields":
-				this.addShield(item);
-				break;
-			case "sorcs":
-				this.addSorc(item);
-				break;
-			case "spirits":
-				this.addSpirit(item);
-				break;
-			case "talismans":
-				this.addTalisman(item);
-				break;
-
-			case "armors":
-				const armor: Armor = item as Armor;
-				switch (armor.category) {
-					case ArmorCategory.Helm:
-						this._helm = armor;
-						break;
-					case ArmorCategory.Chest:
-						this._chest = armor;
-						break;
-					case ArmorCategory.Gauntlets:
-						this._gauntlets = armor;
-						break;
-					case ArmorCategory.Leg:
-						this._leg = armor;
-						break;
-				}
-		}
-	}
-
-	private addClass(c: Item) {
-		this._class = c;
-	}
-
-	private addWeapon(weapon: Item) {
-		this._weapons.push(weapon);
-	}
-
-	private addTear(tear: Item) {
-		this._tears.push(tear);
-	}
-
-	private addIncant(incant: Item) {
-		this._incants.push(incant);
-	}
-
-	private addSeal(seal: Item) {
-		this._seals.push(seal);
-	}
-
-	private addShield(shield: Item) {
-		this._shields.push(shield);
-	}
-
-	private addSorc(sorc: Item) {
-		this._sorcs.push(sorc);
-	}
-
-	private addSpirit(spirit: Item) {
-		this._spirits.push(spirit);
-	}
-
-	private addTalisman(talisman: Item) {
-		this._talismans.push(talisman);
-	}
-
-	set helm(helm: Armor) {
-		this._helm = helm;
-	}
-
-	set chest(chest: Armor) {
-		this._chest = chest;
-	}
-
-	set gaunlets(gauntlets: Armor) {
-		this._gauntlets = gauntlets;
-	}
-
-	set leg(leg: Armor) {
-		this._leg = leg;
-	}
-}
+import { BuildNums, ExcludePreviuouslyRolled, ItemData } from "../types/types";
+import data from "../data/new_data.json";
+import { ItemCategory } from "../types/enums";
+import { Build } from "./Build";
+import { Item } from "./Item";
 
 /**
  * NOTE: Consider breaking this class up into two children classes, AIGenerator and RandomGenerator instead of one monolithic class
@@ -260,14 +19,33 @@ export class Build {
  */
 export default class BuildGenerator {
 	_itemData: ItemData = data;
+	_excludePreviouslyRolled: ExcludePreviuouslyRolled = {
+		helms: true,
+		chests: true,
+		gauntlets: true,
+		legs: true,
+		classes: true,
+		ashes: true,
+		tears: true,
+		incants: true,
+		seals: true,
+		shields: true,
+		sorcs: true,
+		spirits: true,
+		talismans: true,
+		weapons: true,
+	};
+
 	/**
 	 * Maps the category to the indices of the rolled items in that category for all builds.
 	 * The value is a Set for more efficient access of numbers
 	 */
-	_previouslyRolled: Map<string, Set<number>> = new Map<string, Set<number>>();
-	_excludePreviouslyRolled: boolean = true;
+	_previouslyRolled: Map<ItemCategory, Set<number>> = new Map<ItemCategory, Set<number>>();
 	_buildNums: BuildNums = {
-		armors: 4,
+		helms: 1,
+		chests: 1,
+		gauntlets: 1,
+		legs: 1,
 		classes: 1,
 		ashes: 2,
 		tears: 2,
@@ -290,161 +68,12 @@ export default class BuildGenerator {
 	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
 	 */
 	public generateUrl(): string {
-		return this._excludePreviouslyRolled ? this.generateRandomUnique() : this.generateRandom();
+		return this.generateRandom();
 	}
 
-	/**
-	 * Generates a random build of items
-	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
-	 */
-	private generateRandom(): string {
-		/**
-		 * Maps the category to the indices of the items rolled for that category for the current build
-		 * This values is an array because we do not need to access numbers at arbitrary indices.
-		 */
-		const buildMap: Map<string, number[]> = new Map<string, number[]>();
-
-		for (const category of Object.keys(this._itemData)) {
-			const count = this._itemData[category]["count"];
-			const numItems = this._buildNums[category];
-
-			if (category === "armors") {
-				const armors = this.generateArmors();
-				armors.forEach((armor) => this.addItemToBuildMap(category, armor, buildMap));
-				continue;
-			}
-
-			for (let i = 0; i < numItems; ++i) {
-				const rand = Math.floor(Math.random() * count);
-				this.addItemToBuildMap(category, rand, buildMap);
-			}
-		}
-
-		return this.createUrlFromBuildMap(buildMap);
-	}
-
-	/**
-	 * Generates a build of unique items that have not been previously rolled.
-	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
-	 */
-	private generateRandomUnique(): string {
-		const uniqueBuildMap: Map<string, number[]> = new Map<string, number[]>();
-
-		for (const category of Object.keys(this._itemData)) {
-			const numItems = this._itemData[category]["count"];
-			const numItemsToRoll = this._buildNums[category];
-
-			if (category === "armors") {
-				const armors = this.generateArmors();
-				armors.forEach((armor: number) => {
-					this.addItemToBuildMap(category, armor, uniqueBuildMap);
-				});
-				continue;
-			}
-
-			const prevRolledItems = this._previouslyRolled.get(category) ?? new Set<number>();
-			if (prevRolledItems.size >= numItems) {
-				// console.log("Category: ", category);
-				// console.log("prevRolledItems: ", prevRolledItems.size);
-				// console.log("numItems: ", numItems);
-				// console.log("previouslyRolled: ", this._previouslyRolled);
-				if (!uniqueBuildMap.has(category)) {
-					uniqueBuildMap.set(category, []);
-				}
-				continue;
-			}
-
-			for (let i = 0; i < numItemsToRoll; ++i) {
-				let randomIndex = Math.floor(Math.random() * numItems);
-				while (prevRolledItems.has(randomIndex) && prevRolledItems.size < numItems) {
-					randomIndex = Math.floor(Math.random() * numItems);
-				}
-				this.addItemToBuildMap(category, randomIndex, uniqueBuildMap);
-				if (category === "seals") {
-					console.log("prevRolledItems: ", prevRolledItems);
-					console.log("Rolled item: ", randomIndex, " in category: ", category);
-					console.log("prevRolledItems: ", prevRolledItems);
-				}
-			}
-
-			if (category === "seals") {
-				console.log("Build map current iteration: ", uniqueBuildMap);
-			}
-		}
-
-		return this.createUrlFromBuildMap(uniqueBuildMap);
-	}
-
-	private addItemToBuildMap(category: string, item: number, map: Map<string, number[]>) {
-		/**
-		 * This is needed because Map and Set's get method can return undefined,
-		 * in which case a new Map or Set needs to be initialized in order for an item to be added
-		 */
-
-		this.addItemToPreviouslyRolled(category, item);
-		map.set(category, [...(map.get(category) ?? []), item]); // add item to current rolled items
-	}
-
-	/**
-	 * Adds an item to the list of previously rolled items.
-	 * @param category the category of item
-	 * @param item the index of the item
-	 */
-	private addItemToPreviouslyRolled(category: string, item: number) {
-		const newItems = (this._previouslyRolled.get(category) ?? new Set<number>()).add(item); // add item to previously rolled
-		this._previouslyRolled.set(category, newItems);
-	}
-
-	/**
-	 * Generates a random set of armor.
-	 * @returns {number[]} the list of armor indices
-	 */
-	private generateArmors(): number[] {
-		return this._excludePreviouslyRolled ? this.generateRandomUniqueArmors() : this.generateRandomArmors();
-	}
-
-	private generateRandomArmors(): number[] {
-		const armors: number[] = [];
-		const armorsData = data["armors"];
-		const count = armorsData["count"];
-		const items = armorsData["items"];
-		const armorsMap = new Map<string, number>();
-
-		while (armors.length < 4) {
-			const rand = Math.floor(Math.random() * count);
-
-			const item = items[rand];
-			if (armorsMap.has(item["category"])) {
-				continue;
-			}
-
-			armorsMap.set(item.category, rand);
-			armors.push(rand);
-		}
-
-		return armors;
-	}
-
-	private generateRandomUniqueArmors(): number[] {
-		const armors: number[] = [];
-		const armorsData = data["armors"];
-		const count = armorsData["count"];
-		const items = armorsData["items"];
-		const armorsMap = new Map<string, number>();
-
-		while (armors.length < 4 && (this._previouslyRolled.get("armors") ?? new Set<number>()).size < count) {
-			const rand = Math.floor(Math.random() * count);
-			const item = items[rand];
-
-			if (armorsMap.has(item["category"]) || (this._previouslyRolled.get("armors") ?? new Set<number>()).has(rand)) {
-				continue;
-			}
-
-			armorsMap.set(item.category, rand);
-			armors.push(rand);
-			this.addItemToPreviouslyRolled("armors", rand);
-		}
-		return armors;
+	public rerollItem(build: Build, category: ItemCategory, oldItem: number) {
+		const newItem = this.generateItem(category);
+		build.replaceItem(category, oldItem, newItem);
 	}
 
 	/**
@@ -462,47 +91,124 @@ export default class BuildGenerator {
 	}
 
 	/**
+	 * Gets the index of the item by its name, or -1 if the item was not found.
+	 * @param type the type of item to retrieve
+	 * @param name the name of the item
+	 * @returns {number} the index of the item in the raw data
+	 */
+	public getItemFromName(type: string, name: string): number {
+		const items = data[type as keyof typeof data]["items"];
+
+		items.forEach((item, i) => {
+			if (item.name === name) {
+				return i;
+			}
+		});
+
+		return -1;
+	}
+
+	/**
+	 * Generates a random index of an item from a given category.
+	 * If `_excludePreviouslyRolled` is true, it generates an index of an unrolled item.
+	 *
+	 * @param {ItemCategory} category - The category of the item to generate.
+	 * @returns {number} - The index of the generated item.
+	 *                     -1 if all items in the category have been rolled.
+	 */
+	public generateItem(category: ItemCategory): number {
+		// Get the count of items in the category
+		const count = this._itemData[category]["count"];
+
+		// Generate a random index between 0 and count - 1
+		let randomIndex = Math.floor(Math.random() * count);
+
+		// Get the set of previously rolled items for the category
+		const prevRolledItems = this._previouslyRolled.get(category) ?? new Set<number>();
+
+		// If all items in the category have been rolled, return -1
+		if (prevRolledItems.size >= count) {
+			return -1;
+		}
+
+		// If `_excludePreviouslyRolled` is true and the generated index is of a previously rolled item,
+		// generate a new index until an unrolled item is found.
+		while (this._excludePreviouslyRolled[category] && prevRolledItems.has(randomIndex)) {
+			randomIndex = Math.floor(Math.random() * count);
+		}
+
+		// Add the generated index to the set of previously rolled items for the category
+		prevRolledItems.add(randomIndex);
+
+		// Update the set of previously rolled items for the category
+		this._previouslyRolled.set(category, prevRolledItems);
+
+		// Return the generated index
+		return randomIndex;
+	}
+
+	/**
+	 * Generates a random build of items
+	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
+	 */
+	private generateRandom(): string {
+		/**
+		 * Maps the category to the indices of the items rolled for that category for the current build
+		 */
+		const buildMap: Map<ItemCategory, number[]> = new Map<ItemCategory, number[]>();
+
+		for (const category of Object.keys(this._itemData)) {
+			const numItemsToRoll = this._buildNums[category];
+
+			for (let i = 0; i < numItemsToRoll; ++i) {
+				const itemIndex = this.generateItem(category as ItemCategory);
+				this.addItemToBuildMap(category as ItemCategory, itemIndex, buildMap);
+			}
+		}
+
+		return this.createUrlFromBuildMap(buildMap);
+	}
+
+	private addItemToBuildMap(category: ItemCategory, item: number, map: Map<ItemCategory, number[]>) {
+		/**
+		 * This is needed because Map and Set's get method can return undefined,
+		 * in which case a new Map or Set needs to be initialized in order for an item to be added
+		 */
+
+		this.addItemToPreviouslyRolled(category, item);
+		map.set(category, [...(map.get(category) ?? []), item]); // add item to current rolled items
+	}
+
+	/**
+	 * Adds an item to the list of previously rolled items.
+	 * @param category the category of item
+	 * @param item the index of the item
+	 */
+	private addItemToPreviouslyRolled(category: ItemCategory, item: number) {
+		const newItems = (this._previouslyRolled.get(category) ?? new Set<number>()).add(item); // add item to previously rolled
+		this._previouslyRolled.set(category, newItems);
+	}
+
+	/**
 	 * Parses a Build from a build map where the keys are the category
 	 * and the values are the list of indices of items for that category.
 	 * @param map the build map to parse.
 	 * @returns {Build} the Build object.
 	 */
-	private parseBuildFromMap(map: Map<string, number[]>): Build {
+	private parseBuildFromMap(map: Map<ItemCategory, number[]>): Build {
 		const build = new Build();
-		// console.log("Parsing map: ", map);
+
 		for (const [key, val] of map) {
-			// console.log("Key, val: ");
-			// console.log(key, val);
-			// TODO: fix bug
 			val.forEach((val: number) => {
 				if (isNaN(val)) {
 					console.log("WHY ME");
 					return;
 				}
-				const item = this.getItem(key, val);
-				build.addItem(key, item);
+				build.addItem(key, val);
 			});
 		}
 
 		return build;
-	}
-
-	/**
-	 * Gets a piece of armor.
-	 * @param index the index of the armor piece in armors data
-	 * @returns {Armor} the armor piece.
-	 */
-	private getArmor(index: number): Armor {
-		const armor = new Armor();
-		const itemData: any = data["armors"].items[index]; // Apparently Armors is a complex type that I cba to play around with atm.
-
-		armor.image = itemData["image"];
-		armor.index = index;
-		armor.name = itemData["name"];
-		armor.type = ItemType.Armor;
-		armor.category = itemData["category"];
-
-		return armor;
 	}
 
 	/**
@@ -511,20 +217,9 @@ export default class BuildGenerator {
 	 * @param index the index of the item in the raw data
 	 * @returns {Item | Armor} the item.
 	 */
-	private getItem(type: string, index: number): Item | Armor {
-		if (type === "armors") {
-			return this.getArmor(index);
-		}
-
-		const item = new Item();
+	private getItem(type: ItemCategory, index: number): Item {
 		const itemData = data[type as keyof typeof data].items[index]; // Just pleasing TypeScript...
-		// console.log("type: ", type);
-		// console.log("index: ", index);
-		// console.log(itemData);
-		item.image = itemData["image"];
-		item.index = index;
-		item.name = itemData["name"];
-		item.type = type as ItemType;
+		const item = new Item(type, itemData, index);
 
 		return item;
 	}
@@ -533,8 +228,8 @@ export default class BuildGenerator {
 	 * Parses a string of the form `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
 	 * into a build map containing categories as keys and the indices of build items as values
 	 */
-	private parseBuildMapFromUrl(str: string): Map<string, number[]> {
-		const buildMap = new Map<string, number[]>();
+	private parseBuildMapFromUrl(str: string): Map<ItemCategory, number[]> {
+		const buildMap = new Map<ItemCategory, number[]>();
 
 		for (let i = 0; i < str.length; ++i) {
 			// If we are at an ampersand, slice out the entire category.
@@ -557,7 +252,7 @@ export default class BuildGenerator {
 
 				// once we have the entire category, split by the "=" to find the name and values
 				const items = category.split("=");
-				const name = items[0];
+				const categoryName = items[0] as ItemCategory;
 				const values = items[1].split(",");
 				const intVals: number[] = [];
 				values.forEach((val) => {
@@ -570,7 +265,7 @@ export default class BuildGenerator {
 					}
 					intVals.push(num);
 				});
-				buildMap.set(name, intVals);
+				buildMap.set(categoryName, intVals);
 			}
 		}
 
@@ -594,7 +289,7 @@ export default class BuildGenerator {
 	 * @returns {string} A base64 encoded ASCII string of the form
 	 *                   `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
 	 */
-	private createUrlFromBuildMap(rolled: Map<string, number[]>): string {
+	public createUrlFromBuildMap(rolled: Map<ItemCategory, number[]>): string {
 		let url = "";
 		for (const category of rolled.keys()) {
 			url += `&${category}=`;
@@ -607,165 +302,6 @@ export default class BuildGenerator {
 		}
 
 		url = url.slice(0, url.length); // remove last comma
-		console.log(url);
 		return this.encode(url);
-	}
-
-	public generateAIBuild(): Build {
-		const build = new Build();
-		return build;
-	}
-
-	/**
-	 * Gets the index of the item by its name, or -1 if the item was not found.
-	 * @param type the type of item to retrieve
-	 * @param name the name of the item
-	 * @returns {number} the index of the item in the raw data
-	 */
-	public getItemFromName(type: string, name: string): number {
-		const items = data[type as keyof typeof data]["items"];
-
-		items.forEach((item, i) => {
-			if (item.name === name) {
-				return i;
-			}
-		});
-
-		return -1;
-	}
-}
-
-export class AIWrapper {
-	private _API_KEY: string = import.meta.env.VITE_API_KEY;
-	private _genAI = new GoogleGenerativeAI(this._API_KEY);
-
-	private _generationConfig: GenerationConfig = {
-		temperature: 1.0, // Maximum randomness
-		topP: 1.0, // The cumulative probability of potential tokens in which to stop considering subsequent tokens, 1.0 is max
-		topK: 50, // Consider the top K tokens
-	};
-
-	private _model: any = this._genAI.getGenerativeModel({ ...this._generationConfig, model: "gemini-1.5-pro" });
-	private _prompt = import.meta.env.VITE_PROMPT;
-
-	private _generator = new BuildGenerator();
-
-	constructor() {
-		console.log("New AIWrapper initialized.");
-	}
-
-	/**
-	 * Prompts the LLM and returns the response
-	 * @returns {Promise<string>} the AI response
-	 */
-	async queryAI(): Promise<string> {
-		const result = await this._model.generateContent(this._prompt);
-		const response = await result.response;
-		const text = response.text();
-		console.log(text);
-		return text;
-	}
-
-	/**
-	 * Parses the AI response into a build URL
-	 * @returns {string} the build url
-	 */
-	parseResponse(): string {
-		const url = "";
-		const response = `Name=Oathbound Duelist
-        Vigor=40
-        Mind=16
-        Endurance=25
-        Strength=18
-        Dexterity=40
-        Intelligence=9
-        Faith=12
-        Arcane=7
-        Class=Samurai
-        Weapons='Uchigatana' | 'Regalia of Eochaid'
-        Ashes 0f War='Ash Of War: Barrage' | 'Ash Of War: Prelate's Charge'
-        Helm='None'
-        Chest Armor='Ronin's Armor'
-        Gauntlets='None'
-        Leg Armor='Ronin's Greaves'
-        Crystal Tears='Cerulean Hidden Tear'
-        Incantations='Golden Vow' | 'Flame, Grant Me Strength'
-        Sacred Seals='None'
-        Shields='None'
-        Sorceries='None'
-        Spirit Ashes='Black Knife Tiche'
-        Talismans='Rotten Winged Sword Insignia' | 'Lord of Blood's Exultation' | 'Green Turtle Talisman' | 'Carian Filigreed Crest'
-        Summary=This build is a glass cannon bleed/Dex build that utilizes the unique combination of 'Uchigatana' and 'Regalia of Eochaid' to inflict bleed quickly with high damage output.  It uses minimal armor to maintain light equip load and prioritize dodging and mobility. The 'Black Knife Tiche' ashes supplement the player's damage and stagger enemies.
-        Strengths=Very high damage output | Extremely mobile | Good stagger potential | Can inflict bleed quickly
-        Weaknesses=Very low defense | Requires precise dodging and spacing | Susceptible to crowd control | Low FP`;
-
-		// needs to parse the response into a build map -> Map<string, number[]>
-
-		const responseArray = response.split("\n");
-		const mapArray: string[][] = [];
-		responseArray.forEach((el: string) => {
-			const currKeyValPair = el.trim().split("=");
-			mapArray.push(currKeyValPair);
-		});
-
-		const buildMap = this.createBuildMap(mapArray);
-		// console.log(buildMap);
-		return url;
-	}
-
-	/**
-	 * Creates a build map from an array of arrays of key, value pairs.
-	 * @param arr An array containing arrays of key, value pairs where they key is the category and the value is the name of the item.
-	 * @returns {Map<string, number[]>} a map representing a build.
-	 */
-	private createBuildMap(arr: string[][]): Map<string, number[]> {
-		const buildMap = new Map<string, number[]>();
-
-		arr.forEach((kvPair: string[]) => {
-			const key = this.translateResponseCategory(kvPair[0]);
-
-			if (key === "") return;
-
-			const value = kvPair[1];
-
-			const names = value.split("|");
-			// console.log(names);
-			names.forEach((name) => {
-				const item = this._generator.getItemFromName(key, name);
-				buildMap.set(key, [...(buildMap.get(key) ?? []), item]);
-			});
-		});
-
-		return buildMap;
-	}
-
-	/**
-	 * Translates the category from the given response string into the form used by the BuildGenerator.
-	 *
-	 * @param {string} cat - The category string as received from the AI.
-	 * @return {string} The parsed category string in the form used by the BuildGenerator.
-	 */
-	private translateResponseCategory(cat: string): string {
-		switch (cat) {
-			case "Class":
-				return "classes";
-			case "Weapons":
-				return "weapons";
-			case "Helm" || "Chest Armor" || "Leg Armor" || "Gauntlets":
-				return "armors";
-			case "Shields" || "Sorceries" || "Talismans":
-				return cat.toLowerCase();
-			case "Incantations":
-				return "incants";
-			case "Sacred Seals" || "Crystal Tears":
-				return cat.split(" ")[1].toLowerCase();
-			case "Spirit Ashes":
-				return "spirits";
-			case "Ashes 0f War":
-				return "ashes";
-			default:
-				console.log("Invalid category.");
-				return "";
-		}
 	}
 }
