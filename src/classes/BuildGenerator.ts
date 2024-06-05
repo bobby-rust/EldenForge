@@ -1,12 +1,10 @@
-import { BuildNums, ExcludePreviuouslyRolled, ItemData } from "../types/types";
+import { BuildGenerationConfig, ItemData, defaultBuildGenerationConfig } from "../types/types";
 import data from "../data/new_data.json";
 import { ItemCategory } from "../types/enums";
 import { Build } from "./Build";
 import { Item } from "./Item";
 
 /**
- * NOTE: Consider breaking this class up into two children classes, AIGenerator and RandomGenerator instead of one monolithic class
- *
  * The BuildGenerator needs to generate a valid build and return a base64 encoded
  * URL parameter string of the form
  * ?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...
@@ -19,44 +17,7 @@ import { Item } from "./Item";
  */
 export default class BuildGenerator {
 	_itemData: ItemData = data;
-	_excludePreviouslyRolled: ExcludePreviuouslyRolled = {
-		helms: true,
-		chests: true,
-		gauntlets: true,
-		legs: true,
-		classes: true,
-		ashes: true,
-		tears: true,
-		incants: true,
-		seals: true,
-		shields: true,
-		sorcs: true,
-		spirits: true,
-		talismans: true,
-		weapons: true,
-	};
-
-	/**
-	 * Maps the category to the indices of the rolled items in that category for all builds.
-	 * The value is a Set for more efficient access of numbers
-	 */
-	_previouslyRolled: Map<ItemCategory, Set<number>> = new Map<ItemCategory, Set<number>>();
-	_buildNums: BuildNums = {
-		helms: 1,
-		chests: 1,
-		gauntlets: 1,
-		legs: 1,
-		classes: 1,
-		ashes: 2,
-		tears: 2,
-		incants: 2,
-		seals: 2,
-		shields: 2,
-		sorcs: 2,
-		spirits: 2,
-		talismans: 2,
-		weapons: 2,
-	};
+	_buildGenerationConfig: BuildGenerationConfig = defaultBuildGenerationConfig;
 
 	constructor() {
 		console.log("Initialized new build generator");
@@ -124,8 +85,7 @@ export default class BuildGenerator {
 		let randomIndex = Math.floor(Math.random() * count);
 
 		// Get the set of previously rolled items for the category
-		const prevRolledItems = this._previouslyRolled.get(category) ?? new Set<number>();
-
+		const prevRolledItems = this._buildGenerationConfig[category].previouslyRolled;
 		// If all items in the category have been rolled, return -1
 		if (prevRolledItems.size >= count) {
 			return -1;
@@ -133,18 +93,70 @@ export default class BuildGenerator {
 
 		// If `_excludePreviouslyRolled` is true and the generated index is of a previously rolled item,
 		// generate a new index until an unrolled item is found.
-		while (this._excludePreviouslyRolled[category] && prevRolledItems.has(randomIndex)) {
+		while (this._buildGenerationConfig[category].excludePreviouslyRolled && prevRolledItems.has(randomIndex)) {
 			randomIndex = Math.floor(Math.random() * count);
 		}
 
-		// Add the generated index to the set of previously rolled items for the category
-		prevRolledItems.add(randomIndex);
-
-		// Update the set of previously rolled items for the category
-		this._previouslyRolled.set(category, prevRolledItems);
+		// Add the generated index to the set of previously rolled items
+		this.addItemToPreviouslyRolled(category, randomIndex);
 
 		// Return the generated index
 		return randomIndex;
+	}
+
+	public getBuildNumsForCategory(category: ItemCategory) {
+		return this._buildGenerationConfig[category].buildNums;
+	}
+
+	public setBuildNumsForCategory(category: ItemCategory, buildNums: number) {
+		this._buildGenerationConfig[category].buildNums = buildNums;
+	}
+
+	public getPreviouslyRolledForCategory(category: ItemCategory) {
+		return this._buildGenerationConfig[category].previouslyRolled;
+	}
+
+	/**
+	 * Retrieves the value of the `excludePreviouslyRolled` property for the specified `category` from the `_buildGenerationConfig` object.
+	 *
+	 * @param {ItemCategory} category - The category for which to retrieve the `excludePreviouslyRolled` property.
+	 * @return {boolean} The value of the `excludePreviouslyRolled` property for the specified `category`.
+	 */
+	public getExcludePreviouslyRolledForCategory(category: ItemCategory) {
+		return this._buildGenerationConfig[category].excludePreviouslyRolled;
+	}
+
+	/**
+	 * Sets the value of `excludePreviouslyRolled` in the `_buildGenerationConfig` object for the given `category`.
+	 *
+	 * @param {ItemCategory} category - The category for which to set the value.
+	 * @param {boolean} exclude - The new value for `excludePreviouslyRolled`.
+	 */
+	public setExcludePreviouslyRolledForCategory(category: ItemCategory, exclude: boolean) {
+		this._buildGenerationConfig[category].excludePreviouslyRolled = exclude;
+	}
+
+	/**
+	 * Converts a Map representing a build into a base64 encoded string
+	 *
+	 * @param rolled A Map containing categories as keys and the indices of build items as values
+	 * @returns {string} A base64 encoded ASCII string of the form
+	 *                   `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
+	 */
+	public createUrlFromBuildMap(rolled: Map<ItemCategory, number[]>): string {
+		let url = "";
+		for (const category of rolled.keys()) {
+			url += `&${category}=`;
+
+			// IDK why TypeScript finds this necessary, rolled CLEARLY has category as we are LOOPING OVER ITS KEYS
+			const items = rolled.get(category) ?? [];
+			items.forEach((num, i) => {
+				url += i === items.length - 1 ? num.toString() : num.toString() + ",";
+			});
+		}
+
+		url = url.slice(0, url.length); // remove last comma
+		return this.encode(url);
 	}
 
 	/**
@@ -158,7 +170,7 @@ export default class BuildGenerator {
 		const buildMap: Map<ItemCategory, number[]> = new Map<ItemCategory, number[]>();
 
 		for (const category of Object.keys(this._itemData)) {
-			const numItemsToRoll = this._buildNums[category];
+			const numItemsToRoll = this._buildGenerationConfig[category].buildNums;
 
 			for (let i = 0; i < numItemsToRoll; ++i) {
 				const itemIndex = this.generateItem(category as ItemCategory);
@@ -174,8 +186,6 @@ export default class BuildGenerator {
 		 * This is needed because Map and Set's get method can return undefined,
 		 * in which case a new Map or Set needs to be initialized in order for an item to be added
 		 */
-
-		this.addItemToPreviouslyRolled(category, item);
 		map.set(category, [...(map.get(category) ?? []), item]); // add item to current rolled items
 	}
 
@@ -185,8 +195,7 @@ export default class BuildGenerator {
 	 * @param item the index of the item
 	 */
 	private addItemToPreviouslyRolled(category: ItemCategory, item: number) {
-		const newItems = (this._previouslyRolled.get(category) ?? new Set<number>()).add(item); // add item to previously rolled
-		this._previouslyRolled.set(category, newItems);
+		this._buildGenerationConfig[category].previouslyRolled.add(item);
 	}
 
 	/**
@@ -280,28 +289,5 @@ export default class BuildGenerator {
 	// Converts a Base64 encoded string to ASCII
 	private decode(str: string): string {
 		return atob(str);
-	}
-
-	/**
-	 * Converts a Map representing a build into a base64 encoded string
-	 *
-	 * @param rolled A Map containing categories as keys and the indices of build items as values
-	 * @returns {string} A base64 encoded ASCII string of the form
-	 *                   `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
-	 */
-	public createUrlFromBuildMap(rolled: Map<ItemCategory, number[]>): string {
-		let url = "";
-		for (const category of rolled.keys()) {
-			url += `&${category}=`;
-
-			// IDK why TypeScript finds this necessary, rolled CLEARLY has category as we are LOOPING OVER ITS KEYS
-			const items = rolled.get(category) ?? [];
-			items.forEach((num, i) => {
-				url += i === items.length - 1 ? num.toString() : num.toString() + ",";
-			});
-		}
-
-		url = url.slice(0, url.length); // remove last comma
-		return this.encode(url);
 	}
 }

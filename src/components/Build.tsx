@@ -10,7 +10,7 @@ const CONTAINER_THEME = {
 	margin: "1rem",
 };
 
-export default function SmallLayout(props: any) {
+export default function Build(props: any) {
 	return (
 		<>
 			<Box sx={CONTAINER_THEME}>

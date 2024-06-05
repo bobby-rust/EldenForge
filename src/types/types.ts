@@ -1,20 +1,20 @@
-type BuildNums = {
-	helms: number;
-	chests: number;
-	gauntlets: number;
-	legs: number;
-	classes: number;
-	ashes: number;
-	tears: number;
-	incants: number;
-	seals: number;
-	shields: number;
-	sorcs: number;
-	spirits: number;
-	talismans: number;
-	weapons: number;
-	[key: string]: number;
-};
+// type BuildNums = {
+// 	helms: number;
+// 	chests: number;
+// 	gauntlets: number;
+// 	legs: number;
+// 	classes: number;
+// 	ashes: number;
+// 	tears: number;
+// 	incants: number;
+// 	seals: number;
+// 	shields: number;
+// 	sorcs: number;
+// 	spirits: number;
+// 	talismans: number;
+// 	weapons: number;
+// 	[key: string]: number;
+// };
 
 /**
  * An item category has `count` items and a list of that category's items
@@ -45,24 +45,123 @@ type ItemData = {
 	weapons: Category;
 	tears: Category;
 	incants: Category;
+	seals: Category;
 	[key: string]: Category;
 };
 
-type ExcludePreviuouslyRolled = {
-	helms: boolean;
-	chests: boolean;
-	gauntlets: boolean;
-	legs: boolean;
-	talismans: boolean;
-	spirits: boolean;
-	ashes: boolean;
-	classes: boolean;
-	shields: boolean;
-	sorcs: boolean;
-	weapons: boolean;
-	tears: boolean;
-	incants: boolean;
-	[key: string]: boolean;
+// type ExcludePreviuouslyRolled = {
+// 	helms: boolean;
+// 	chests: boolean;
+// 	gauntlets: boolean;
+// 	legs: boolean;
+// 	talismans: boolean;
+// 	spirits: boolean;
+// 	ashes: boolean;
+// 	classes: boolean;
+// 	shields: boolean;
+// 	sorcs: boolean;
+// 	weapons: boolean;
+// 	tears: boolean;
+// 	incants: boolean;
+// 	[key: string]: boolean;
+// };
+
+type BuildInfo = {
+	excludePreviouslyRolled: boolean;
+	buildNums: number;
+	previouslyRolled: Set<number>;
 };
 
-export type { BuildNums, ItemData, ExcludePreviuouslyRolled };
+type BuildGenerationConfig = {
+	helms: BuildInfo;
+	chests: BuildInfo;
+	gauntlets: BuildInfo;
+	legs: BuildInfo;
+	talismans: BuildInfo;
+	spirits: BuildInfo;
+	ashes: BuildInfo;
+	classes: BuildInfo;
+	shields: BuildInfo;
+	sorcs: BuildInfo;
+	weapons: BuildInfo;
+	tears: BuildInfo;
+	incants: BuildInfo;
+	seals: BuildInfo;
+	[key: string]: BuildInfo;
+};
+
+const defaultBuildGenerationConfig: BuildGenerationConfig = {
+	helms: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	chests: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	gauntlets: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	legs: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	weapons: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	tears: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	incants: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	talismans: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	spirits: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	ashes: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	classes: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	shields: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	sorcs: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+	seals: {
+		excludePreviouslyRolled: true,
+		buildNums: 1,
+		previouslyRolled: new Set<number>(),
+	},
+};
+
+export type { BuildGenerationConfig, ItemData, BuildInfo };
+export { defaultBuildGenerationConfig };

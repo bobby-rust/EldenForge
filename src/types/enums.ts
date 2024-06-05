@@ -34,7 +34,7 @@ export enum ItemCategory {
 	Shields = "shields",
 	Classes = "classes",
 	Tears = "tears",
-	Incantations = "incants",
+	Incants = "incants",
 	Seals = "seals",
 	Sorcs = "sorcs",
 	Spirits = "spirits",
