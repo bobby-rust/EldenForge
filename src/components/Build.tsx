@@ -4,6 +4,8 @@ import { Item } from "../classes/Item";
 import useGeneratorState from "../hooks/useGeneratorState";
 import { ItemCategory } from "../types/enums";
 import BuildGenerator from "../classes/BuildGenerator";
+import Navbar from "./Navbar";
+import Card from "./Card";
 
 const generator = new BuildGenerator();
 
@@ -54,53 +56,23 @@ export default function Build() {
 	}, [build]);
 
 	return (
-		<div>
-			<h1>Incrementers</h1>
-			<button onClick={() => handleIncrementBuildNumsForCategory(ItemCategory.Weapons)}>increment num weapons</button>
-			<button onClick={() => handleIncrementBuildNumsForCategory(ItemCategory.Ashes)}>increment num ashes</button>
-			<button onClick={() => handleIncrementBuildNumsForCategory(ItemCategory.Incants)}>increment num incants</button>
-			<button onClick={() => handleIncrementBuildNumsForCategory(ItemCategory.Seals)}>increment num seals</button>
-			<button onClick={() => handleIncrementBuildNumsForCategory(ItemCategory.Sorcs)}>increment num sorcs</button>
-			<button onClick={() => handleIncrementBuildNumsForCategory(ItemCategory.Shields)}>increment num shields</button>
-			<button onClick={() => handleIncrementBuildNumsForCategory(ItemCategory.Spirits)}>increment num spirits</button>
-			<button onClick={() => handleIncrementBuildNumsForCategory(ItemCategory.Talismans)}>increment num talis</button>
-			<button onClick={() => handleIncrementBuildNumsForCategory(ItemCategory.Tears)}>increment num tear</button>
-
-			<button onClick={handleReroll}>
-				<h1>reroll</h1>
-			</button>
-
-			<h1>Toggles</h1>
-			<button onClick={() => handleToggleExcludePreviouslyRolledForCategory(ItemCategory.Weapons)}>
-				toggle weapons
-			</button>
-			<button onClick={() => handleToggleExcludePreviouslyRolledForCategory(ItemCategory.Ashes)}>
-				toggle exclude previously rolled ashes
-			</button>
-			<button onClick={() => handleToggleExcludePreviouslyRolledForCategory(ItemCategory.Incants)}>incants</button>
-			<button onClick={() => handleToggleExcludePreviouslyRolledForCategory(ItemCategory.Seals)}>seals</button>
-			<button onClick={() => handleToggleExcludePreviouslyRolledForCategory(ItemCategory.Sorcs)}>sorcs</button>
-			<button onClick={() => handleToggleExcludePreviouslyRolledForCategory(ItemCategory.Shields)}>shields</button>
-			<button onClick={() => handleToggleExcludePreviouslyRolledForCategory(ItemCategory.Spirits)}>spirits</button>
-			<button onClick={() => handleToggleExcludePreviouslyRolledForCategory(ItemCategory.Talismans)}>talis</button>
-			<button onClick={() => handleToggleExcludePreviouslyRolledForCategory(ItemCategory.Tears)}>tear</button>
-			<h1>{generatorState.weapons.buildNums}</h1>
-
-			<div>
-				<h1>Build</h1>
-				{build &&
-					// yeah dont ask
-					[...build.keys()].map((c: ItemCategory) =>
-						build.get(c)?.map((i: Item, j: number) => {
-							return (
-								<div key={j}>
-									<h3>{i.category}</h3>
-									<p>{i.name}</p>
-									<button onClick={() => handleRerollItem(c, i.index)}>reroll item</button>
-								</div>
-							);
-						})
-					)}{" "}
+		<div data-theme="fantasy">
+			<Navbar />
+			<div className="flex w-full justify-center align-center">
+				<button className="btn" onClick={handleReroll}>
+					<h1>reroll</h1>
+				</button>
+			</div>
+			<div className="flex justify-center align-center">
+				<div className="grid grid-template-columns-1 sm:grid-cols-2 md:grid-cols-3 m-auto">
+					{build &&
+						// yeah dont ask
+						[...build.keys()].map((c: ItemCategory) =>
+							build.get(c)?.map((i: Item, j: number) => {
+								return <Card item={i as Item} reroll={handleRerollItem} />;
+							})
+						)}{" "}
+				</div>
 			</div>
 		</div>
 	);
