@@ -10,7 +10,7 @@ import { ItemCategory } from "../types/enums";
 export class Item {
 	private _category: ItemCategory;
 	private _name: string = "";
-	private _index: number = -1;
+	private _index: number | undefined;
 	private _image: string = "";
 	private _wikiUrl: string = "";
 
@@ -47,7 +47,7 @@ export class Item {
 	/**
 	 * The index of the item in the raw data array.
 	 */
-	get index(): number {
+	get index(): number | undefined {
 		return this._index;
 	}
 

@@ -15,12 +15,19 @@ import { Item } from "./Item";
  * If a generated item is not valid (i.e. _excludePreviouslyRolled is false and the item has already been generated),
  * it will keep regenerating items until a valid item is found or there are no more valid items.
  */
-export default class BuildGenerator {
+export default class BuildGenerator extends Build {
+	private static instance: BuildGenerator;
+
 	_itemData: ItemData = data;
-	_buildGenerationConfig: BuildGenerationConfig = defaultBuildGenerationConfig;
+	_buildGenerationConfig: BuildGenerationConfig = structuredClone(defaultBuildGenerationConfig);
 
 	constructor() {
-		console.log("Initialized new build generator");
+		super();
+		if (!BuildGenerator.instance) {
+			BuildGenerator.instance = this;
+		} else {
+			return BuildGenerator.instance;
+		}
 	}
 
 	/**
@@ -32,9 +39,17 @@ export default class BuildGenerator {
 		return this.generateRandom();
 	}
 
-	public rerollItem(build: Build, category: ItemCategory, oldItem: number) {
+	private resetItems() {
+		this._items = new Map<ItemCategory, number[]>();
+	}
+
+	public rerollItem(category: ItemCategory, oldItem: number): Map<ItemCategory, number[]> {
 		const newItem = this.generateItem(category);
-		build.replaceItem(category, oldItem, newItem);
+		if (typeof newItem === "undefined") return this._items;
+		console.log("Got new item: ", newItem);
+		this.replaceItem(category, oldItem, newItem);
+
+		return this._items;
 	}
 
 	/**
@@ -42,12 +57,11 @@ export default class BuildGenerator {
 	 * @param encoded The base64 encoded url.
 	 * @returns {Build} A build object containing the items of `encoded`
 	 */
-	public generateBuildFromUrl(encoded: string): Build {
-		const url = this.decode(encoded);
-
+	public generateBuildFromUrl(encoded: string): Map<ItemCategory, Item[]> {
+		// const url = this.decode(encoded);
+		const url = encoded;
 		const buildMap = this.parseBuildMapFromUrl(url);
-		const build: Build = this.parseBuildFromMap(buildMap);
-
+		const build: Map<ItemCategory, Item[]> = this.parseBuildFromMap(buildMap);
 		return build;
 	}
 
@@ -77,7 +91,7 @@ export default class BuildGenerator {
 	 * @returns {number} - The index of the generated item.
 	 *                     -1 if all items in the category have been rolled.
 	 */
-	public generateItem(category: ItemCategory): number {
+	public generateItem(category: ItemCategory): number | undefined {
 		// Get the count of items in the category
 		const count = this._itemData[category]["count"];
 
@@ -86,9 +100,10 @@ export default class BuildGenerator {
 
 		// Get the set of previously rolled items for the category
 		const prevRolledItems = this._buildGenerationConfig[category].previouslyRolled;
+
 		// If all items in the category have been rolled, return -1
 		if (prevRolledItems.size >= count) {
-			return -1;
+			return;
 		}
 
 		// If `_excludePreviouslyRolled` is true and the generated index is of a previously rolled item,
@@ -112,7 +127,7 @@ export default class BuildGenerator {
 		this._buildGenerationConfig[category].buildNums = buildNums;
 	}
 
-	public getPreviouslyRolledForCategory(category: ItemCategory) {
+	private getPreviouslyRolledForCategory(category: ItemCategory) {
 		return this._buildGenerationConfig[category].previouslyRolled;
 	}
 
@@ -134,6 +149,7 @@ export default class BuildGenerator {
 	 */
 	public setExcludePreviouslyRolledForCategory(category: ItemCategory, exclude: boolean) {
 		this._buildGenerationConfig[category].excludePreviouslyRolled = exclude;
+		!exclude ? this._buildGenerationConfig[category].previouslyRolled.clear() : null;
 	}
 
 	/**
@@ -150,13 +166,18 @@ export default class BuildGenerator {
 
 			// IDK why TypeScript finds this necessary, rolled CLEARLY has category as we are LOOPING OVER ITS KEYS
 			const items = rolled.get(category) ?? [];
+
 			items.forEach((num, i) => {
+				if (typeof num === "undefined") {
+					return;
+				}
 				url += i === items.length - 1 ? num.toString() : num.toString() + ",";
 			});
 		}
 
 		url = url.slice(0, url.length); // remove last comma
-		return this.encode(url);
+		return url;
+		// return this.encode(url);
 	}
 
 	/**
@@ -171,9 +192,12 @@ export default class BuildGenerator {
 
 		for (const category of Object.keys(this._itemData)) {
 			const numItemsToRoll = this._buildGenerationConfig[category].buildNums;
-
+			buildMap.set(category as ItemCategory, []);
 			for (let i = 0; i < numItemsToRoll; ++i) {
 				const itemIndex = this.generateItem(category as ItemCategory);
+				if (typeof itemIndex === "undefined") {
+					continue;
+				}
 				this.addItemToBuildMap(category as ItemCategory, itemIndex, buildMap);
 			}
 		}
@@ -204,20 +228,18 @@ export default class BuildGenerator {
 	 * @param map the build map to parse.
 	 * @returns {Build} the Build object.
 	 */
-	private parseBuildFromMap(map: Map<ItemCategory, number[]>): Build {
-		const build = new Build();
-
+	private parseBuildFromMap(map: Map<ItemCategory, number[]>): Map<ItemCategory, Item[]> {
+		this.resetItems();
 		for (const [key, val] of map) {
 			val.forEach((val: number) => {
 				if (isNaN(val)) {
-					console.log("WHY ME");
 					return;
 				}
-				build.addItem(key, val);
+				this.addItem(key, val);
 			});
 		}
 
-		return build;
+		return this.getItemsFromBuild();
 	}
 
 	/**
@@ -226,12 +248,12 @@ export default class BuildGenerator {
 	 * @param index the index of the item in the raw data
 	 * @returns {Item | Armor} the item.
 	 */
-	private getItem(type: ItemCategory, index: number): Item {
-		const itemData = data[type as keyof typeof data].items[index]; // Just pleasing TypeScript...
-		const item = new Item(type, itemData, index);
+	// private getItem(type: ItemCategory, index: number): Item {
+	// 	const itemData = data[type as keyof typeof data].items[index]; // Just pleasing TypeScript...
+	// 	const item = new Item(type, itemData, index);
 
-		return item;
-	}
+	// 	return item;
+	// }
 
 	/**
 	 * Parses a string of the form `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
@@ -263,14 +285,15 @@ export default class BuildGenerator {
 				const items = category.split("=");
 				const categoryName = items[0] as ItemCategory;
 				const values = items[1].split(",");
+				if (values[0] === "") {
+					buildMap.set(categoryName, []);
+					continue;
+				}
 				const intVals: number[] = [];
 				values.forEach((val) => {
 					const num = parseInt(val);
 					if (isNaN(num)) {
-						console.log("Val is NaN: ", val);
-						console.log("Current items: ", items);
-						console.log("While parsing URL: ", str);
-						console.log("Current Category: ", category);
+						return;
 					}
 					intVals.push(num);
 				});
@@ -281,13 +304,13 @@ export default class BuildGenerator {
 		return buildMap;
 	}
 
-	// Converts an ASCII string to a Base64 encoded string
-	private encode(str: string): string {
-		return btoa(str);
-	}
+	// // Converts an ASCII string to a Base64 encoded string
+	// private encode(str: string): string {
+	// 	return btoa(str);
+	// }
 
-	// Converts a Base64 encoded string to ASCII
-	private decode(str: string): string {
-		return atob(str);
-	}
+	// // Converts a Base64 encoded string to ASCII
+	// private decode(str: string): string {
+	// 	return atob(str);
+	// }
 }

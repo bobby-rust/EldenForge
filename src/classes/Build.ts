@@ -1,6 +1,6 @@
 import { ItemCategory } from "../types/enums";
 import { Item } from "./Item";
-import data from "../data/data.json";
+import data from "../data/new_data.json";
 
 /**
  * Represents a generated build.
@@ -8,16 +8,14 @@ import data from "../data/data.json";
 export class Build {
 	_items = new Map<ItemCategory, number[]>();
 
-	constructor() {
-		console.log("Initialized a new build.");
-	}
+	constructor() {}
 
 	/**
 	 * Adds an item to the build.
 	 * @param type the type of item.
 	 * @param item the index of the item to add.
 	 */
-	public addItem(category: ItemCategory, item: number) {
+	protected addItem(category: ItemCategory, item: number) {
 		this._items.set(category, [...(this._items.get(category) ?? []), item]);
 	}
 
@@ -29,7 +27,7 @@ export class Build {
 	 * @param {number} newItem - The index of the new item to replace the old item.
 	 * @throws {Error} Throws an error if the item list for the specified category is empty.
 	 */
-	public replaceItem(category: ItemCategory, oldItem: number, newItem: number) {
+	protected replaceItem(category: ItemCategory, oldItem: number, newItem: number) {
 		const oldItems = this._items.get(category) ?? [];
 
 		if (oldItems.length === 0) {
@@ -45,11 +43,12 @@ export class Build {
 	 *
 	 * @return {Map<ItemCategory, Item[]>} A Map with ItemCategory as the key and an array of Item objects as the value.
 	 */
-	public getItemsFromBuild(): Map<ItemCategory, Item[]> {
+	protected getItemsFromBuild(): Map<ItemCategory, Item[]> {
 		const items = new Map<ItemCategory, Item[]>();
 
 		this._items.forEach((value, key) => {
 			value.forEach((index) => {
+				if (index === -1) return;
 				const item = new Item(key, data[key as keyof typeof data].items[index], index);
 				items.set(key, [...(items.get(key) ?? []), item]);
 			});

@@ -1,17 +1,22 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import BuildGenerator from "../classes/BuildGenerator";
 import { ItemCategory } from "../types/enums";
 
 describe("BuildGenerator", () => {
 	let buildGenerator: BuildGenerator;
+
 	beforeEach(() => {
+		// @ts-expect-error
+		BuildGenerator.instance = undefined;
 		buildGenerator = new BuildGenerator();
 	});
+
 	describe("generateUrl", () => {
 		it("should return a url of the correct form", () => {
 			const b64Url = buildGenerator.generateUrl();
 			expect(typeof b64Url).toBe("string");
-			const url = atob(b64Url);
+			// const url = atob(b64Url);
+			const url = b64Url;
 			const regexp = new RegExp("&(?:[a-zA-Z]+=[0-9]{1,3}(?:,[0-9]{1,3}){0,3}|[a-zA-Z]+=&)+");
 			expect(regexp.test(url)).toBe(true);
 		});
@@ -20,7 +25,7 @@ describe("BuildGenerator", () => {
 	describe("generateRandom", () => {
 		it("should generate a random build"),
 			() => {
-				buildGenerator._buildGenerationConfig.seals.excludePreviosuslyRolled = false;
+				buildGenerator._buildGenerationConfig.seals.excludePreviouslyRolled = false;
 				let isNonUnique = false;
 				const rolledItems = new Map<ItemCategory, Set<number>>();
 
@@ -28,18 +33,19 @@ describe("BuildGenerator", () => {
 					const url = buildGenerator.generateUrl();
 					const build = buildGenerator.generateBuildFromUrl(url);
 
-					if (rolledItems.get(ItemCategory.Seals)?.has(build._items.get(ItemCategory.Seals)![0])) {
+					if (rolledItems.get(ItemCategory.Seals)?.has(build.get(ItemCategory.Seals)![0].index)) {
 						isNonUnique = true;
 						break;
 					}
 
-					rolledItems.get(ItemCategory.Seals)?.add(build._items.get(ItemCategory.Seals)![0]);
+					rolledItems.get(ItemCategory.Seals)?.add(build.get(ItemCategory.Seals)![0].index);
 				}
 
 				expect(isNonUnique).toBe(true);
 			};
 
 		it("should generate a unique build", () => {
+			buildGenerator = new BuildGenerator();
 			let isUnique = true;
 			buildGenerator._buildGenerationConfig.seals.buildNums = 1;
 			const rolledSeals = new Set<number>();
@@ -48,14 +54,14 @@ describe("BuildGenerator", () => {
 				const url = buildGenerator.generateUrl();
 				const build = buildGenerator.generateBuildFromUrl(url);
 
-				expect(build._items.get(ItemCategory.Seals)).toBeDefined();
-				expect(build._items.get(ItemCategory.Seals)).not.toBeNull();
+				expect(build.get(ItemCategory.Seals)).toBeDefined();
+				expect(build.get(ItemCategory.Seals)).not.toBeNull();
 
-				if (rolledSeals.has(build._items.get(ItemCategory.Seals)![0])) {
+				if (rolledSeals.has(build.get(ItemCategory.Seals)![0].index)) {
 					isUnique = false;
 				}
 
-				rolledSeals.add(build._items.get(ItemCategory.Seals)![0]);
+				rolledSeals.add(build.get(ItemCategory.Seals)![0].index);
 			}
 
 			expect(isUnique).toBe(true);
@@ -66,25 +72,28 @@ describe("BuildGenerator", () => {
 			const url = buildGenerator.generateUrl();
 			const build = buildGenerator.generateBuildFromUrl(url);
 
-			expect(build._items.get(ItemCategory.Helm)?.length).toBe(1);
-			expect(build._items.get(ItemCategory.Chest)?.length).toBe(1);
-			expect(build._items.get(ItemCategory.Gauntlets)?.length).toBe(1);
-			expect(build._items.get(ItemCategory.Leg)?.length).toBe(1);
+			expect(build.get(ItemCategory.Helm)?.length).toBe(1);
+			expect(build.get(ItemCategory.Chest)?.length).toBe(1);
+			expect(build.get(ItemCategory.Gauntlets)?.length).toBe(1);
+			expect(build.get(ItemCategory.Leg)?.length).toBe(1);
 		});
 
 		it("should generate a unique set of armor", () => {
 			let isUnique = true;
-			const buildGenerator = new BuildGenerator();
 
 			for (let i = 0; i < 167; ++i) {
+				// create a snapshot of the state of the previouslyRolled map before generating a new build
+				// not using structuredClone would cause prevRolled to be a reference, so when we generate the build
+				// it would reflect in prevRolled, so when we check if prevRolled has the index, it would be true
+				// causing the test to throw a false-negative failure
 				const prevRolled = structuredClone(buildGenerator._buildGenerationConfig.helms.previouslyRolled);
 
 				const url = buildGenerator.generateUrl();
 				const build = buildGenerator.generateBuildFromUrl(url);
 
-				expect(build._items.get(ItemCategory.Helm)).toBeDefined();
+				expect(build.get(ItemCategory.Helm)).toBeDefined();
 
-				if (prevRolled.has(build._items.get(ItemCategory.Helm)![0])) {
+				if (prevRolled.has(build.get(ItemCategory.Helm)![0].index)) {
 					isUnique = false;
 				}
 			}
@@ -92,13 +101,14 @@ describe("BuildGenerator", () => {
 			const url = buildGenerator.generateUrl();
 			const build = buildGenerator.generateBuildFromUrl(url);
 
-			// After 167 rolls, the only available armor is -1
-			expect(build._items.get(ItemCategory.Helm)?.[0]).toBe(-1);
+			// After 167 rolls, there are no available helms
+			expect(build.get(ItemCategory.Helm)?.[0]).toBeUndefined();
 
 			// The first 167 rolls should contain valid armors
 			expect(buildGenerator._buildGenerationConfig.helms.previouslyRolled.has(-1)).toBe(false);
 
 			expect(isUnique).toBe(true);
+			expect(buildGenerator._buildGenerationConfig.helms.previouslyRolled.has(-1)).toBe(false);
 			expect(buildGenerator._buildGenerationConfig.helms.previouslyRolled.size).toBe(167);
 		});
 	});
