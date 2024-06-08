@@ -113,52 +113,52 @@ const defaultBuildGenerationConfig: BuildGenerationConfig = {
 	},
 	weapons: {
 		excludePreviouslyRolled: true,
-		buildNums: 1,
+		buildNums: 2,
 		previouslyRolled: new Set<number>(),
 	},
 	tears: {
 		excludePreviouslyRolled: true,
-		buildNums: 1,
+		buildNums: 2,
 		previouslyRolled: new Set<number>(),
 	},
 	incants: {
 		excludePreviouslyRolled: true,
-		buildNums: 1,
+		buildNums: 2,
 		previouslyRolled: new Set<number>(),
 	},
 	talismans: {
 		excludePreviouslyRolled: true,
-		buildNums: 1,
+		buildNums: 2,
 		previouslyRolled: new Set<number>(),
 	},
 	spirits: {
 		excludePreviouslyRolled: true,
-		buildNums: 1,
+		buildNums: 2,
 		previouslyRolled: new Set<number>(),
 	},
 	ashes: {
 		excludePreviouslyRolled: true,
-		buildNums: 1,
+		buildNums: 2,
 		previouslyRolled: new Set<number>(),
 	},
 	classes: {
 		excludePreviouslyRolled: true,
-		buildNums: 1,
+		buildNums: 2,
 		previouslyRolled: new Set<number>(),
 	},
 	shields: {
 		excludePreviouslyRolled: true,
-		buildNums: 1,
+		buildNums: 2,
 		previouslyRolled: new Set<number>(),
 	},
 	sorcs: {
 		excludePreviouslyRolled: true,
-		buildNums: 1,
+		buildNums: 2,
 		previouslyRolled: new Set<number>(),
 	},
 	seals: {
 		excludePreviouslyRolled: true,
-		buildNums: 1,
+		buildNums: 2,
 		previouslyRolled: new Set<number>(),
 	},
 };

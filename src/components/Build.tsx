@@ -5,21 +5,39 @@ import useGeneratorState from "../hooks/useGeneratorState";
 import { ItemCategory } from "../types/enums";
 import BuildGenerator from "../classes/BuildGenerator";
 import Navbar from "./Navbar";
-import Card from "./Card";
+import "../App.css";
+import CardColumn from "./CardColumn";
+import { ErrorBoundary } from "react-error-boundary";
 
 const generator = new BuildGenerator();
 
+const armorCategories = new Set([
+	ItemCategory.Classes,
+	ItemCategory.Helm,
+	ItemCategory.Chest,
+	ItemCategory.Gauntlets,
+	ItemCategory.Leg,
+]);
+
 export default function Build() {
+	const [theme, setTheme] = React.useState("light");
+	const [armors, setArmors] = React.useState<Item[]>([]);
+
+	const handleChangeTheme = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		console.log("Setting theme: ", e.target.value);
+		setTheme(e.target.value);
+	};
+
 	const { buildUrl } = useParams();
 
 	if (!buildUrl) {
 		throw new Error("Invalid path");
 	}
 
-	console.log("Loading page with buildUrl: ", buildUrl);
 	const navigate = useNavigate();
 
 	const [build, setBuild] = React.useState<Map<ItemCategory, Item[]> | null>(generator.generateBuildFromUrl(buildUrl));
+	// const [armors, setArmors] = React.useState<Item[]>([]);
 	const { generatorState, setBuildNumsState, setExcludePreviouslyRolledState } = useGeneratorState(generator);
 
 	const handleIncrementBuildNumsForCategory = (c: ItemCategory) => {
@@ -40,40 +58,51 @@ export default function Build() {
 	};
 
 	const handleRerollItem = (c: ItemCategory, i: number | undefined) => {
-		console.log("i", i);
-		if (!i) return;
-		console.log("rerolling item", c, i);
+		if (typeof i === "undefined") return;
+
 		const newBuildMap = generator.rerollItem(c, i);
-		console.log("Got new build map: ", newBuildMap);
 		const newUrl = generator.createUrlFromBuildMap(newBuildMap);
-		console.log("got new url: ", newUrl);
+
 		navigate(`../${newUrl}`, { replace: true });
 		setBuild(generator.generateBuildFromUrl(newUrl));
 	};
 
 	React.useEffect(() => {
-		console.log("Current items: ", generator._items);
+		if (build) {
+			const newArmors: Item[] = [];
+			[...build.keys()].forEach((c: ItemCategory) => {
+				if (armorCategories.has(c) && build.get(c)) {
+					newArmors.push(...(build.get(c) ?? []));
+				}
+			});
+			setArmors(newArmors);
+		}
 	}, [build]);
 
 	return (
-		<div data-theme="fantasy">
-			<Navbar />
-			<div className="flex w-full justify-center align-center">
-				<button className="btn" onClick={handleReroll}>
-					<h1>reroll</h1>
-				</button>
-			</div>
-			<div className="flex justify-center align-center">
-				<div className="grid grid-template-columns-1 sm:grid-cols-2 md:grid-cols-3 m-auto">
-					{build &&
-						// yeah dont ask
-						[...build.keys()].map((c: ItemCategory) =>
-							build.get(c)?.map((i: Item, j: number) => {
-								return <Card item={i as Item} reroll={handleRerollItem} />;
-							})
-						)}{" "}
+		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
+			<div data-theme={theme} className="App">
+				<Navbar handleChangeTheme={handleChangeTheme} />
+				<div className="flex w-full justify-center align-center p-3">
+					<button className="btn btn-lg btn-primary" onClick={handleReroll}>
+						<h1>Generate New Build</h1>
+					</button>
+				</div>
+				<div className="flex justify-center align-center">
+					<div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 ">
+						{build &&
+							[...build.keys()].map((c: ItemCategory, i: number) => (
+								<>
+									{/* TODO: fix this garbage */}
+									{!armorCategories.has(c) && (
+										<CardColumn key={i} items={build.get(c) ?? []} reroll={handleRerollItem} />
+									)}
+									{c === ItemCategory.Helm && <CardColumn key={i} items={armors} reroll={handleRerollItem} />}
+								</>
+							))}{" "}
+					</div>
 				</div>
 			</div>
-		</div>
+		</ErrorBoundary>
 	);
 }
