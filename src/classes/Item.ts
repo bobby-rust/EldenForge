@@ -13,12 +13,43 @@ export class Item {
 	private _index: number | undefined;
 	private _image: string = "";
 	private _wikiUrl: string = "";
+	private _weight: number | undefined = undefined;
+	private _attack: any[] = [];
+	private _scalesWith: any[] = [];
+	private _requiredAttributes: any[] = [];
+	private _weaponCategory?: string = undefined;
+	private _spellCost?: number = undefined;
+	private _effects?: string = undefined;
+	private _affinity?: string = undefined;
+	private _description?: string = undefined;
 
 	constructor(category: ItemCategory, rawItemData: any, index: number) {
 		this._category = category;
 		this.name = rawItemData["name"];
 		this.index = index;
 		this.image = rawItemData["image"];
+		this.weight = rawItemData["weight"];
+		this.attack = rawItemData["attack"];
+		this.scalesWith = rawItemData["scalesWith"];
+		this.requiredAttributes = rawItemData["requiredAttributes"];
+		this.affinity = rawItemData["affinity"];
+
+		if (category === ItemCategory.Weapons) {
+			this.weaponCategory = rawItemData["category"];
+		}
+
+		if (category === ItemCategory.Sorcs || category === ItemCategory.Incants) {
+			this.effects = rawItemData["effects"];
+			this.spellCost = rawItemData["cost"];
+		}
+
+		if (category === ItemCategory.Talismans) {
+			this.effects = rawItemData["effect"];
+		}
+
+		if (category === ItemCategory.Tears) {
+			this.description = rawItemData["description"];
+		}
 	}
 
 	/**
@@ -65,5 +96,77 @@ export class Item {
 
 	get wikiUrl(): string {
 		return this._wikiUrl;
+	}
+
+	get weight(): number | undefined {
+		return this._weight;
+	}
+
+	set weight(weight: number) {
+		this._weight = weight;
+	}
+
+	get attack(): any[] {
+		return this._attack;
+	}
+
+	set attack(attack: any[]) {
+		this._attack = attack;
+	}
+
+	get scalesWith(): any[] {
+		return this._scalesWith;
+	}
+
+	set scalesWith(scalesWith: any[]) {
+		this._scalesWith = scalesWith;
+	}
+
+	get requiredAttributes(): any[] {
+		return this._requiredAttributes;
+	}
+
+	set requiredAttributes(requiredAttributes: any[]) {
+		this._requiredAttributes = requiredAttributes;
+	}
+
+	get weaponCategory(): string | undefined {
+		return this._weaponCategory;
+	}
+
+	set weaponCategory(weaponCategory: string | undefined) {
+		this._weaponCategory = weaponCategory;
+	}
+
+	get spellCost(): number | undefined {
+		return this._spellCost;
+	}
+
+	set spellCost(spellCost: number | undefined) {
+		this._spellCost = spellCost;
+	}
+
+	get effects(): string | undefined {
+		return this._effects;
+	}
+
+	set effects(effects: string | undefined) {
+		this._effects = effects;
+	}
+
+	get affinity(): string | undefined {
+		return this._affinity;
+	}
+
+	set affinity(affinity: string | undefined) {
+		this._affinity = affinity;
+	}
+
+	set description(description: string | undefined) {
+		this._description = description;
+	}
+
+	get description(): string | undefined {
+		return this._description;
 	}
 }

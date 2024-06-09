@@ -23,11 +23,11 @@ export default class BuildGenerator extends Build {
 
 	constructor() {
 		super();
-		if (!BuildGenerator.instance) {
-			BuildGenerator.instance = this;
-		} else {
-			return BuildGenerator.instance;
-		}
+		// if (!BuildGenerator.instance) {
+		// 	BuildGenerator.instance = this;
+		// } else {
+		// 	return BuildGenerator.instance;
+		// }
 	}
 
 	/**
@@ -63,24 +63,6 @@ export default class BuildGenerator extends Build {
 		const buildMap = this.parseBuildMapFromUrl(url);
 		const build: Map<ItemCategory, Item[]> = this.parseBuildFromMap(buildMap);
 		return build;
-	}
-
-	/**
-	 * Gets the index of the item by its name, or -1 if the item was not found.
-	 * @param type the type of item to retrieve
-	 * @param name the name of the item
-	 * @returns {number} the index of the item in the raw data
-	 */
-	public getItemFromName(type: string, name: string): number {
-		const items = data[type as keyof typeof data]["items"];
-
-		items.forEach((item, i) => {
-			if (item.name === name) {
-				return i;
-			}
-		});
-
-		return -1;
 	}
 
 	/**
@@ -125,10 +107,6 @@ export default class BuildGenerator extends Build {
 
 	public setBuildNumsForCategory(category: ItemCategory, buildNums: number) {
 		this._buildGenerationConfig[category].buildNums = buildNums;
-	}
-
-	private getPreviouslyRolledForCategory(category: ItemCategory) {
-		return this._buildGenerationConfig[category].previouslyRolled;
 	}
 
 	/**
@@ -178,6 +156,27 @@ export default class BuildGenerator extends Build {
 		url = url.slice(0, url.length); // remove last comma
 		return url;
 		// return this.encode(url);
+	}
+
+	/**
+	 * Gets the index of the item by its name, or -1 if the item was not found.
+	 * @param type the type of item to retrieve
+	 * @param name the name of the item
+	 * @returns {number} the index of the item in the raw data
+	 */
+	protected getItemFromName(type: string, name: string): number {
+		// TODO: Write algorithm to fuzzy search for item - Levenshtein distance?
+		const items = data[type as keyof typeof data]["items"];
+		console.log("Name: ", name);
+
+		for (let i = 0; i < data[type as keyof typeof data]["count"]; ++i) {
+			if (items[i].name.toLowerCase() == name.toLowerCase()) {
+				console.log("Found item: ", items[i]);
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
 	/**
@@ -304,13 +303,7 @@ export default class BuildGenerator extends Build {
 		return buildMap;
 	}
 
-	// // Converts an ASCII string to a Base64 encoded string
-	// private encode(str: string): string {
-	// 	return btoa(str);
-	// }
-
-	// // Converts a Base64 encoded string to ASCII
-	// private decode(str: string): string {
-	// 	return atob(str);
-	// }
+	private getPreviouslyRolledForCategory(category: ItemCategory) {
+		return this._buildGenerationConfig[category].previouslyRolled;
+	}
 }

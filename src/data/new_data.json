@@ -10193,7 +10193,7 @@
 			{
 				"id": "17f695a182dl0i0pdc9aqxyoh0h4bl",
 				"name": "Witch's Glintstone Crown",
-				"image": "https://eldenring.fanapis.com/images/armors/17f695a182dl0i0pdc9aqxyoh0h4bl.png",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/witchs_glintstone_crown_helmet_elden_ring_wiki_guide_200px.png",
 				"description": "One of the glintstone crowns bestowed upon Raya Lucaria scholars whose pursuits were deemed worthy. ",
 				"category": "Helm",
 				"dmgNegation": [
@@ -30179,8 +30179,8 @@
 			},
 			{
 				"id": "17f692d4de3l0i0pf68kg5ine04x3",
-				"name": "Blackflame Monk Greave",
-				"image": "https://eldenring.fanapis.com/images/armors/17f692d4de3l0i0pf68kg5ine04x3.png",
+				"name": "Blackflame Monk Greaves",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/blackflame_monk_greaves_elden_ring_wiki_guide_200px.png",
 				"description": "Black iron greaves featuring a flame motif.",
 				"category": "Leg Armor",
 				"dmgNegation": [
@@ -36384,7 +36384,7 @@
 		]
 	},
 	"weapons": {
-		"count": 307,
+		"count": 298,
 		"items": [
 			{
 				"id": "17f69c35d2cl0i1oh7zuqfb3mdvsj",
@@ -42676,7 +42676,7 @@
 			},
 			{
 				"id": "17f6977fc1al0i1oswu20i8xjh9liqj",
-				"name": "Serpent-god's Curved Sword",
+				"name": "Serpent-God's Curved Sword",
 				"image": "https://eldenring.fanapis.com/images/weapons/17f6977fc1al0i1oswu20i8xjh9liqj.png",
 				"description": "Curved sword fashioned in the image of an ancient serpent deity and tool of a forgotten religion practiced on Mt. Gelmir. Formerly used to offer up sacrifices, this sword restores HP upon slaying an enemy.",
 				"attack": [
@@ -53659,7 +53659,7 @@
 			},
 			{
 				"id": "17f6946d08bl0i1pfb4sevs913hvu",
-				"name": "Rivers Of Blood",
+				"name": "Rivers of Blood",
 				"image": "https://eldenring.fanapis.com/images/weapons/17f6946d08bl0i1pfb4sevs913hvu.png",
 				"description": "Weapon of Okina, swordsman from the Land of Reeds. A cursed weapon that has felled countless men.  When Mohg, the Lord of Blood, first felt Okina's sword, and madness, upon his flesh, he had a proposal, to offer Okina the life of a demon, whose thirst would never go unsated.",
 				"attack": [
@@ -54740,746 +54740,6 @@
 				],
 				"category": "Reaper",
 				"weight": 7.5
-			},
-			{
-				"id": "17f699368ccl0i1ph45qf42ty540od",
-				"name": "Finger Seal",
-				"image": "https://eldenring.fanapis.com/images/weapons/17f699368ccl0i1ph45qf42ty540od.png",
-				"description": "A sacred seal given by maidens of the Finger Readers which serves as a catalyst for casting sacred incantations. Incantations must be memorized first at a site of lost grace, and a sacred seal must be equipped to cast them.",
-				"attack": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 0
-					},
-					{
-						"name": "Fire",
-						"amount": 0
-					},
-					{
-						"name": "Ligt",
-						"amount": 0
-					},
-					{
-						"name": "Holy",
-						"amount": 0
-					},
-					{
-						"name": "Crit",
-						"amount": 100
-					},
-					{
-						"name": "Inc",
-						"amount": 114
-					}
-				],
-				"defence": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 15
-					},
-					{
-						"name": "Fire",
-						"amount": 15
-					},
-					{
-						"name": "Ligt",
-						"amount": 15
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Boost",
-						"amount": 15
-					}
-				],
-				"scalesWith": [
-					{
-						"name": "Str",
-						"scaling": "E"
-					},
-					{
-						"name": "Fai",
-						"scaling": "C"
-					}
-				],
-				"requiredAttributes": [
-					{
-						"name": "Str",
-						"amount": 4
-					},
-					{
-						"name": "Fai",
-						"amount": 10
-					}
-				],
-				"category": "Sacred Seal",
-				"weight": 1.5
-			},
-			{
-				"id": "17f69bbd392l0i1ph9qxgols7hl7qc",
-				"name": "Godslayer's Seal",
-				"image": "https://eldenring.fanapis.com/images/weapons/17f69bbd392l0i1ph9qxgols7hl7qc.png",
-				"description": "Sacred seal of the Godskin Apostles, inlaid with obsidian. Said to represent the manipulation of black flame, this catalyst enhances godslayer incantations.",
-				"attack": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 0
-					},
-					{
-						"name": "Fire",
-						"amount": 0
-					},
-					{
-						"name": "Ligt",
-						"amount": 0
-					},
-					{
-						"name": "Holy",
-						"amount": 0
-					},
-					{
-						"name": "Crit",
-						"amount": 100
-					},
-					{
-						"name": "Inc",
-						"amount": 129
-					}
-				],
-				"defence": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 15
-					},
-					{
-						"name": "Fire",
-						"amount": 15
-					},
-					{
-						"name": "Ligt",
-						"amount": 15
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Boost",
-						"amount": 15
-					}
-				],
-				"scalesWith": [
-					{
-						"name": "Str",
-						"scaling": "E"
-					},
-					{
-						"name": "Fai",
-						"scaling": "C"
-					}
-				],
-				"requiredAttributes": [
-					{
-						"name": "Str",
-						"amount": 4
-					},
-					{
-						"name": "Fai",
-						"amount": 27
-					}
-				],
-				"category": "Sacred Seal",
-				"weight": 1.5
-			},
-			{
-				"id": "17f6995ccbfl0i1phh558cbgycwuo",
-				"name": "Giant's Seal",
-				"image": "https://eldenring.fanapis.com/images/weapons/17f6995ccbfl0i1phh558cbgycwuo.png",
-				"description": "Sacred seal depicting the one eyed god of the Fire Giants, adorned with braids of red hair. Sacred seal wielded by Fire Monks and Prelates, this catalyst enhances Giants' Flame incantations. ",
-				"attack": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 0
-					},
-					{
-						"name": "Fire",
-						"amount": 0
-					},
-					{
-						"name": "Ligt",
-						"amount": 0
-					},
-					{
-						"name": "Holy",
-						"amount": 0
-					},
-					{
-						"name": "Crit",
-						"amount": 100
-					}
-				],
-				"defence": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 15
-					},
-					{
-						"name": "Fire",
-						"amount": 15
-					},
-					{
-						"name": "Ligt",
-						"amount": 15
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Boost",
-						"amount": 15
-					}
-				],
-				"scalesWith": [
-					{
-						"name": "Str",
-						"scaling": "E"
-					},
-					{
-						"name": "Fai",
-						"scaling": "C"
-					}
-				],
-				"requiredAttributes": [
-					{
-						"name": "Str",
-						"amount": 4
-					},
-					{
-						"name": "Fai",
-						"amount": 14
-					}
-				],
-				"category": "Sacred Seal",
-				"weight": 1.5
-			},
-			{
-				"id": "17f697c0b2dl0i1phqrezjlqqlunoa",
-				"name": "Clawmark Seal",
-				"image": "https://eldenring.fanapis.com/images/weapons/17f697c0b2dl0i1phqrezjlqqlunoa.png",
-				"description": "A sacred seal given by Gurranq, the Beast Clergyman. A rare trinket which allows incantations to be scaled with strength.  The claw mark represents Gurranq's wrath. Enhances bestial incantations learned from Gurranq.",
-				"attack": [
-					{
-						"name": "Phy",
-						"amount": 31
-					},
-					{
-						"name": "Mag",
-						"amount": 0
-					},
-					{
-						"name": "Fire",
-						"amount": 0
-					},
-					{
-						"name": "Ligt",
-						"amount": 0
-					},
-					{
-						"name": "Holy",
-						"amount": 0
-					},
-					{
-						"name": "Crit",
-						"amount": 100
-					},
-					{
-						"name": "Inc",
-						"amount": 60
-					}
-				],
-				"defence": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 15
-					},
-					{
-						"name": "Fire",
-						"amount": 15
-					},
-					{
-						"name": "Ligt",
-						"amount": 15
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Boost",
-						"amount": 15
-					}
-				],
-				"scalesWith": [
-					{
-						"name": "Str",
-						"scaling": "D"
-					},
-					{
-						"name": "Fai",
-						"scaling": "D"
-					}
-				],
-				"requiredAttributes": [
-					{
-						"name": "Str",
-						"amount": 4
-					},
-					{
-						"name": "Fai",
-						"amount": 10
-					}
-				],
-				"category": "Sacred Seal",
-				"weight": 1.5
-			},
-			{
-				"id": "17f69d76aa8l0i1phsgjq5azzb5g1",
-				"name": "Golden Order Seal",
-				"image": "https://eldenring.fanapis.com/images/weapons/17f69d76aa8l0i1phsgjq5azzb5g1.png",
-				"description": "A formless sacred seal depicting the ceremonial observation of Order. Enhances Golden Fundamentalist incantations.  Fundamentalism is scholarship in all but name. Scales incantation using both intelligence and faith.",
-				"attack": [
-					{
-						"name": "Phy",
-						"amount": 24
-					},
-					{
-						"name": "Mag",
-						"amount": 0
-					},
-					{
-						"name": "Fire",
-						"amount": 0
-					},
-					{
-						"name": "Ligt",
-						"amount": 0
-					},
-					{
-						"name": "Holy",
-						"amount": 0
-					},
-					{
-						"name": "Crit",
-						"amount": 100
-					},
-					{
-						"name": "Inc",
-						"amount": 60
-					}
-				],
-				"defence": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 15
-					},
-					{
-						"name": "Fire",
-						"amount": 15
-					},
-					{
-						"name": "Ligt",
-						"amount": 15
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Boost",
-						"amount": 15
-					}
-				],
-				"scalesWith": [
-					{
-						"name": "Int",
-						"scaling": "D"
-					},
-					{
-						"name": "Fai",
-						"scaling": "D"
-					}
-				],
-				"requiredAttributes": [
-					{
-						"name": "Int",
-						"amount": 17
-					},
-					{
-						"name": "Fai",
-						"amount": 17
-					}
-				],
-				"category": "Sacred Seal",
-				"weight": 0
-			},
-			{
-				"id": "17f69746125l0i1phti5gxbjc1nfhx",
-				"name": "Erdtree Seal",
-				"image": "https://eldenring.fanapis.com/images/weapons/17f69746125l0i1phti5gxbjc1nfhx.png",
-				"description": "A formless sacred seal decorated with an Erdtree crest, once the focus of religion in the Lands Between. Even though the Elden Ring is shattered, and the Erdtree has dulled from its former radiance, earnest faith continues to hold the answers. ",
-				"attack": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 0
-					},
-					{
-						"name": "Fire",
-						"amount": 0
-					},
-					{
-						"name": "Ligt",
-						"amount": 0
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Crit",
-						"amount": 100
-					},
-					{
-						"name": "Inc",
-						"amount": 60
-					}
-				],
-				"defence": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 15
-					},
-					{
-						"name": "Fire",
-						"amount": 15
-					},
-					{
-						"name": "Ligt",
-						"amount": 15
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Boost",
-						"amount": 15
-					}
-				],
-				"scalesWith": [
-					{
-						"name": "Fai",
-						"scaling": "C"
-					}
-				],
-				"requiredAttributes": [
-					{
-						"name": "Fai",
-						"amount": 40
-					}
-				],
-				"category": "Sacred Seal",
-				"weight": 0
-			},
-			{
-				"id": "17f698bacafl0i1phz3om56qt5bqof",
-				"name": "Erdtree Seal",
-				"image": "https://eldenring.fanapis.com/images/weapons/17f698bacafl0i1phz3om56qt5bqof.png",
-				"description": "A formless sacred seal decorated with an Erdtree crest, once the focus of religion in the Lands Between. Even though the Elden Ring is shattered, and the Erdtree has dulled from its former radiance, earnest faith continues to hold the answers. ",
-				"attack": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 0
-					},
-					{
-						"name": "Fire",
-						"amount": 0
-					},
-					{
-						"name": "Ligt",
-						"amount": 0
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Crit",
-						"amount": 100
-					},
-					{
-						"name": "Inc",
-						"amount": 60
-					}
-				],
-				"defence": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 15
-					},
-					{
-						"name": "Fire",
-						"amount": 15
-					},
-					{
-						"name": "Ligt",
-						"amount": 15
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Boost",
-						"amount": 15
-					}
-				],
-				"scalesWith": [
-					{
-						"name": "Fai",
-						"scaling": "C"
-					}
-				],
-				"requiredAttributes": [
-					{
-						"name": "Fai",
-						"amount": 40
-					}
-				],
-				"category": "Sacred Seal",
-				"weight": 0
-			},
-			{
-				"id": "17f697307d1l0i1pi6qvgmp5wuhmk",
-				"name": "Dragon Communion Seal",
-				"image": "https://eldenring.fanapis.com/images/weapons/17f697307d1l0i1pi6qvgmp5wuhmk.png",
-				"description": "Formless drakeblood seal with a dragon communion crest. Enhances Dragon Communion incantations. The sacrificial devouring of the heart gives power. Indeed, Dragon Communion is too primal in nature for the term \"incantation\" to be appropriate. This seal scales incantations with one's arcane attribute.",
-				"attack": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 0
-					},
-					{
-						"name": "Fire",
-						"amount": 0
-					},
-					{
-						"name": "Ligt",
-						"amount": 0
-					},
-					{
-						"name": "Holy",
-						"amount": 0
-					},
-					{
-						"name": "Crit",
-						"amount": 100
-					},
-					{
-						"name": "Inc",
-						"amount": 60
-					}
-				],
-				"defence": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 15
-					},
-					{
-						"name": "Fire",
-						"amount": 15
-					},
-					{
-						"name": "Ligt",
-						"amount": 15
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Boost",
-						"amount": 15
-					}
-				],
-				"scalesWith": [
-					{
-						"name": "Fai",
-						"scaling": "D"
-					},
-					{
-						"name": "Arc",
-						"scaling": "C"
-					}
-				],
-				"requiredAttributes": [
-					{
-						"name": "Fai",
-						"amount": 10
-					},
-					{
-						"name": "Arc",
-						"amount": 10
-					}
-				],
-				"category": "Sacred Seal",
-				"weight": 0
-			},
-			{
-				"id": "17f69885c93l0i1pihpfc550piu1x",
-				"name": "Frenzied Flame Seal",
-				"image": "https://eldenring.fanapis.com/images/weapons/17f69885c93l0i1pihpfc550piu1x.png",
-				"description": "Formless sacred seal bestowed by the maiden of the Three Fingers. Enhances incantations of the frenzied flame. This seal is the mark of the Lord of Frenzied Flame. Scales incantations using strength, dexterity, intelligence, and faith all together.",
-				"attack": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 0
-					},
-					{
-						"name": "Fire",
-						"amount": 0
-					},
-					{
-						"name": "Ligt",
-						"amount": 0
-					},
-					{
-						"name": "Holy",
-						"amount": 0
-					},
-					{
-						"name": "Crit",
-						"amount": 100
-					}
-				],
-				"defence": [
-					{
-						"name": "Phy",
-						"amount": 25
-					},
-					{
-						"name": "Mag",
-						"amount": 15
-					},
-					{
-						"name": "Fire",
-						"amount": 15
-					},
-					{
-						"name": "Ligt",
-						"amount": 15
-					},
-					{
-						"name": "Holy",
-						"amount": 15
-					},
-					{
-						"name": "Boost",
-						"amount": 15
-					}
-				],
-				"scalesWith": [
-					{
-						"name": "Str",
-						"scaling": "E"
-					},
-					{
-						"name": "Dex",
-						"scaling": "E"
-					},
-					{
-						"name": "Int",
-						"scaling": "E"
-					},
-					{
-						"name": "Fai",
-						"scaling": "D"
-					}
-				],
-				"requiredAttributes": [
-					{
-						"name": "Fai",
-						"amount": 10
-					},
-					{
-						"name": "Arc",
-						"amount": 10
-					}
-				],
-				"category": "Sacred Seal",
-				"weight": 0
 			},
 			{
 				"id": "17f697047a0l0i1pik0le4bp23xal",
@@ -62267,7 +61527,7 @@
 			{
 				"id": "17f694f3dc4l0hznjyrorixzbrhtyl",
 				"name": "Through And Through",
-				"image": "https://eldenring.fanapis.com/images/ashes/17f694f3dc4l0hznjyrorixzbrhtyl.png",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ash_of_war_through_and_through_elden_ring_wiki_guide_200px.png",
 				"description": "This Ash of War grants no affinity to an armament, but imparts the following skill:\"Through and Through: Powerful archery skill using a greatbow held in an oblique stance. Ready the greatbow, then twist the bowstring to fire a mighty greatarrow that can penetrate through enemies.\"Usable on greatbows.",
 				"affinity": "Standard",
 				"skill": "Through and Through"
@@ -64330,7 +63590,7 @@
 				"type": "Sorceries",
 				"cost": 7,
 				"slots": 1,
-				"effects": "Swiftly fires a semi-invisible",
+				"effects": "Swiftly fires a semi-invisible projectile.",
 				"requires": [
 					{
 						"name": "Intelligence",
@@ -64925,7 +64185,7 @@
 		]
 	},
 	"incants": {
-		"count": 98,
+		"count": 99,
 		"items": [
 			{
 				"id": "17f696c7ce7l0hynrwmh6d0r0rwk2",
@@ -66000,6 +65260,30 @@
 					{
 						"name": "Faith",
 						"amount": 46
+					},
+					{
+						"name": "Arcane",
+						"amount": 0
+					}
+				]
+			},
+			{
+				"id": "1",
+				"name": "Flame, Cleanse Me",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/flame_cleanse_me_incantation_elden_ring_wiki_guide_200px.png",
+				"description": "One of the incantations of the Fire Monks.",
+				"type": "Incantations",
+				"cost": 14,
+				"slots": 1,
+				"effects": "Alleviates buildup of and cures poison and scarlet rot",
+				"requires": [
+					{
+						"name": "Intelligence",
+						"amount": 0
+					},
+					{
+						"name": "Faith",
+						"amount": 12
 					},
 					{
 						"name": "Arcane",

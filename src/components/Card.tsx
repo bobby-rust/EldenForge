@@ -1,6 +1,7 @@
 import { Item } from "../classes/Item";
 import { ItemCategory } from "../types/enums";
 import { GiBroadsword, GiWeight } from "react-icons/gi";
+import { TbDropletDown } from "react-icons/tb";
 
 export default function Card(props: { item: Item; reroll: (c: ItemCategory, i: number | undefined) => void }) {
 	if (props.item.category === ItemCategory.Classes) return null;
@@ -11,11 +12,14 @@ export default function Card(props: { item: Item; reroll: (c: ItemCategory, i: n
 		name = props.item.name.split("Ash Of War: ")[1];
 	}
 
+	if (props.item.weight !== 0) {
+		console.log(props.item.weight);
+	}
 	// TODO: compress / downscale images for better rendering performance
 	return (
 		<>
-			<div className="flex flex-col w-60 h-60 bg-slate-100 shadow-xl m-3 rounded-lg">
-				<div className="relative h-full p-3">
+			<div className="flex text-sm flex-col w-60 h-60 bg-slate-100 shadow-xl m-3 rounded-lg">
+				<div className="relative h-full p-3 text-slate-700">
 					<a href={`${props.item.wikiUrl}`} target="_blank" rel="noreferrer" className="flex">
 						<figure className="w-[50%]">
 							<img
@@ -27,24 +31,64 @@ export default function Card(props: { item: Item; reroll: (c: ItemCategory, i: n
 							/>
 						</figure>
 						<div className="flex justify-center w-[50%]">
-							<h6 className="text-[18px] font-semibold overflow-hidden whitespace-pre-wrap">{name}</h6>
+							<h6 className="text-[18px] text-black font-semibold overflow-hidden whitespace-pre-wrap">{name}</h6>
 						</div>
 						<div className="absolute inset-0 rounded-x-lg rounded-t-lg bg-black bg-opacity-50 flex justify-center items-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
 							<p className="text-center">Overlay Text Here</p>
 						</div>
 					</a>
-					<div>
-						<GiBroadsword size="20" />
+					<div className="flex overflow-hidden">
+						{(props.item.category === ItemCategory.Sorcs || props.item.category === ItemCategory.Incants) && (
+							<div className="flex flex-col [&>div]:mt-1">
+								<div className="flex">
+									<TbDropletDown size="20" />
+									<span>Cost: {props.item.spellCost}</span>
+								</div>
+								<div className="flex">
+									<div className="h-[20px] w-[20px]">
+										<GiBroadsword size={20} />
+									</div>
+									<span className="line-clamp-2">Effects: {props.item.effects}</span>
+								</div>
+							</div>
+						)}
+						{props.item.category === ItemCategory.Weapons && (
+							<div className="flex m-1">
+								<GiBroadsword size="20" />
+								<span>{props.item.weaponCategory}</span>
+							</div>
+						)}
+
+						{props.item.category === ItemCategory.Ashes && (
+							<div>
+								<div className="flex m-1">
+									<GiBroadsword size="20" />
+									<span>{props.item.affinity}</span>
+								</div>
+							</div>
+						)}
+
+						{props.item.category === ItemCategory.Tears && (
+							<div>
+								<div className="flex m-1">
+									<GiBroadsword size="20" />
+									<span>{props.item.description}</span>
+								</div>
+							</div>
+						)}
 					</div>
-					<div>
-						<GiWeight size="20" />
-					</div>
+					{typeof props.item.weight !== "undefined" && (
+						<div className="flex m-1">
+							<GiWeight size="20" />
+							Weight: {props.item.weight}
+						</div>
+					)}
 				</div>
 				<div className="flex flex-col justify-center items-center text-center w-full">
-					<div className="align-bottom bg-slate-400 w-full h-12 flex justify-end align-center p-2 rounded-b-lg">
+					<div className="bg-slate-400 w-full h-10 flex justify-end items-center p-2 rounded-b-lg">
 						<button
 							onClick={() => props.reroll(props.item.category, props.item.index)}
-							className="btn btn-primary btn-sm"
+							className="btn btn-primary btn-sm h-6 min-h-6 rounded-md"
 						>
 							Reroll Item
 						</button>

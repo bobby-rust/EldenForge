@@ -3,6 +3,8 @@ import App from "./App.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Build from "./components/Build.tsx";
+import AIBuild from "./components/AIBuild.tsx";
+import AIApp from "./components/AIApp.tsx";
 
 const Err = () => (
 	<div className="flex justify-center items-center h-screen">
@@ -19,6 +21,14 @@ const router = createBrowserRouter([
 		path: "/:buildUrl",
 		element: <Build />,
 		errorElement: <Err />,
+	},
+	{
+		path: "/ai",
+		element: <AIApp />,
+	},
+	{
+		path: "/ai/:buildUrl",
+		element: <AIBuild />,
 	},
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(

@@ -6,7 +6,7 @@ export default function Navbar({
 	handleChangeTheme: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) {
 	return (
-		<div className="navbar bg-base-100">
+		<div className="navbar h-10 bg-slate-900 text-slate-100">
 			<div className="flex-1">
 				<a className="btn btn-ghost text-2xl">EldenForge</a>
 			</div>
