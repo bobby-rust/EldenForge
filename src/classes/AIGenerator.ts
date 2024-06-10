@@ -1,23 +1,22 @@
 import { GoogleGenerativeAI, GenerationConfig } from "@google/generative-ai";
-import BuildGenerator from "./BuildGenerator";
+import data from "../data/new_data.json";
+import { ItemCategory } from "../types/enums";
 
-export default class AIGenerator extends BuildGenerator {
+export default class AI {
 	private _API_KEY: string = import.meta.env.VITE_API_KEY;
 	private _genAI = new GoogleGenerativeAI(this._API_KEY);
 
 	private _generationConfig: GenerationConfig = {
-		temperature: 0, // minimum randomness
-		topP: 0.95, // The cumulative probability of potential tokens in which to stop considering subsequent tokens, 1.0 is max
-		topK: 40, // Consider the top K tokens
+		temperature: 1, // maximum randomness
+		topP: 1, // The cumulative probability of potential tokens in which to stop considering subsequent tokens, 1.0 is max
+		topK: 50, // Consider the top K tokens
 	};
-	public WHAT() {
-		console.log("ARE YOU THERE?");
-		return "Hello";
-	}
-	private _model: any = this._genAI.getGenerativeModel({ ...this._generationConfig, model: "gemini-1.5-pro" });
-	private _prompt = `
-    Generate an unique and creative Elden Ring build for a level 100 character in this structured format: 
-    'Name=<Name>
+
+	private _model: any = this._genAI.getGenerativeModel({
+		...this._generationConfig,
+		model: "gemini-1.5-pro",
+		systemInstruction: `You are an Elden Ring build generator. You generate unique and creative Elden Ring builds in this structured format: 
+    Name=<Name>
     Vigor=<Vigor>
     Mind=<Mind>
     Endurance=<Endurance>
@@ -27,88 +26,63 @@ export default class AIGenerator extends BuildGenerator {
     Faith=<Faith>
     Arcane=<Arcane>
     Class=<Class>
-    Weapons=<Weapons>
     Helm=<helmet>
     Chest Armor=<Chest Armor>
     Gauntlets=<Gauntlets>
     Leg Armor=<Leg Armor>
-    Crystal Tears<Crystal Tears>
-    Incantations=<Incantations>
+    Weapons=<Weapons>
+    Ashes 0f War=<Ashes of War>
     Sacred Seals=<Sacred Seals>
+    Incantations=<Incantations>
     Shields=<Shield>
-    Sorceries=<Sorceries>
-    Spirit Ashes=<Spirit Ashes>
     Talismans=<Talismans>
+    Crystal Tears=<Crystal Tears>
+    Spirit Ashes=<Spirit Ashes>
+    Sorceries=<Sorceries>
     Summary=<Summary>
     Strengths=<Strengths>
     Weaknesses=<Weaknesses>'
-    Do not describe each item.
+    Do not describe each item. Do not include Sacred Seals in the Weapons category.
+    Make sure to give every build Talismans, Crystal Tears, and Spirit Ashes. 
+    Make sure to generate a full armor set for each build.
     If there are multiple items for a category, separate them with a single bar (|). Put single quotes around each item name.
     Do not generate more than 4 items per category.
     Make sure to generate one of each armor type.
     If there are no items for a category, put 'None'.
     Provide a strengths and weaknesses summary at the end.
-    Use the exact item names as they appear in-game.`;
+    Use the exact item names as they appear in the following data. Select items using the following data which contains information about Elden Ring items: ${data}`,
+	});
+	private _prompt = `Generate an Elden Ring build.`;
 
 	constructor() {
-		super();
-		console.log("New AIWrapper initialized: ", this);
+		console.log("New AI initialized");
 	}
 
 	/**
 	 * Prompts the LLM and returns the response
 	 * @returns {Promise<string>} the AI response
 	 */
-	public async generateAIBuild(): Promise<string> {
+	public async getAIBuild(): Promise<Map<ItemCategory, number[]>> {
 		const result = await this._model.generateContent(this._prompt);
 		const response = await result.response;
 		const text = response.text();
-		console.log("Raw response: ", text);
-		const url = this.parseResponse(text);
-		console.log("URL: ", url);
-		return text;
+		const buildMap = this.parseResponse(text);
+		console.log(text);
+
+		return buildMap;
 	}
 
 	/**
-	 * Parses the AI response into a build URL
-	 * @returns {string} the build url
+	 * Parses the AI response into a build map
+	 * @returns {Map<ItemCategory, number[]>} the build map
 	 */
-	private parseResponse(res: string): string {
-		const url = "";
-		// const response = `Name=Oathbound Duelist
-		// Vigor=40
-		// Mind=16
-		// Endurance=25
-		// Strength=18
-		// Dexterity=40
-		// Intelligence=9
-		// Faith=12
-		// Arcane=7
-		// Class=Samurai
-		// Weapons='Uchigatana' | 'Regalia of Eochaid'
-		// Ashes 0f War='Ash Of War: Barrage' | 'Ash Of War: Prelate's Charge'
-		// Helm='None'
-		// Chest Armor='Ronin's Armor'
-		// Gauntlets='None'
-		// Leg Armor='Ronin's Greaves'
-		// Crystal Tears='Cerulean Hidden Tear'
-		// Incantations='Golden Vow' | 'Flame, Grant Me Strength'
-		// Sacred Seals='None'
-		// Shields='None'
-		// Sorceries='None'
-		// Spirit Ashes='Black Knife Tiche'
-		// Talismans='Rotten Winged Sword Insignia' | 'Lord of Blood's Exultation' | 'Green Turtle Talisman' | 'Carian Filigreed Crest'
-		// Summary=This build is a glass cannon bleed/Dex build that utilizes the unique combination of 'Uchigatana' and 'Regalia of Eochaid' to inflict bleed quickly with high damage output.  It uses minimal armor to maintain light equip load and prioritize dodging and mobility. The 'Black Knife Tiche' ashes supplement the player's damage and stagger enemies.
-		// Strengths=Very high damage output | Extremely mobile | Good stagger potential | Can inflict bleed quickly
-		// Weaknesses=Very low defense | Requires precise dodging and spacing | Susceptible to crowd control | Low FP`;
-
-		// needs to parse the response into a build map -> Map<string, number[]>
-
+	private parseResponse(res: string): Map<ItemCategory, number[]> {
 		const responseArray = res.split("\n");
 		const mapArray: string[][] = [];
 		responseArray.forEach((el: string) => {
 			let currKeyValPair = el.trim().split("=");
 			let name = "";
+			currKeyValPair[0] = currKeyValPair[0];
 			if (typeof currKeyValPair[1] === "undefined") return;
 			for (let i = 0; i < currKeyValPair[1].length; i++) {
 				if (currKeyValPair[1][i] !== "'") {
@@ -120,9 +94,7 @@ export default class AIGenerator extends BuildGenerator {
 			mapArray.push(currKeyValPair);
 		});
 
-		const buildMap = this.createBuildMap(mapArray);
-		console.log("Build Map Parsed: ", buildMap);
-		return url;
+		return this.createBuildMap(mapArray);
 	}
 
 	/**
@@ -130,25 +102,70 @@ export default class AIGenerator extends BuildGenerator {
 	 * @param arr An array containing arrays of key, value pairs where they key is the category and the value is the name of the item.
 	 * @returns {Map<string, number[]>} a map representing a build.
 	 */
-	private createBuildMap(arr: string[][]): Map<string, number[]> {
-		const buildMap = new Map<string, number[]>();
-
+	private createBuildMap(arr: string[][]): Map<ItemCategory, number[]> {
+		const buildMap = new Map<ItemCategory, number[]>();
 		arr.forEach((kvPair: string[]) => {
 			const key = this.translateResponseCategory(kvPair[0]);
-
 			if (key === "") return;
 
 			const value = kvPair[1];
 
 			const names = value.split("|");
-			// console.log(names);
 			names.forEach((name) => {
+				if (name.toLowerCase() === "'none'" || name.toLowerCase() === "none") return;
 				const item = this.getItemFromName(key, name);
-				buildMap.set(key, [...(buildMap.get(key) ?? []), item]);
+				buildMap.set(key as ItemCategory, [...(buildMap.get(key as ItemCategory) ?? []), item]);
 			});
 		});
 
 		return buildMap;
+	}
+
+	/**
+	 * Gets the index of the item by its name, or -1 if the item was not found.
+	 * @param type the type of item to retrieve
+	 * @param name the name of the item
+	 * @returns {number} the index of the item in the raw data
+	 */
+	private getItemFromName(type: string, name: string): number {
+		if (type === ItemCategory.Ashes) {
+			name += " Ashes";
+		}
+
+		if (type === ItemCategory.Weapons && name.split(" ")[-1] === "Seal") {
+			type = ItemCategory.Seals;
+		}
+
+		const items = data[type as keyof typeof data]["items"];
+
+		const distances: number[] = [];
+		for (let i = 0; i < data[type as keyof typeof data]["count"]; ++i) {
+			const dist = this.levenshteinDistance(name.toLowerCase(), items[i].name.toLowerCase());
+			if (dist < 3) {
+				return i;
+			} else {
+				distances.push(dist);
+			}
+		}
+
+		const index = distances.indexOf(Math.min(...distances));
+		return index;
+	}
+
+	private levenshteinDistance(s: string, t: string) {
+		if (!s.length) return t.length;
+		if (!t.length) return s.length;
+		const arr = [];
+		for (let i = 0; i <= t.length; i++) {
+			arr[i] = [i];
+			for (let j = 1; j <= s.length; j++) {
+				arr[i][j] =
+					i === 0
+						? j
+						: Math.min(arr[i - 1][j] + 1, arr[i][j - 1] + 1, arr[i - 1][j - 1] + (s[j - 1] === t[i - 1] ? 0 : 1));
+			}
+		}
+		return arr[t.length][s.length];
 	}
 
 	/**
@@ -158,29 +175,35 @@ export default class AIGenerator extends BuildGenerator {
 	 * @return {string} The parsed category string in the form used by the BuildGenerator.
 	 */
 	private translateResponseCategory(cat: string): string {
+		if (cat === "Crystal Tears") {
+			// Am I going crazy or WHAT, WHY IS THIS NECESSARY?
+			return "tears";
+		}
+
 		//TODO: Fix this. This is bad. No magic strings.
-		switch (cat) {
-			case "Class":
+		switch (cat.toLowerCase().trim()) {
+			case "class":
 				return "classes";
-			case "Weapons":
+			case "weapons":
 				return "weapons";
-			case "Helm":
+			case "helm":
 				return "helms";
-			case "Chest Armor":
+			case "chest armor":
 				return "chests";
-			case "Gauntlets" || "Gauntlet":
+			case "gauntlets" || "gauntlet":
 				return "gauntlets";
-			case "Leg Armor":
+			case "leg armor":
 				return "legs";
-			case "Shields" || "Sorceries" || "Talismans":
+			case "shields" || "sorceries" || "talismans":
 				return cat.toLowerCase();
-			case "Incantations":
+			case "incantations":
 				return "incants";
-			case "Sacred Seals" || "Crystal Tears":
+			case "sacred seals" || "crystal tears":
+				console.log("Got a hit.");
 				return cat.split(" ")[1].toLowerCase();
-			case "Spirit Ashes":
+			case "spirit ashes":
 				return "spirits";
-			case "Ashes 0f War":
+			case "ashes of war":
 				return "ashes";
 			default:
 				console.log("Invalid category.");

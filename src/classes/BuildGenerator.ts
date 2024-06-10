@@ -3,6 +3,7 @@ import data from "../data/new_data.json";
 import { ItemCategory } from "../types/enums";
 import { Build } from "./Build";
 import { Item } from "./Item";
+import AIGenerator from "./AIGenerator";
 
 /**
  * The BuildGenerator needs to generate a valid build and return a base64 encoded
@@ -15,20 +16,11 @@ import { Item } from "./Item";
  * If a generated item is not valid (i.e. _excludePreviouslyRolled is false and the item has already been generated),
  * it will keep regenerating items until a valid item is found or there are no more valid items.
  */
-export default class BuildGenerator extends Build {
-	private static instance: BuildGenerator;
-
+export default class BuildGenerator {
 	_itemData: ItemData = data;
 	_buildGenerationConfig: BuildGenerationConfig = structuredClone(defaultBuildGenerationConfig);
-
-	constructor() {
-		super();
-		// if (!BuildGenerator.instance) {
-		// 	BuildGenerator.instance = this;
-		// } else {
-		// 	return BuildGenerator.instance;
-		// }
-	}
+	_build: Build = new Build();
+	_aiGenerator = new AIGenerator();
 
 	/**
 	 * Generates a URL representing a build.
@@ -39,17 +31,20 @@ export default class BuildGenerator extends Build {
 		return this.generateRandom();
 	}
 
+	public async generateAIUrl(): Promise<string> {
+		return this.createUrlFromBuildMap(await this._aiGenerator.getAIBuild());
+	}
+
 	private resetItems() {
-		this._items = new Map<ItemCategory, number[]>();
+		this._build._items = new Map<ItemCategory, number[]>();
 	}
 
 	public rerollItem(category: ItemCategory, oldItem: number): Map<ItemCategory, number[]> {
 		const newItem = this.generateItem(category);
-		if (typeof newItem === "undefined") return this._items;
-		console.log("Got new item: ", newItem);
-		this.replaceItem(category, oldItem, newItem);
+		if (typeof newItem === "undefined") return this._build._items;
+		this._build.replaceItem(category, oldItem, newItem);
 
-		return this._items;
+		return this._build._items;
 	}
 
 	/**
@@ -159,27 +154,6 @@ export default class BuildGenerator extends Build {
 	}
 
 	/**
-	 * Gets the index of the item by its name, or -1 if the item was not found.
-	 * @param type the type of item to retrieve
-	 * @param name the name of the item
-	 * @returns {number} the index of the item in the raw data
-	 */
-	protected getItemFromName(type: string, name: string): number {
-		// TODO: Write algorithm to fuzzy search for item - Levenshtein distance?
-		const items = data[type as keyof typeof data]["items"];
-		console.log("Name: ", name);
-
-		for (let i = 0; i < data[type as keyof typeof data]["count"]; ++i) {
-			if (items[i].name.toLowerCase() == name.toLowerCase()) {
-				console.log("Found item: ", items[i]);
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
-	/**
 	 * Generates a random build of items
 	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
 	 */
@@ -234,11 +208,11 @@ export default class BuildGenerator extends Build {
 				if (isNaN(val)) {
 					return;
 				}
-				this.addItem(key, val);
+				this._build.addItem(key, val);
 			});
 		}
 
-		return this.getItemsFromBuild();
+		return this._build.getItemsFromBuild();
 	}
 
 	/**

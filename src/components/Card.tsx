@@ -3,7 +3,7 @@ import { ItemCategory } from "../types/enums";
 import { GiBroadsword, GiWeight } from "react-icons/gi";
 import { TbDropletDown } from "react-icons/tb";
 
-export default function Card(props: { item: Item; reroll: (c: ItemCategory, i: number | undefined) => void }) {
+export default function Card(props: { item: Item; reroll: ((c: ItemCategory, i: number | undefined) => void) | null }) {
 	if (props.item.category === ItemCategory.Classes) return null;
 
 	let name = props.item.name;
@@ -12,9 +12,6 @@ export default function Card(props: { item: Item; reroll: (c: ItemCategory, i: n
 		name = props.item.name.split("Ash Of War: ")[1];
 	}
 
-	if (props.item.weight !== 0) {
-		console.log(props.item.weight);
-	}
 	// TODO: compress / downscale images for better rendering performance
 	return (
 		<>
@@ -87,7 +84,7 @@ export default function Card(props: { item: Item; reroll: (c: ItemCategory, i: n
 				<div className="flex flex-col justify-center items-center text-center w-full">
 					<div className="bg-slate-400 w-full h-10 flex justify-end items-center p-2 rounded-b-lg">
 						<button
-							onClick={() => props.reroll(props.item.category, props.item.index)}
+							onClick={() => props.reroll?.(props.item.category, props.item.index)}
 							className="btn btn-primary btn-sm h-6 min-h-6 rounded-md"
 						>
 							Reroll Item

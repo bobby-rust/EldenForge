@@ -3,9 +3,6 @@ import { ItemCategory } from "../types/enums";
 /**
  * This class represents an item that is generated.
  * It contains only the fields needed by the application.
- * The application displays the item's name, an image of the item,
- * and each item contains a link the item's wiki page
- * The item type is used to categorize the items.
  */
 export class Item {
 	private _category: ItemCategory;

@@ -163,5 +163,13 @@ const defaultBuildGenerationConfig: BuildGenerationConfig = {
 	},
 };
 
+type AIResponse = {
+	name: string;
+	url: string;
+	summary: string;
+	strengths: string;
+	weaknesses: string;
+};
+
 export type { BuildGenerationConfig, ItemData, BuildInfo };
 export { defaultBuildGenerationConfig };

@@ -3,30 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Item } from "../classes/Item";
 import useGeneratorState from "../hooks/useGeneratorState";
 import { ItemCategory } from "../types/enums";
-import BuildGenerator from "../classes/BuildGenerator";
-import Navbar from "./Navbar";
 import "../App.css";
 import CardColumn from "./CardColumn";
 import { ErrorBoundary } from "react-error-boundary";
-
+import BuildGenerator from "../classes/BuildGenerator";
+import { ArmorCategories } from "../types/constants";
 const generator = new BuildGenerator();
 
-const armorCategories = new Set([
-	ItemCategory.Classes,
-	ItemCategory.Helm,
-	ItemCategory.Chest,
-	ItemCategory.Gauntlets,
-	ItemCategory.Leg,
-]);
-
 export default function Build() {
-	const [theme, setTheme] = React.useState("light");
 	const [armors, setArmors] = React.useState<Item[]>([]);
-
-	const handleChangeTheme = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		console.log("Setting theme: ", e.target.value);
-		setTheme(e.target.value);
-	};
 
 	const { buildUrl } = useParams();
 
@@ -37,7 +22,6 @@ export default function Build() {
 	const navigate = useNavigate();
 
 	const [build, setBuild] = React.useState<Map<ItemCategory, Item[]> | null>(generator.generateBuildFromUrl(buildUrl));
-	// const [armors, setArmors] = React.useState<Item[]>([]);
 	const { generatorState, setBuildNumsState, setExcludePreviouslyRolledState } = useGeneratorState(generator);
 
 	const handleIncrementBuildNumsForCategory = (c: ItemCategory) => {
@@ -71,7 +55,7 @@ export default function Build() {
 		if (build) {
 			const newArmors: Item[] = [];
 			[...build.keys()].forEach((c: ItemCategory) => {
-				if (armorCategories.has(c) && build.get(c)) {
+				if (ArmorCategories.has(c) && build.get(c)) {
 					newArmors.push(...(build.get(c) ?? []));
 				}
 			});
@@ -81,8 +65,7 @@ export default function Build() {
 
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
-			<div data-theme={theme} className="App">
-				<Navbar handleChangeTheme={handleChangeTheme} />
+			<div className="App">
 				<div className="flex w-full justify-center align-center p-3">
 					<button className="btn btn-lg btn-primary" onClick={handleReroll}>
 						<h1>Generate New Build</h1>
@@ -94,7 +77,7 @@ export default function Build() {
 							[...build.keys()].map((c: ItemCategory, i: number) => (
 								<>
 									{/* TODO: fix this garbage */}
-									{!armorCategories.has(c) && (
+									{!ArmorCategories.has(c) && (
 										<CardColumn key={i} items={build.get(c) ?? []} reroll={handleRerollItem} />
 									)}
 									{c === ItemCategory.Helm && <CardColumn key={i} items={armors} reroll={handleRerollItem} />}

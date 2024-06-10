@@ -15,7 +15,7 @@ export class Build {
 	 * @param type the type of item.
 	 * @param item the index of the item to add.
 	 */
-	protected addItem(category: ItemCategory, item: number) {
+	public addItem(category: ItemCategory, item: number) {
 		this._items.set(category, [...(this._items.get(category) ?? []), item]);
 	}
 
@@ -27,7 +27,7 @@ export class Build {
 	 * @param {number} newItem - The index of the new item to replace the old item.
 	 * @throws {Error} Throws an error if the item list for the specified category is empty.
 	 */
-	protected replaceItem(category: ItemCategory, oldItem: number, newItem: number) {
+	public replaceItem(category: ItemCategory, oldItem: number, newItem: number) {
 		const oldItems = this._items.get(category) ?? [];
 
 		if (oldItems.length === 0) {
@@ -43,7 +43,7 @@ export class Build {
 	 *
 	 * @return {Map<ItemCategory, Item[]>} A Map with ItemCategory as the key and an array of Item objects as the value.
 	 */
-	protected getItemsFromBuild(): Map<ItemCategory, Item[]> {
+	public getItemsFromBuild(): Map<ItemCategory, Item[]> {
 		const items = new Map<ItemCategory, Item[]>();
 
 		this._items.forEach((value, key) => {

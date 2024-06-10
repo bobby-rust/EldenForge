@@ -64185,8 +64185,32 @@
 		]
 	},
 	"incants": {
-		"count": 99,
+		"count": 100,
 		"items": [
+			{
+				"id": "2",
+				"name": "Flame, Grant Me Strength",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/flame_grant_me%20strength_incantation_elden_ring_wiki_guide_200px.png",
+				"description": "Superior incantation of the Fire Monks",
+				"type": "Incantations",
+				"cost": 28,
+				"slots": 1,
+				"effects": "Increases the strength of the caster",
+				"requires": [
+					{
+						"name": "Intelligence",
+						"amount": 0
+					},
+					{
+						"name": "Faith",
+						"amount": 15
+					},
+					{
+						"name": "Arcane",
+						"amount": 0
+					}
+				]
+			},
 			{
 				"id": "17f696c7ce7l0hynrwmh6d0r0rwk2",
 				"name": "Ancient Dragons' Lightning Strike",
@@ -65275,7 +65299,7 @@
 				"type": "Incantations",
 				"cost": 14,
 				"slots": 1,
-				"effects": "Alleviates buildup of and cures poison and scarlet rot",
+				"effects": "Alleviates poison and scarlet rot buildup and cures these ailments.",
 				"requires": [
 					{
 						"name": "Intelligence",
@@ -65400,7 +65424,7 @@
 			},
 			{
 				"id": "17f69510ee3l0hyo0f0mccaj31dwhq",
-				"name": "Golden Vow (spell)",
+				"name": "Golden Vow",
 				"image": "https://eldenring.fanapis.com/images/incantations/17f69510ee3l0hyo0f0mccaj31dwhq.png",
 				"description": "An incantation of Erdtree Worship.",
 				"type": "Incantations",

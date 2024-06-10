@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeContext } from "./ThemeProvider";
 
-export default function Navbar({
-	handleChangeTheme,
-}: {
-	handleChangeTheme: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-}) {
+export default function Navbar() {
+	const themeContext = useContext(ThemeContext);
+	if (!themeContext) {
+		throw new Error("ThemeContext is undefined");
+	}
+
+	const { theme, setTheme } = themeContext;
 	return (
 		<div className="navbar h-10 bg-slate-900 text-slate-100">
 			<div className="flex-1">
@@ -13,7 +16,12 @@ export default function Navbar({
 			<div className="flex-none">
 				<ul className="menu menu-horizontal px-1">
 					<li>
-						<select className="select select-bordered w-full max-w-xs" data-choose-theme onChange={handleChangeTheme}>
+						<select
+							className="select select-bordered w-full max-w-xs"
+							data-choose-theme
+							value={theme}
+							onChange={(e) => setTheme(e.target.value)}
+						>
 							<option disabled selected>
 								Select a theme
 							</option>

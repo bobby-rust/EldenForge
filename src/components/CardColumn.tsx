@@ -1,8 +1,15 @@
 import { Item } from "../classes/Item";
+import { ArmorCategories } from "../types/constants";
 import { ItemCategory } from "../types/enums";
 import Card from "./Card";
 
-export default function CardColumn(props: { items: Item[]; reroll: (c: ItemCategory, i: number | undefined) => void }) {
+export default function CardColumn(props: {
+	items: Item[];
+	reroll: ((c: ItemCategory, i: number | undefined) => void) | null;
+}) {
+	if (props.items.length === 0) return null;
+	if (props.items[0].category === ItemCategory.Classes) return null;
+
 	const readableItemCategory = new Map<ItemCategory, string>([
 		[ItemCategory.Weapons, "Weapons"],
 		[ItemCategory.Helm, "Armors"],
@@ -16,8 +23,8 @@ export default function CardColumn(props: { items: Item[]; reroll: (c: ItemCateg
 		[ItemCategory.Seals, "Sacred Seals"],
 	]);
 
-	if (props.items.length === 0) return null;
-
+	if (ArmorCategories.has(props.items[0].category)) {
+	}
 	return (
 		<>
 			<div className="flex flex-col ">

@@ -1,7 +1,7 @@
 import { Item, Armor } from "../classes/Item";
 import { expect, it, describe } from "vitest";
 import { ArmorType, ItemCategory } from "../types/enums";
-import data from "../data/data";
+import data from "../data/new_data.json";
 
 describe("Item", () => {
 	it("should initialize properly", () => {
