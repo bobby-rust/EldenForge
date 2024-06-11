@@ -1,3 +1,4 @@
+import React from "react";
 import { Item } from "../classes/Item";
 import { ArmorCategories } from "../types/constants";
 import { ItemCategory } from "../types/enums";
@@ -23,16 +24,14 @@ export default function CardColumn(props: {
 		[ItemCategory.Seals, "Sacred Seals"],
 	]);
 
-	if (ArmorCategories.has(props.items[0].category)) {
-	}
 	return (
 		<>
 			<div className="flex flex-col ">
 				<h1 className="text-center text-xl font-bold">{readableItemCategory.get(props.items[0].category)}</h1>
-				{props.items.map((item: Item) => (
-					<>
+				{props.items.map((item: Item, i: number) => (
+					<React.Fragment key={i}>
 						<Card key={item.name} item={item} reroll={props.reroll} />
-					</>
+					</React.Fragment>
 				))}
 			</div>
 		</>

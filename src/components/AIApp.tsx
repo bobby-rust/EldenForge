@@ -9,9 +9,11 @@ export default function AIApp() {
 	React.useEffect(() => {
 		const queryAI = async () => {
 			const url = await generator.generateAIUrl();
-			// console.log(url);
-			// navigate(`/ai/${url}`, { replace: true });
 			navigate(`/ai/${url}`, { replace: true });
+			// navigate(
+			// 	`/ai/&classes=9&helms=122&chests=199&gauntlets=50&legs=10&weapons=206,210&ashes=10,89&seals=3&incants=20,0&tears=5,14&spirits=9`,
+			// 	{ replace: true }
+			// );
 		};
 
 		queryAI();

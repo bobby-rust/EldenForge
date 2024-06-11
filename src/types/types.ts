@@ -1,20 +1,4 @@
-// type BuildNums = {
-// 	helms: number;
-// 	chests: number;
-// 	gauntlets: number;
-// 	legs: number;
-// 	classes: number;
-// 	ashes: number;
-// 	tears: number;
-// 	incants: number;
-// 	seals: number;
-// 	shields: number;
-// 	sorcs: number;
-// 	spirits: number;
-// 	talismans: number;
-// 	weapons: number;
-// 	[key: string]: number;
-// };
+import { ItemCategory } from "./enums";
 
 /**
  * An item category has `count` items and a list of that category's items
@@ -48,23 +32,6 @@ type ItemData = {
 	seals: Category;
 	[key: string]: Category;
 };
-
-// type ExcludePreviuouslyRolled = {
-// 	helms: boolean;
-// 	chests: boolean;
-// 	gauntlets: boolean;
-// 	legs: boolean;
-// 	talismans: boolean;
-// 	spirits: boolean;
-// 	ashes: boolean;
-// 	classes: boolean;
-// 	shields: boolean;
-// 	sorcs: boolean;
-// 	weapons: boolean;
-// 	tears: boolean;
-// 	incants: boolean;
-// 	[key: string]: boolean;
-// };
 
 type BuildInfo = {
 	excludePreviouslyRolled: boolean;
@@ -163,13 +130,24 @@ const defaultBuildGenerationConfig: BuildGenerationConfig = {
 	},
 };
 
-type AIResponse = {
+type Stat = {
+	vigor: number;
+	mind: number;
+	endurance: number;
+	strength: number;
+	dexterity: number;
+	intelligence: number;
+	faith: number;
+	arcane: number;
+};
+
+type AIBuild = Stat & {
 	name: string;
-	url: string;
 	summary: string;
 	strengths: string;
 	weaknesses: string;
+	items: Map<ItemCategory, number[]>;
 };
 
-export type { BuildGenerationConfig, ItemData, BuildInfo };
+export type { BuildGenerationConfig, ItemData, BuildInfo, AIBuild };
 export { defaultBuildGenerationConfig };

@@ -20,19 +20,26 @@ export default class BuildGenerator {
 	_itemData: ItemData = data;
 	_buildGenerationConfig: BuildGenerationConfig = structuredClone(defaultBuildGenerationConfig);
 	_build: Build = new Build();
-	_aiGenerator = new AIGenerator();
+	_ai: AIGenerator | undefined;
 
+	private _buildType = "";
+
+	set buildType(buildType: string) {
+		console.log("Setting build type in class instance to: ", buildType);
+		this._buildType = buildType;
+	}
 	/**
 	 * Generates a URL representing a build.
-	 * The build contains unique items if _excludePreviouslyRolled is false.
+	 * The build cont_ains unique items if _excludePreviouslyRolled is false.
 	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
 	 */
 	public generateUrl(): string {
 		return this.generateRandom();
 	}
 
-	public async generateAIUrl(): Promise<string> {
-		return this.createUrlFromBuildMap(await this._aiGenerator.getAIBuild());
+	public async generateAIUrl(): Promise<string | null> {
+		this.initAIGenerator();
+		return this._ai ? this.createUrlFromBuildMap(await this._ai.getAIBuild()) : null;
 	}
 
 	private resetItems() {
@@ -50,7 +57,7 @@ export default class BuildGenerator {
 	/**
 	 * Generates a Build object from a base64 encoded URL.
 	 * @param encoded The base64 encoded url.
-	 * @returns {Build} A build object containing the items of `encoded`
+	 * @returns {Build} A build object cont_aining the items of `encoded`
 	 */
 	public generateBuildFromUrl(encoded: string): Map<ItemCategory, Item[]> {
 		// const url = this.decode(encoded);
@@ -89,9 +96,6 @@ export default class BuildGenerator {
 			randomIndex = Math.floor(Math.random() * count);
 		}
 
-		// Add the generated index to the set of previously rolled items
-		this.addItemToPreviouslyRolled(category, randomIndex);
-
 		// Return the generated index
 		return randomIndex;
 	}
@@ -128,7 +132,7 @@ export default class BuildGenerator {
 	/**
 	 * Converts a Map representing a build into a base64 encoded string
 	 *
-	 * @param rolled A Map containing categories as keys and the indices of build items as values
+	 * @param rolled A Map cont_aining categories as keys and the indices of build items as values
 	 * @returns {string} A base64 encoded ASCII string of the form
 	 *                   `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
 	 */
@@ -144,6 +148,8 @@ export default class BuildGenerator {
 				if (typeof num === "undefined") {
 					return;
 				}
+
+				this.addItemToPreviouslyRolled(category, num);
 				url += i === items.length - 1 ? num.toString() : num.toString() + ",";
 			});
 		}
@@ -221,16 +227,16 @@ export default class BuildGenerator {
 	 * @param index the index of the item in the raw data
 	 * @returns {Item | Armor} the item.
 	 */
-	// private getItem(type: ItemCategory, index: number): Item {
-	// 	const itemData = data[type as keyof typeof data].items[index]; // Just pleasing TypeScript...
-	// 	const item = new Item(type, itemData, index);
+	private getItem(type: ItemCategory, index: number): Item | null {
+		const itemData = data[type as keyof typeof data].items[index]; // Just pleasing TypeScript...
+		const item = itemData ? new Item(type, itemData, index) : null;
 
-	// 	return item;
-	// }
+		return item;
+	}
 
 	/**
 	 * Parses a string of the form `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
-	 * into a build map containing categories as keys and the indices of build items as values
+	 * into a build map cont_aining categories as keys and the indices of build items as values
 	 */
 	private parseBuildMapFromUrl(str: string): Map<ItemCategory, number[]> {
 		const buildMap = new Map<ItemCategory, number[]>();
@@ -279,5 +285,26 @@ export default class BuildGenerator {
 
 	private getPreviouslyRolledForCategory(category: ItemCategory) {
 		return this._buildGenerationConfig[category].previouslyRolled;
+	}
+
+	private getPreviouslyRolledNameArray(): string[] {
+		const nameArray: string[] = [];
+		for (const category of Object.keys(this._itemData)) {
+			if (category === ItemCategory.Seals || category === ItemCategory.Tears) continue;
+			const previouslyRolled = this.getPreviouslyRolledForCategory(category as ItemCategory);
+
+			for (const i of previouslyRolled) {
+				const item = this.getItem(category as ItemCategory, i);
+				item && nameArray.push(item.name);
+			}
+		}
+
+		return nameArray;
+	}
+
+	private initAIGenerator() {
+		const names = this.getPreviouslyRolledNameArray();
+		console.log(names);
+		this._ai = new AIGenerator(names, this._buildType);
 	}
 }

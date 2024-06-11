@@ -30,28 +30,61 @@ export default function Card(props: { item: Item; reroll: ((c: ItemCategory, i: 
 						<div className="flex justify-center w-[50%]">
 							<h6 className="text-[18px] text-black font-semibold overflow-hidden whitespace-pre-wrap">{name}</h6>
 						</div>
-						<div className="absolute inset-0 rounded-x-lg rounded-t-lg bg-black bg-opacity-50 flex justify-center items-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
-							<p className="text-center">Overlay Text Here</p>
-						</div>
+						{(props.item.dmgNegation || props.item.resistance) && (
+							<div className="absolute inset-0 rounded-x-lg rounded-t-lg bg-black bg-opacity-80 flex justify-center items-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
+								<div className="flex">
+									<div className="flex flex-col p-2">
+										{props.item.dmgNegation && <h1>Damage Negation</h1>}
+										{props.item.dmgNegation &&
+											props.item.dmgNegation.map((obj: any) => {
+												return (
+													<div>
+														<div className="tracking-wide">
+															{obj.name}: {obj.amount}
+														</div>
+													</div>
+												);
+											})}
+									</div>
+									<div className="flex flex-col p-2">
+										{props.item.resistance && <h1>Resistance</h1>}
+										{props.item.resistance &&
+											props.item.resistance.map((obj: any) => {
+												return (
+													<div className="tracking-wide">
+														{obj.name}: {obj.amount}
+													</div>
+												);
+											})}
+									</div>
+								</div>
+							</div>
+						)}
 					</a>
 					<div className="flex overflow-hidden">
 						{(props.item.category === ItemCategory.Sorcs || props.item.category === ItemCategory.Incants) && (
 							<div className="flex flex-col [&>div]:mt-1">
 								<div className="flex">
-									<TbDropletDown size="20" />
+									<TbDropletDown size="20" className="mr-1" />
 									<span>Cost: {props.item.spellCost}</span>
 								</div>
 								<div className="flex">
 									<div className="h-[20px] w-[20px]">
-										<GiBroadsword size={20} />
+										<GiBroadsword size={20} className="mr-1" />
 									</div>
 									<span className="line-clamp-2">Effects: {props.item.effects}</span>
 								</div>
 							</div>
 						)}
+						{props.item.category === ItemCategory.Talismans && (
+							<div className="flex mt-1">
+								<GiBroadsword size={20} className="mr-1" />
+								<span className="line-clamp-2">Effects: {props.item.effects}</span>
+							</div>
+						)}
 						{props.item.category === ItemCategory.Weapons && (
 							<div className="flex m-1">
-								<GiBroadsword size="20" />
+								<GiBroadsword size="20" className="mr-1" />
 								<span>{props.item.weaponCategory}</span>
 							</div>
 						)}
@@ -59,7 +92,7 @@ export default function Card(props: { item: Item; reroll: ((c: ItemCategory, i: 
 						{props.item.category === ItemCategory.Ashes && (
 							<div>
 								<div className="flex m-1">
-									<GiBroadsword size="20" />
+									<GiBroadsword size="20" className="mr-1" />
 									<span>{props.item.affinity}</span>
 								</div>
 							</div>
@@ -68,7 +101,7 @@ export default function Card(props: { item: Item; reroll: ((c: ItemCategory, i: 
 						{props.item.category === ItemCategory.Tears && (
 							<div>
 								<div className="flex m-1">
-									<GiBroadsword size="20" />
+									<GiBroadsword size="20" className="mr-1" />
 									<span>{props.item.description}</span>
 								</div>
 							</div>

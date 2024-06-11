@@ -19,9 +19,15 @@ export class Item {
 	private _effects?: string = undefined;
 	private _affinity?: string = undefined;
 	private _description?: string = undefined;
+	private _dmgNegation?: any[] | undefined = undefined;
+	private _resistance?: any[] | undefined = undefined;
 
 	constructor(category: ItemCategory, rawItemData: any, index: number) {
 		this._category = category;
+		if (!rawItemData) {
+			console.log("Trying to get index ", index, " from category ", category, " failed.");
+			return;
+		}
 		this.name = rawItemData["name"];
 		this.index = index;
 		this.image = rawItemData["image"];
@@ -46,6 +52,16 @@ export class Item {
 
 		if (category === ItemCategory.Tears) {
 			this.description = rawItemData["description"];
+		}
+
+		if (
+			category === ItemCategory.Helm ||
+			category === ItemCategory.Chest ||
+			category === ItemCategory.Gauntlets ||
+			category === ItemCategory.Leg
+		) {
+			this.dmgNegation = rawItemData["dmgNegation"];
+			this.resistance = rawItemData["resistance"];
 		}
 	}
 
@@ -165,5 +181,21 @@ export class Item {
 
 	get description(): string | undefined {
 		return this._description;
+	}
+
+	get dmgNegation(): {}[] | undefined {
+		return this._dmgNegation;
+	}
+
+	set dmgNegation(dmgNegation: {}[] | undefined) {
+		this._dmgNegation = dmgNegation;
+	}
+
+	get resistance(): {}[] | undefined {
+		return this._resistance;
+	}
+
+	set resistance(resistance: {}[] | undefined) {
+		this._resistance = resistance;
 	}
 }
