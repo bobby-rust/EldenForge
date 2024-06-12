@@ -1,9 +1,10 @@
 import { GoogleGenerativeAI, GenerationConfig } from "@google/generative-ai";
 import data from "../data/new_data.json";
 import { ItemCategory } from "../types/enums";
-import { sysPrompt } from "../types/constants";
+import { dummyAIOutput, sysPrompt } from "../types/constants";
 import { Item } from "./Item";
-import { AIBuild } from "../types/types";
+import { AIBuildType } from "../types/types";
+import BuildGenerator from "./BuildGenerator";
 
 export default class AI {
 	private _API_KEY: string = import.meta.env.VITE_API_KEY;
@@ -23,6 +24,9 @@ export default class AI {
 		this._prevRolledNames = prevRolledNames.length > 0 ? prevRolledNames.join(", ") : "";
 	}
 
+	/**
+	 * TODO: add history parameter to model. See https://ai.google.dev/gemini-api/docs/api-overview
+	 */
 	private _model: any = this._genAI.getGenerativeModel({
 		...this._generationConfig,
 		model: "gemini-1.5-pro",
@@ -33,18 +37,24 @@ export default class AI {
 	 * Prompts the LLM and returns the response
 	 * @returns {Promise<string>} the AI response
 	 */
-	public async getAIBuild(): Promise<AIBuild> {
+	public async getAIBuild(): Promise<AIBuildType> {
+		console.log("Prompting LLM...");
 		const result = await this._model.generateContent(this._prompt);
 		const response = await result.response;
+		console.log(response.text());
+		const aiBuild = this.parseResponse(response.text());
 
-		return this.parseResponse(response.text());
+		// const aiBuild = this.parseResponse(dummyAIOutput);
+		console.log("Created AI Build: ");
+		console.dir(aiBuild);
+		return aiBuild;
 	}
 
 	/**
 	 * Parses the AI response into an AIBuild
 	 * @returns {AIBuild} the AI build
 	 */
-	private parseResponse(res: string): AIBuild {
+	private parseResponse(res: string): AIBuildType {
 		const responseArray = res.split("\n");
 		const buildArray: string[][] = [];
 
@@ -56,8 +66,8 @@ export default class AI {
 		});
 
 		const buildMap = this.createBuildMap(buildArray);
-
-		return this.createAIBuild(buildMap, responseArray);
+		const generator = new BuildGenerator();
+		return this.createAIBuild(generator.parseBuildFromMap(buildMap), responseArray);
 	}
 
 	/**
@@ -67,8 +77,8 @@ export default class AI {
 	 * @param {string[]} aiResponseArray - An array of strings representing the AI response.
 	 * @return {AIBuild} The created AIBuild object.
 	 */
-	private createAIBuild(buildMap: Map<ItemCategory, number[]>, aiResponseArray: string[]): AIBuild {
-		const build: AIBuild = {
+	private createAIBuild(buildMap: Map<ItemCategory, Item[]>, aiResponseArray: string[]): AIBuildType {
+		const build: AIBuildType = {
 			name: "",
 			summary: "",
 			strengths: "",
@@ -87,7 +97,8 @@ export default class AI {
 		};
 
 		aiResponseArray.map((el: string) => {
-			let currKeyValPair = el.trim().toLowerCase().split("=");
+			let currKeyValPair = el.trim().split("=");
+			currKeyValPair[0] = currKeyValPair[0].toLowerCase();
 			if (currKeyValPair[0] === "name") build.name = currKeyValPair[1];
 			if (currKeyValPair[0] === "summary") build.summary = currKeyValPair[1];
 			if (currKeyValPair[0] === "strengths") build.strengths = currKeyValPair[1];
@@ -118,21 +129,19 @@ export default class AI {
 			if (kvPair[0] === "") return;
 
 			const key = this.translateResponseCategory(kvPair[0]);
+			if (key === "") return;
+
 			const value = kvPair[1];
 
 			const names = value.split("|");
-
 			names.forEach((name) => {
 				if (name.toLowerCase() === "none") return;
-
+				if (!name) return;
 				const item = this.getItemFromName(key, name);
-				if (typeof item === "object") {
-					item.ashIsIncant
-						? buildMap.set(ItemCategory.Incants, [...(buildMap.get(ItemCategory.Incants) ?? []), item.i])
-						: null;
-				} else {
-					buildMap.set(key as ItemCategory, [...(buildMap.get(key as ItemCategory) ?? []), item]);
+				if (!item) {
+					console.log(`Item not found: ${key} ${name}`);
 				}
+				buildMap.set(key as ItemCategory, [...(buildMap.get(key as ItemCategory) ?? []), item]);
 			});
 		});
 
@@ -145,7 +154,7 @@ export default class AI {
 	 * @param name the name of the item
 	 * @returns {number} the index of the item in the raw data
 	 */
-	public getItemFromName(type: string, name: string): number | { ashIsIncant: boolean; i: number } {
+	public getItemFromName(type: string, name: string): number {
 		if (type === ItemCategory.Weapons && name.includes("Seal")) {
 			// Seals are their own category, but the AI thinks of them as weapons.
 			type = ItemCategory.Seals;
@@ -155,36 +164,17 @@ export default class AI {
 
 		const distances: number[] = [];
 		for (let i = 0; i < data[type as keyof typeof data]["count"]; ++i) {
-			const cmp = this.isCloseMatch(name, items[i].name);
+			const cmp =
+				type !== ItemCategory.Ashes
+					? this.isCloseMatch(name, items[i].name)
+					: // @ts-expect-error
+					  this.isCloseMatch(name, items[i].skill);
+
 			if (cmp.match) {
 				return i;
 			}
 
 			distances.push(cmp.distance);
-
-			// Sometimes the AI generates the Ash's affinity name instead of it's actual name, here we check the affinity names.
-			if (type === ItemCategory.Ashes) {
-				const ash = data[ItemCategory.Ashes]["items"][i] as unknown as Item;
-
-				const cmp = this.isCloseMatch(name, ash.affinity!);
-				if (cmp.match) {
-					return i;
-				}
-
-				distances.push(cmp.distance);
-			}
-		}
-
-		// If the item is an Ash, check the incantations too, the AI sometimes mixes them up.
-		if (type === ItemCategory.Ashes) {
-			items = data[ItemCategory.Incants]["items"];
-
-			for (let i = 0; i < data[ItemCategory.Incants]["count"]; ++i) {
-				const cmp = this.isCloseMatch(name, items[i].name);
-				if (cmp.match) {
-					return { ashIsIncant: true, i: i };
-				}
-			}
 		}
 
 		return distances.indexOf(Math.min(...distances));

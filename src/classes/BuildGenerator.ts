@@ -1,4 +1,4 @@
-import { BuildGenerationConfig, ItemData, defaultBuildGenerationConfig } from "../types/types";
+import { AIBuildType, BuildGenerationConfig, ItemData, defaultBuildGenerationConfig } from "../types/types";
 import data from "../data/new_data.json";
 import { ItemCategory } from "../types/enums";
 import { Build } from "./Build";
@@ -28,6 +28,7 @@ export default class BuildGenerator {
 		console.log("Setting build type in class instance to: ", buildType);
 		this._buildType = buildType;
 	}
+
 	/**
 	 * Generates a URL representing a build.
 	 * The build cont_ains unique items if _excludePreviouslyRolled is false.
@@ -39,7 +40,31 @@ export default class BuildGenerator {
 
 	public async generateAIUrl(): Promise<string | null> {
 		this.initAIGenerator();
-		return this._ai ? this.createUrlFromBuildMap(await this._ai.getAIBuild()) : null;
+		const build = await this._ai?.getAIBuild();
+
+		if (!build) return null;
+
+		return this.createAIUrlFromAIBuild(build);
+	}
+
+	private createAIUrlFromAIBuild(build: AIBuildType): string {
+		const buildMap = new Map<ItemCategory, number[]>();
+		build.items.forEach((value, key) => {
+			value.forEach((item) => {
+				if (item.index === -1) return;
+				if (typeof item.index === "undefined") return;
+				buildMap.set(key, [...(buildMap.get(key) ?? []), item.index]);
+			});
+		});
+
+		let url = this.createUrlFromBuildMap(buildMap);
+
+		for (const category of Object.keys(build)) {
+			if (category === "items") continue;
+			url += `&${category}=${build[category]}`;
+		}
+
+		return url;
 	}
 
 	private resetItems() {
@@ -60,7 +85,6 @@ export default class BuildGenerator {
 	 * @returns {Build} A build object cont_aining the items of `encoded`
 	 */
 	public generateBuildFromUrl(encoded: string): Map<ItemCategory, Item[]> {
-		// const url = this.decode(encoded);
 		const url = encoded;
 		const buildMap = this.parseBuildMapFromUrl(url);
 		const build: Map<ItemCategory, Item[]> = this.parseBuildFromMap(buildMap);
@@ -141,7 +165,7 @@ export default class BuildGenerator {
 		for (const category of rolled.keys()) {
 			url += `&${category}=`;
 
-			// IDK why TypeScript finds this necessary, rolled CLEARLY has category as we are LOOPING OVER ITS KEYS
+			// IDK why TypeScript finds this necessary, rolled CLEARLY has category as we are LOOPING OVER ITS KEYS (ts 5.5 save me)
 			const items = rolled.get(category) ?? [];
 
 			items.forEach((num, i) => {
@@ -156,7 +180,6 @@ export default class BuildGenerator {
 
 		url = url.slice(0, url.length); // remove last comma
 		return url;
-		// return this.encode(url);
 	}
 
 	/**
@@ -207,7 +230,7 @@ export default class BuildGenerator {
 	 * @param map the build map to parse.
 	 * @returns {Build} the Build object.
 	 */
-	private parseBuildFromMap(map: Map<ItemCategory, number[]>): Map<ItemCategory, Item[]> {
+	public parseBuildFromMap(map: Map<ItemCategory, number[]>): Map<ItemCategory, Item[]> {
 		this.resetItems();
 		for (const [key, val] of map) {
 			val.forEach((val: number) => {
@@ -232,6 +255,57 @@ export default class BuildGenerator {
 		const item = itemData ? new Item(type, itemData, index) : null;
 
 		return item;
+	}
+
+	public parseAIBuildFromUrl(url: string): AIBuildType {
+		const buildMap = this.parseBuildFromMap(this.parseBuildMapFromUrl(url));
+
+		const build: AIBuildType = {
+			vigor: 0,
+			mind: 0,
+			endurance: 0,
+			strength: 0,
+			dexterity: 0,
+			intelligence: 0,
+			faith: 0,
+			arcane: 0,
+			name: "",
+			summary: "",
+			strengths: "",
+			weaknesses: "",
+			items: buildMap,
+		};
+
+		for (let i = 0; i < url.length; ++i) {
+			// If we are at an ampersand, slice out the entire category.
+			if (url[i] === "&") {
+				let catStart = i + 1;
+				let catStop = catStart;
+
+				for (let j = catStart; j < url.length; ++j) {
+					if (url[j] === "&") {
+						catStop = j; // string.slice takes up to but NOT including as second parameter
+						break;
+					}
+					if (j === url.length - 1) {
+						catStop = url.length;
+						break;
+					}
+				}
+
+				const category = url.slice(catStart, catStop); // this is the entire category including key and values
+
+				// once we have the entire category, split by the "=" to find the name and values
+				const items = category.split("=");
+				const categoryName = items[0] as ItemCategory;
+
+				if (Object.values(ItemCategory).includes(categoryName)) continue;
+
+				build[items[0]] = items[1];
+			}
+		}
+
+		return build;
 	}
 
 	/**
@@ -263,6 +337,9 @@ export default class BuildGenerator {
 				// once we have the entire category, split by the "=" to find the name and values
 				const items = category.split("=");
 				const categoryName = items[0] as ItemCategory;
+
+				if (!Object.values(ItemCategory).includes(categoryName)) continue;
+
 				const values = items[1].split(",");
 				if (values[0] === "") {
 					buildMap.set(categoryName, []);
@@ -276,6 +353,7 @@ export default class BuildGenerator {
 					}
 					intVals.push(num);
 				});
+
 				buildMap.set(categoryName, intVals);
 			}
 		}
@@ -304,7 +382,6 @@ export default class BuildGenerator {
 
 	private initAIGenerator() {
 		const names = this.getPreviouslyRolledNameArray();
-		console.log(names);
 		this._ai = new AIGenerator(names, this._buildType);
 	}
 }

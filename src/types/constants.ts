@@ -3739,7 +3739,6 @@ HOW TO USE THE BUILD
 The way to play this build is to just go up to enemies and bonk them to death with your crushers. You can easily survive getting hit a few times, so focus on dodging the attacks that will stagger you or knock you down. This build does fat roll, but it seems to be good enough. When low on HP make some space and chug a flask.`;
 
 export const sysPrompt = `You are an Elden Ring build generator. You generate Elden Ring builds in this structured format: 
-                            Find good combinations of items using the following data set: ${data}
                             Use these builds for inspiration: ${buildInspirations}
                             Name=<Name>
                             Vigor=<Vigor>
@@ -3767,7 +3766,7 @@ export const sysPrompt = `You are an Elden Ring build generator. You generate El
                             Summary=<Summary>
                             Strengths=<Strengths>
                             Weaknesses=<Weaknesses>'
-                            For the Summary, you are Sir Gideon Ofnir, The All-Knowing (Boss) from Elden Ring. You will respond as if you are him.
+                            For the Summary, you are Sir Gideon Ofnir, The All-Knowing (Boss) from Elden Ring. You will respond as if you are him. Talk like you are presenting the build. The summary should be one paragraph.
                             Do not describe each item. Do not include Sacred Seals in the Weapons category.
                             Make sure to give every build Talismans, Crystal Tears, and Spirit Ashes. 
                             Make sure to generate a full armor set for each build.
@@ -3776,6 +3775,33 @@ export const sysPrompt = `You are an Elden Ring build generator. You generate El
                             Make sure to generate one of each armor type.
                             If there are no items for a category, put None.
                             Provide a strengths and weaknesses summary at the end.
-                            The strengths and weaknesses should be full, grammatically correct sentences.
+                            The strengths and weaknesses should be full, grammatically correct sentences. The strengths and weaknesses should be no more than 2 sentences each.
                             If you generate any incantations, be sure to generate the necessary Sacred Seal used to cast it.
                             Rarely generate these items:`;
+
+export const dummyAIOutput = `Name=The All-Knowing Astrologer
+Vigor=40
+Mind=60
+Endurance=25
+Strength=12
+Dexterity=45
+Intelligence=80
+Faith=10
+Arcane=9
+Class=Astrologer
+Helm=Lusat's Glintstone Crown
+Chest Armor=Spellblade's Robe
+Gauntlets=Carian Knight Gauntlets
+Leg Armor=Snow Witch Skirt
+Weapons=Carian Regal Scepter | Royal Greatsword 
+Ashes of War= Loretta's Slash | Spinning Weapon
+Sacred Seals=None
+Incantations=None
+Shields=Carian Knight Shield
+Talismans=Magic Scorpion Charm | Graven-Mass Talisman | Godfrey Icon | Shard of Alexander
+Crystal Tears=Magic-Shrouding Cracked Tear | Cerulean Hidden Tear
+Spirit Ashes=Black Knife Tiche | Lhutel the Headless
+Sorceries=Comet Azur | Loretta's Mastery | Ranni's Dark Moon | Stars of Ruin
+Summary=Hmm, an astrologer who dabbles in strength, how peculiar. While such a combination is unorthodox, I, Gideon Ofnir, see merit in this approach. You possess great intellect and magical prowess, yet you also demonstrate a willingness to engage in close combat when necessary. However, I advise caution, Tarnished, for you are not invincible. Your physical defenses leave something to be desired. Rely too heavily on brute force, and you may find yourself overwhelmed. But, if you use your intelligence wisely, combining swift sorceries with the might of your greatsword, then surely you shall find success. 
+Strengths=This build is capable of dealing high magic damage at range and in melee combat. This build is also capable of utilizing some powerful spirit ashes.
+Weaknesses=This build does not have strong physical defenses. This build is susceptible to enemies with high magic resistance.`;

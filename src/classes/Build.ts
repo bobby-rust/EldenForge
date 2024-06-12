@@ -49,6 +49,8 @@ export class Build {
 		this._items.forEach((value, key) => {
 			value.forEach((index) => {
 				if (index === -1) return;
+				if (!Object.values(ItemCategory).includes(key)) return;
+
 				const item = new Item(key, data[key as keyof typeof data].items[index], index);
 				items.set(key, [...(items.get(key) ?? []), item]);
 			});

@@ -1,3 +1,4 @@
+import { Item } from "../classes/Item";
 import { ItemCategory } from "./enums";
 
 /**
@@ -141,13 +142,14 @@ type Stat = {
 	arcane: number;
 };
 
-type AIBuild = Stat & {
+type AIBuildType = Stat & {
 	name: string;
 	summary: string;
 	strengths: string;
 	weaknesses: string;
-	items: Map<ItemCategory, number[]>;
+	items: Map<ItemCategory, Item[]>;
+	[key: string]: string | number | Map<ItemCategory, Item[]>;
 };
 
-export type { BuildGenerationConfig, ItemData, BuildInfo, AIBuild };
+export type { BuildGenerationConfig, ItemData, BuildInfo, AIBuildType, Stat };
 export { defaultBuildGenerationConfig };

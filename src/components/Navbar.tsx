@@ -1,11 +1,13 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "./ThemeProvider";
-
+import { useNavigate } from "react-router-dom";
 export default function Navbar() {
 	const themeContext = useContext(ThemeContext);
 	if (!themeContext) {
 		throw new Error("ThemeContext is undefined");
 	}
+
+	const navigate = useNavigate();
 
 	const { theme, setTheme } = themeContext;
 	return (
@@ -17,7 +19,7 @@ export default function Navbar() {
 				<ul className="menu menu-horizontal px-1">
 					<li>
 						<select
-							className="select select-bordered w-full max-w-xs"
+							className="select select-bordered w-full color-white"
 							data-choose-theme
 							value={theme}
 							onChange={(e) => setTheme(e.target.value)}
@@ -60,20 +62,7 @@ export default function Navbar() {
 						</select>
 					</li>
 					<li>
-						<a>Link</a>
-					</li>
-					<li>
-						<details>
-							<summary>Parent</summary>
-							<ul className="p-2 bg-base-100 rounded-t-none">
-								<li>
-									<a>Link 1</a>
-								</li>
-								<li>
-									<a>Link 2</a>
-								</li>
-							</ul>
-						</details>
+						<button onClick={() => navigate("/ai")}>AI Builds</button>
 					</li>
 				</ul>
 			</div>

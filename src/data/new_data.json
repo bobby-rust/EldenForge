@@ -61274,7 +61274,7 @@
 				"image": "https://eldenring.fanapis.com/images/ashes/17f697ede6el0hzng0czebz0gl42f.png",
 				"description": "This Ash of War grants no affinity to an armament and replaces any skill present with the following:\"No skill: This armament has no skill. If the armament in the other hand has a skill, that skill will be used instead.\"Usable on shields and torches.",
 				"affinity": "Standard",
-				"skill": null
+				"skill": "No Skill"
 			},
 			{
 				"id": "17f69a087c2l0hzng49rzvczvag1p",
