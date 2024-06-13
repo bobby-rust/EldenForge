@@ -65,14 +65,15 @@ export default function Build() {
 
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
-			<div className="App">
+			<div className="App px-14">
 				<div className="flex w-full justify-center align-center p-3">
 					<button className="btn btn-lg btn-primary" onClick={handleReroll}>
 						<h1>Generate New Build</h1>
 					</button>
 				</div>
 				<div className="flex justify-center align-center">
-					<div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 ">
+					{/* <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 "> */}
+					<div className="flex flex-wrap justify-center align-center">
 						{build &&
 							[...build.keys()].map((c: ItemCategory, i: number) => (
 								<>

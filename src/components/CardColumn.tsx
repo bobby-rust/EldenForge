@@ -26,7 +26,7 @@ export default function CardColumn(props: {
 
 	return (
 		<>
-			<div className="flex flex-col ">
+			<div className="flex flex-col flex-grow-0 ">
 				<h1 className="text-center text-xl font-bold">{readableItemCategory.get(props.items[0].category)}</h1>
 				{props.items.map((item: Item, i: number) => (
 					<React.Fragment key={i}>

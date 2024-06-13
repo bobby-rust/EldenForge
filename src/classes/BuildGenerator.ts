@@ -39,7 +39,9 @@ export default class BuildGenerator {
 	}
 
 	public async generateAIUrl(): Promise<string | null> {
-		this.initAIGenerator();
+		if (typeof this._ai === "undefined") {
+			this.initAIGenerator();
+		}
 		const build = await this._ai?.getAIBuild();
 
 		if (!build) return null;
@@ -381,7 +383,6 @@ export default class BuildGenerator {
 	}
 
 	private initAIGenerator() {
-		const names = this.getPreviouslyRolledNameArray();
-		this._ai = new AIGenerator(names, this._buildType);
+		this._ai = new AIGenerator(this._buildType);
 	}
 }

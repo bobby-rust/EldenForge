@@ -11,7 +11,8 @@ const generator = new BuildGenerator();
 
 export default function AIBuild() {
 	const { buildUrl } = useParams();
-	console.log("build url: ", buildUrl);
+	const [showDescription, setShowDescription] = React.useState(false);
+
 	if (!buildUrl) {
 		throw new Error("Invalid path");
 	}
@@ -21,7 +22,6 @@ export default function AIBuild() {
 	const [buildType, setBuildType] = React.useState("");
 
 	const handleRegenerateAIBuild = async () => {
-		return;
 		const newUrl = (await generator.generateAIUrl()) ?? "";
 		console.log("new url: ", newUrl);
 		setBuild(generator.parseAIBuildFromUrl(newUrl));
@@ -53,11 +53,13 @@ export default function AIBuild() {
 	React.useEffect(() => {}, [armors]);
 
 	return (
-		<div className="flex flex-col justify-center items-center px-14 py-8">
-			<div className="flex justify-evenly w-full items-center">
+		<div className="flex flex-col justify-center items-center xl:px-14 py-8">
+			<div className="flex flex-col xl:flex-row justify-evenly w-full items-center mb-10">
 				<div className="flex justify-center items-center w-1/3">
 					<select className="select select-bordered max-w-xs" onChange={handleChangeBuildType}>
-						<option selected>Select a build type</option>
+						<option selected value="">
+							Select a build type
+						</option>
 						<option value="Intelligence">Intelligence</option>
 						<option value="Faith">Faith</option>
 						<option value="Strength">Strength</option>
@@ -71,18 +73,69 @@ export default function AIBuild() {
 					</button>
 				</div>
 				<div className="flex justify-center items-center w-1/3">
-					<button className="btn btn-lg mr-2">View Description</button>
-					<button className="btn btn-lg ml-2">View Stats</button>
+					<div className="dropdown">
+						<div tabIndex={0} role="button" className="btn btn-lg m-1">
+							Show Stats{" "}
+						</div>
+						<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+							<li>
+								<table className="table table-auto table-zebra text-lg">
+									<thead>
+										<tr className="border-b">
+											<th
+												className="h-12 text-left relative rounded-t-lg align-middle font-semobold text-xl bg-gray-100 py-1 px-3"
+												colSpan={2}
+											>
+												Stats
+											</th>
+										</tr>
+									</thead>
+									<tbody className="border-2 border-gray-100">
+										{build &&
+											[...Object.keys(build)].map((key: string, i: number) => (
+												<tr className="border-b">
+													{!["name", "summary", "strengths", "weaknesses", "items"].includes(key) && (
+														<>
+															<td className="p-4 align-middle font-medium py-2 px-3 ">
+																{key[0].toUpperCase() + key.slice(1)}
+															</td>
+															<td className="p-4 align-middle text-right py-2 px-3">{build[key]}</td>
+														</>
+													)}
+												</tr>
+											))}
+									</tbody>
+								</table>
+							</li>
+						</ul>
+					</div>
+					<button className="btn btn-lg mr-2" onClick={() => setShowDescription(!showDescription)}>
+						Toggle Description
+					</button>
 				</div>
 			</div>
 			{build && (
-				<div className="flex mt-10 mb-20 justify-evenly">
-					<div className="flex flex-col items-center rounded-lg shadow-lg">
-						<div className="w-full bg-gray-100 text-center p-2">
-							<h1 className="font-bold text-2xl self-start">{build.name}</h1>
-						</div>
-						<div className="flex flex-col justify-center items-center w-full pb-6">
-							<div className="flex">
+				<div className={`${showDescription ? "animate-fadeIn block" : "animate-fadeOut hidden"} max-w-4xl h-[360px]`}>
+					<div className="w-full bg-gray-100 text-center p-2 relative">
+						<h1 className="font-bold text-slate-800 text-2xl self-start">{build.name}</h1>
+						<button
+							className="btn btn-sm btn-square absolute right-1.5 top-1.5"
+							onClick={() => setShowDescription(false)}
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="h-6 w-6"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</button>
+					</div>
+					<div className="flex flex-col rounded-lg shadow-lg p-8 h-full">
+						<div className="flex flex-col w-full pb-6">
+							<div className="flex leading-relaxed">
 								<div className="self-start w-1/2 mr-2 text-center text-lg">
 									<h1 className="font-semibold">Summary</h1>
 									<p>{build.summary}</p>
@@ -100,45 +153,19 @@ export default function AIBuild() {
 							</div>
 						</div>
 					</div>
-					<div className="px-3">
-						<table className="table table-auto table-zebra">
-							<thead>
-								<tr className="border-b">
-									<th
-										className="h-12 text-left rounded-t-lg align-middle font-semobold text-lg bg-gray-100 py-2 px-3"
-										colSpan={2}
-									>
-										Stats
-									</th>
-								</tr>
-							</thead>
-							<tbody className="border-2 border-gray-100">
-								{[...Object.keys(build)].map((key: string, i: number) => (
-									<tr className="border-b">
-										{!["name", "summary", "strengths", "weaknesses", "items"].includes(key) && (
-											<>
-												<td className="p-4 align-middle font-medium py-2 px-3 ">
-													{key[0].toUpperCase() + key.slice(1)}
-												</td>
-												<td className="p-4 align-middle text-right py-2 px-3">{build[key]}</td>
-											</>
-										)}{" "}
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
 				</div>
 			)}
-			<div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
-				{build &&
-					[...build.items.keys()].map((c: ItemCategory, i: number) => (
-						<React.Fragment key={i}>
-							{/* TODO: fix this garbage */}
-							{!ArmorCategories.has(c) && <CardColumn key={i} items={build.items.get(c) ?? []} reroll={null} />}
-							{c === ItemCategory.Helm && <CardColumn key={i} items={armors} reroll={null} />}
-						</React.Fragment>
-					))}{" "}
+			<div className="flex justify-center items-center">
+				<div className={`${showDescription ? "animate-slideDown" : "animate-slideUp"} flex flex-wrap justify-center`}>
+					{build &&
+						[...build.items.keys()].map((c: ItemCategory, i: number) => (
+							<React.Fragment key={i}>
+								{/* TODO: fix this garbage ... actually is it garbage, or is it just practicing K.I.S.S.? */}
+								{!ArmorCategories.has(c) && <CardColumn key={i} items={build.items.get(c) ?? []} reroll={null} />}
+								{c === ItemCategory.Helm && <CardColumn key={i} items={armors} reroll={null} />}
+							</React.Fragment>
+						))}{" "}
+				</div>
 			</div>
 		</div>
 	);

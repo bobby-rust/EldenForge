@@ -151,5 +151,36 @@ type AIBuildType = Stat & {
 	[key: string]: string | number | Map<ItemCategory, Item[]>;
 };
 
-export type { BuildGenerationConfig, ItemData, BuildInfo, AIBuildType, Stat };
+type AIOutput = {
+	name: string;
+	stats: {
+		vigor: string;
+		mind: string;
+		endurance: string;
+		strength: string;
+		dexterity: string;
+		intelligence: string;
+		faith: string;
+		arcane: string;
+	};
+	class: string;
+	helm: string;
+	chest_armor: string;
+	gauntlets: string;
+	leg_armor: string;
+	weapons: string;
+	ashes_of_war: string;
+	sacred_seals: string;
+	incantations: string;
+	shields: string;
+	talismans: string;
+	crystal_tears: string;
+	spirit_ashes: string;
+	sorceries: string;
+	summary: string;
+	strengths: string;
+	weaknesses: string;
+};
+
+export type { AIOutput, BuildGenerationConfig, ItemData, BuildInfo, AIBuildType, Stat };
 export { defaultBuildGenerationConfig };

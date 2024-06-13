@@ -2,7 +2,37 @@
 export default {
 	content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 	theme: {
-		extend: {},
+		extend: {
+			gridAutoColumns: {
+				autofit: "repeat(auto-fit, minmax(200px, 1fr))",
+			},
+			keyframes: {
+				fadeIn: {
+					"0%": { opacity: 0 },
+					"100%": { opacity: 1 },
+				},
+				fadeOut: {
+					"0%": { opacity: 1 },
+					// "99%": { display: "block" },
+					"100%": { opacity: 0 },
+				},
+				slideDown: {
+					"0%": { transform: "translateY(-360px)" },
+					"100%": { transform: "translateY(100px)" },
+				},
+				slideUp: {
+					"0%": { transform: "translateY(460px)" },
+					// "99%": { transform: "translateY(-400px)" },
+					"100%": { transform: "translateY(0px)" },
+				},
+			},
+			animation: {
+				fadeIn: "fadeIn 0.5s ease-in-out forwards",
+				fadeOut: "fadeOut 0.5s ease-in-out forwards",
+				slideDown: "slideDown 0.5s ease-in-out forwards",
+				slideUp: "slideUp 0.5s ease-in-out forwards",
+			},
+		},
 		screens: {
 			sm: "640px",
 			// => @media (min-width: 640px) { ... }

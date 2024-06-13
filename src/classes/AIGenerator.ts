@@ -1,37 +1,42 @@
-import { GoogleGenerativeAI, GenerationConfig } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import data from "../data/new_data.json";
 import { ItemCategory } from "../types/enums";
-import { dummyAIOutput, sysPrompt } from "../types/constants";
+import { sysPrompt } from "../types/constants";
 import { Item } from "./Item";
-import { AIBuildType } from "../types/types";
+import { AIBuildType, AIOutput } from "../types/types";
 import BuildGenerator from "./BuildGenerator";
 
 export default class AI {
 	private _API_KEY: string = import.meta.env.VITE_API_KEY;
 	private _genAI = new GoogleGenerativeAI(this._API_KEY);
 
-	private _generationConfig: GenerationConfig = {
-		temperature: 1, // maximum randomness
-		topP: 1, // The cumulative probability of potential tokens in which to stop considering subsequent tokens, 1.0 is max
-		topK: 50, // Consider the top K tokens
-	};
+	// private _generationConfig: GenerationConfig = {
+	// 	temperature: 0.7, // maximum randomness
+	// 	topP: 0.95, // The cumulative probability of potential tokens in which to stop considering subsequent tokens, 1.0 is max
+	// 	topK: 50, // Consider the top K tokens
+	// 	responseMimeType: "application/json",
+	// };
 
-	private _prevRolledNames: string = "";
 	private _prompt: string;
 
-	constructor(prevRolledNames: string[], buildType: string) {
-		this._prompt = buildType !== "" ? `Generate a(n) ${buildType} Elden Ring build.` : "Generate an Elden Ring build.";
-		this._prevRolledNames = prevRolledNames.length > 0 ? prevRolledNames.join(", ") : "";
+	constructor(buildType: string) {
+		console.log("New ai generator initialized");
+		this._prompt =
+			buildType !== ""
+				? `Generate a(n) different ${buildType} Elden Ring build.`
+				: "Generate a different Elden Ring build.";
 	}
 
 	/**
 	 * TODO: add history parameter to model. See https://ai.google.dev/gemini-api/docs/api-overview
 	 */
 	private _model: any = this._genAI.getGenerativeModel({
-		...this._generationConfig,
 		model: "gemini-1.5-pro",
-		systemInstruction: sysPrompt + this._prevRolledNames,
+		// generationConfig: { ...this._generationConfig },
+		systemInstruction: sysPrompt,
 	});
+
+	_chat = this._model.startChat();
 
 	/**
 	 * Prompts the LLM and returns the response
@@ -39,13 +44,15 @@ export default class AI {
 	 */
 	public async getAIBuild(): Promise<AIBuildType> {
 		console.log("Prompting LLM...");
-		const result = await this._model.generateContent(this._prompt);
+		const result = await this._chat.sendMessage(this._prompt);
 		const response = await result.response;
-		console.log(response.text());
+		// console.log(response.text());
 		const aiBuild = this.parseResponse(response.text());
 
-		// const aiBuild = this.parseResponse(dummyAIOutput);
 		console.log("Created AI Build: ");
+		// const jsonObj = JSON.parse(response.text());
+		console.log(this._chat);
+		// console.log(jsonObj);
 		console.dir(aiBuild);
 		return aiBuild;
 	}
@@ -55,6 +62,22 @@ export default class AI {
 	 * @returns {AIBuild} the AI build
 	 */
 	private parseResponse(res: string): AIBuildType {
+		// return {
+		// 	vigor: 0,
+		// 	mind: 0,
+		// 	endurance: 0,
+		// 	strength: 0,
+		// 	dexterity: 0,
+		// 	intelligence: 0,
+		// 	faith: 0,
+		// 	arcane: 0,
+		// 	name: res.name,
+		// 	summary: res.summary,
+		// 	strengths: res.strengths,
+		// 	weaknesses: res.weaknesses,
+		// 	items: new Map<ItemCategory, Item[]>(),
+		// };
+
 		const responseArray = res.split("\n");
 		const buildArray: string[][] = [];
 
@@ -238,15 +261,17 @@ export default class AI {
 			case "leg armor":
 				return "legs";
 			case "shields":
-				return cat.toLowerCase();
+				return "shields";
 			case "talismans":
 				return "talismans";
 			case "sorceries":
 				return "sorcs";
 			case "incantations":
 				return "incants";
-			case "sacred seals" || "crystal tears":
-				return cat.split(" ")[1].toLowerCase();
+			case "sacred seals":
+				return "seals";
+			case "crystal tears":
+				return "tears";
 			case "spirit ashes":
 				return "spirits";
 			case "ashes of war":

@@ -1,69 +1,62 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "./ThemeProvider";
 import { useNavigate } from "react-router-dom";
+import NavbarMenu from "./NavbarMenu";
+
 export default function Navbar() {
+	const [isMobile, setIsMobile] = React.useState<boolean>(window.innerWidth < 768);
+
 	const themeContext = useContext(ThemeContext);
 	if (!themeContext) {
 		throw new Error("ThemeContext is undefined");
 	}
+	const { theme, setTheme } = themeContext;
+
+	React.useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	const navigate = useNavigate();
 
-	const { theme, setTheme } = themeContext;
+	React.useEffect(() => {
+		console.log("Mobile is: ", isMobile);
+	}, [isMobile]);
 	return (
-		<div className="navbar h-10 bg-slate-900 text-slate-100">
-			<div className="flex-1">
-				<a className="btn btn-ghost text-2xl">EldenForge</a>
+		<div className="drawer z-10">
+			<input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
+			<div className="drawer-content flex flex-col">
+				{/* Navbar */}
+				<div className="w-full navbar bg-base-300">
+					<div className="flex-none lg:hidden">
+						<label htmlFor="my-drawer-3" aria-label="open sidebar" className="btn btn-square btn-ghost">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								className="inline-block w-6 h-6 stroke-current"
+							>
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+							</svg>
+						</label>
+					</div>
+					<div className="flex-1 px-2 mx-2 text-2xl font-semibold">EldenForge</div>
+					<div className="flex-none hidden lg:block">
+						<ul className="menu menu-horizontal">
+							{/* Navbar menu content here */}
+							<NavbarMenu theme={theme} setTheme={setTheme} />
+						</ul>
+					</div>
+				</div>
 			</div>
-			<div className="flex-none">
-				<ul className="menu menu-horizontal px-1">
-					<li>
-						<select
-							className="select select-bordered w-full color-white"
-							data-choose-theme
-							value={theme}
-							onChange={(e) => setTheme(e.target.value)}
-						>
-							<option disabled selected>
-								Select a theme
-							</option>
-							<option value="light">Light</option>
-							<option value="dark">Dark</option>
-							<option value="cupcake">Cupcake</option>
-							<option value="bumblebee">Bumblebee</option>
-							<option value="emerald">Emerald</option>
-							<option value="corporate">Corporate</option>
-							<option value="synthwave">Synthwave</option>
-							<option value="retro">Retro</option>
-							<option value="cyberpunk">Cyberpunk</option>
-							<option value="valentine">Valentine</option>
-							<option value="halloween">Halloween</option>
-							<option value="garden">Garden</option>
-							<option value="forest">Forest</option>
-							<option value="aqua">Aqua</option>
-							<option value="lofi">Lofi</option>
-							<option value="pastel">Pastel</option>
-							<option value="fantasy">Fantasy</option>
-							<option value="wireframe">Wireframe</option>
-							<option value="black">Black</option>
-							<option value="luxury">Luxury</option>
-							<option value="dracula">Dracula</option>
-							<option value="cmyk">Cmyk</option>
-							<option value="autumn">Autumn</option>
-							<option value="business">Business</option>
-							<option value="acid">Acid</option>
-							<option value="lemonade">Lemonade</option>
-							<option value="night">Night</option>
-							<option value="coffee">Coffee</option>
-							<option value="winter">Winter</option>
-							<option value="dim">Dim</option>
-							<option value="nord">Nord</option>
-							<option value="sunset">Sunset</option>
-						</select>
-					</li>
-					<li>
-						<button onClick={() => navigate("/ai")}>AI Builds</button>
-					</li>
+			<div className="drawer-side">
+				<label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
+				<ul className="menu p-4 w-80 min-h-full bg-base-200">
+					{/* Sidebar content here */}
+					<NavbarMenu theme={theme} setTheme={setTheme} />
 				</ul>
 			</div>
 		</div>
