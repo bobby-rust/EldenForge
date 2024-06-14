@@ -16,7 +16,8 @@ export default function AIApp() {
 	}, []);
 
 	return (
-		<div className="flex justify-center align-center">
+		<div className="flex flex-col items-center justify-center align-center p-10">
+			<h1 className="text-2xl">Asking Gideon for a build...</h1>
 			<div className="loading loading-dots h-32 w-32"></div>
 		</div>
 	);
