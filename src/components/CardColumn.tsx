@@ -1,6 +1,5 @@
 import React from "react";
 import { Item } from "../classes/Item";
-import { ArmorCategories } from "../types/constants";
 import { ItemCategory } from "../types/enums";
 import Card from "./Card";
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Item } from "../classes/Item";
-import useGeneratorState from "../hooks/useGeneratorState";
 import { ItemCategory } from "../types/enums";
 import "../App.css";
 import CardColumn from "./CardColumn";
@@ -22,15 +21,6 @@ export default function Build() {
 	const navigate = useNavigate();
 
 	const [build, setBuild] = React.useState<Map<ItemCategory, Item[]> | null>(generator.generateBuildFromUrl(buildUrl));
-	const { generatorState, setBuildNumsState, setExcludePreviouslyRolledState } = useGeneratorState(generator);
-
-	const handleIncrementBuildNumsForCategory = (c: ItemCategory) => {
-		setBuildNumsState(c, generatorState[c].buildNums + 1);
-	};
-
-	const handleToggleExcludePreviouslyRolledForCategory = (c: ItemCategory) => {
-		setExcludePreviouslyRolledState(c, !generatorState[c].excludePreviouslyRolled);
-	};
 
 	const handleReroll = () => {
 		// if i keep track of the state of the build separately, i can avoid refreshing the page

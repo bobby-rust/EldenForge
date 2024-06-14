@@ -1,6 +1,6 @@
-import { Item, Armor } from "../classes/Item";
+import { Item } from "../classes/Item";
 import { expect, it, describe } from "vitest";
-import { ArmorType, ItemCategory } from "../types/enums";
+import { ItemCategory } from "../types/enums";
 import data from "../data/new_data.json";
 
 describe("Item", () => {

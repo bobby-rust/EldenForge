@@ -1,14 +1,12 @@
 import ReactDOM from "react-dom/client";
-import React from "react";
-import App from "./App.tsx";
+import App from "./App";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Build from "./components/Build.tsx";
-import AIBuild from "./components/AIBuild.tsx";
-import AIApp from "./components/AIApp.tsx";
-import Navbar from "./components/Navbar.tsx";
-import { ThemeProvider } from "./components/ThemeProvider.tsx";
+import Build from "./components/Build";
+import AIBuild from "./components/AIBuild";
+import AIApp from "./components/AIApp";
+import Navbar from "./components/Navbar";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 const Err = () => (
 	<div className="flex justify-center items-center h-screen">

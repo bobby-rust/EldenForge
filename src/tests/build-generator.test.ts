@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import BuildGenerator from "../classes/BuildGenerator";
 import { ItemCategory } from "../types/enums";
 
@@ -33,12 +33,12 @@ describe("BuildGenerator", () => {
 					const url = buildGenerator.generateUrl();
 					const build = buildGenerator.generateBuildFromUrl(url);
 
-					if (rolledItems.get(ItemCategory.Seals)?.has(build.get(ItemCategory.Seals)![0].index)) {
+					if (rolledItems.get(ItemCategory.Seals)?.has(build.get(ItemCategory.Seals)?.[0].index!)) {
 						isNonUnique = true;
 						break;
 					}
 
-					rolledItems.get(ItemCategory.Seals)?.add(build.get(ItemCategory.Seals)![0].index);
+					rolledItems.get(ItemCategory.Seals)?.add(build.get(ItemCategory.Seals)?.[0].index!);
 				}
 
 				expect(isNonUnique).toBe(true);
@@ -57,11 +57,11 @@ describe("BuildGenerator", () => {
 				expect(build.get(ItemCategory.Seals)).toBeDefined();
 				expect(build.get(ItemCategory.Seals)).not.toBeNull();
 
-				if (rolledSeals.has(build.get(ItemCategory.Seals)![0].index)) {
+				if (rolledSeals.has(build.get(ItemCategory.Seals)?.[0].index!)) {
 					isUnique = false;
 				}
 
-				rolledSeals.add(build.get(ItemCategory.Seals)![0].index);
+				rolledSeals.add(build.get(ItemCategory.Seals)?.[0].index!);
 			}
 
 			expect(isUnique).toBe(true);
@@ -93,7 +93,7 @@ describe("BuildGenerator", () => {
 
 				expect(build.get(ItemCategory.Helm)).toBeDefined();
 
-				if (prevRolled.has(build.get(ItemCategory.Helm)![0].index)) {
+				if (prevRolled.has(build.get(ItemCategory.Helm)?.[0].index!)) {
 					isUnique = false;
 				}
 			}
