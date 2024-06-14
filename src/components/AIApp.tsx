@@ -15,5 +15,9 @@ export default function AIApp() {
 		queryAI();
 	}, []);
 
-	return <div>AIApp</div>;
+	return (
+		<div className="flex justify-center align-center">
+			<div className="loading loading-dots h-32 w-32"></div>
+		</div>
+	);
 }
