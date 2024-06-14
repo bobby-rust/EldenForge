@@ -7,6 +7,7 @@ import Card from "./Card";
 export default function CardColumn(props: {
 	items: Item[];
 	reroll: ((c: ItemCategory, i: number | undefined) => void) | null;
+	isAIBuild: boolean;
 }) {
 	if (props.items.length === 0) return null;
 	if (props.items[0].category === ItemCategory.Classes) return null;
@@ -26,11 +27,11 @@ export default function CardColumn(props: {
 
 	return (
 		<>
-			<div className="flex flex-col flex-grow-0 ">
+			<div className="flex flex-col">
 				<h1 className="text-center text-xl font-bold">{readableItemCategory.get(props.items[0].category)}</h1>
 				{props.items.map((item: Item, i: number) => (
 					<React.Fragment key={i}>
-						<Card key={item.name} item={item} reroll={props.reroll} />
+						<Card key={item.name} item={item} reroll={props.reroll} isAIBuild={props.isAIBuild} />
 					</React.Fragment>
 				))}
 			</div>

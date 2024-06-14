@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { ItemCategory } from "../types/enums";
 import { Item } from "../classes/Item";
 import { ArmorCategories } from "../types/constants";
-import { AIBuildType, Stat } from "../types/types";
+import { AIBuildType } from "../types/types";
 import CardColumn from "./CardColumn";
 import BuildGenerator from "../classes/BuildGenerator";
 
@@ -11,7 +11,10 @@ const generator = new BuildGenerator();
 
 export default function AIBuild() {
 	const { buildUrl } = useParams();
-	const [showDescription, setShowDescription] = React.useState(false);
+	const [showDescription, setShowDescription] = React.useState(true);
+	const [loading, setLoading] = React.useState(false);
+	const [countdown, setCountdown] = React.useState(0);
+	const [disabled, setDisabled] = React.useState(false);
 
 	if (!buildUrl) {
 		throw new Error("Invalid path");
@@ -22,15 +25,26 @@ export default function AIBuild() {
 	const [buildType, setBuildType] = React.useState("");
 
 	const handleRegenerateAIBuild = async () => {
+		setLoading(true);
 		const newUrl = (await generator.generateAIUrl()) ?? "";
-		console.log("new url: ", newUrl);
 		setBuild(generator.parseAIBuildFromUrl(newUrl));
+		setLoading(false);
+		setDisabled(true);
+		setCountdown(30);
 	};
 
 	const handleChangeBuildType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		console.log("setting build type: ", e.target.value);
 		setBuildType(e.target.value);
 	};
+
+	React.useEffect(() => {
+		if (countdown > 0) {
+			const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+			return () => clearTimeout(timer);
+		} else {
+			setDisabled(false);
+		}
+	}, [countdown]);
 
 	React.useEffect(() => {
 		if (build) {
@@ -42,20 +56,18 @@ export default function AIBuild() {
 			});
 			setArmors(newArmors);
 		}
-
-		console.log(build);
 	}, [build]);
 
 	React.useEffect(() => {
 		generator.buildType = buildType;
 	}, [buildType]);
 
-	React.useEffect(() => {}, [armors]);
+	build && console.log(build.items.size);
 
 	return (
-		<div className="flex flex-col justify-center items-center xl:px-14 py-8">
-			<div className="flex flex-col xl:flex-row justify-evenly w-full items-center mb-10">
-				<div className="flex justify-center items-center w-1/3">
+		<div className="flex flex-col justify-center items-center xl:px-14 py-8 ">
+			<div className="flex flex-col items-center xl:flex-row justify-evenly w-full mb-10">
+				<div className="flex justify-center items-center w-1/3 p-3">
 					<select className="select select-bordered max-w-xs" onChange={handleChangeBuildType}>
 						<option selected value="">
 							Select a build type
@@ -65,16 +77,35 @@ export default function AIBuild() {
 						<option value="Strength">Strength</option>
 						<option value="Dexterity">Dexterity</option>
 						<option value="Arcane">Arcane</option>
+						<option value="Strike Damage">Strike Damage</option>
+						<option value="Slash Damage">Slash Damage</option>
+						<option value="Pierce Damage">Pierce Damage</option>
+						<option value="Magic Damage">Magic Damage</option>
+						<option value="Holy Damage">Holy Damage</option>
+						<option value="Fire Damage">Fire Damage</option>
+						<option value="Lightning Damage">Lightning Damage</option>
 					</select>
 				</div>
-				<div className="flex justify-center items-center w-1/3">
-					<button className="btn btn-lg" onClick={handleRegenerateAIBuild}>
-						Ask Sir Gideon Ofnir, The All-Knowing
+				<div className="flex justify-center items-center w-1/3 p-3">
+					<button
+						className={`btn btn-lg btn-primary ${loading && "loading loading-dots"}`}
+						disabled={disabled}
+						onClick={handleRegenerateAIBuild}
+						aria-disabled={disabled}
+						tabIndex={disabled ? -1 : 0}
+					>
+						<span>
+							{disabled
+								? `Wait ${countdown}s...`
+								: window.innerWidth < 400
+								? "Ask Gideon"
+								: "Ask Sir Gideon Ofnir, The All-Knowing"}
+						</span>
 					</button>
 				</div>
-				<div className="flex justify-center items-center w-1/3">
+				<div className="flex flex-col lg:flex-row justify-center items-center w-1/3">
 					<div className="dropdown">
-						<div tabIndex={0} role="button" className="btn btn-lg m-1">
+						<div tabIndex={0} role="button" className="btn btn-lg m-3">
 							Show Stats{" "}
 						</div>
 						<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
@@ -93,7 +124,7 @@ export default function AIBuild() {
 									<tbody className="border-2 border-gray-100">
 										{build &&
 											[...Object.keys(build)].map((key: string, i: number) => (
-												<tr className="border-b">
+												<tr className="border-b" key={i}>
 													{!["name", "summary", "strengths", "weaknesses", "items"].includes(key) && (
 														<>
 															<td className="p-4 align-middle font-medium py-2 px-3 ">
@@ -110,12 +141,12 @@ export default function AIBuild() {
 						</ul>
 					</div>
 					<button className="btn btn-lg mr-2" onClick={() => setShowDescription(!showDescription)}>
-						Toggle Description
+						Show Description
 					</button>
 				</div>
 			</div>
 			{build && (
-				<div className={`${showDescription ? "animate-fadeIn block" : "animate-fadeOut hidden"} max-w-4xl h-[360px]`}>
+				<div className={`max-w-[80vw] md:max-w-[70vw] xl:max-w-[60vw] mb-20 ${showDescription ? "" : "hidden"}`}>
 					<div className="w-full bg-gray-100 text-center p-2 relative">
 						<h1 className="font-bold text-slate-800 text-2xl self-start">{build.name}</h1>
 						<button
@@ -133,14 +164,14 @@ export default function AIBuild() {
 							</svg>
 						</button>
 					</div>
-					<div className="flex flex-col rounded-lg shadow-lg p-8 h-full">
-						<div className="flex flex-col w-full pb-6">
-							<div className="flex leading-relaxed">
-								<div className="self-start w-1/2 mr-2 text-center text-lg">
+					<div className="flex justify-center items-center rounded-lg shadow-lg p-8 h-full">
+						<div className="flex w-full justify-center items-center pb-6">
+							<div className="flex flex-col sm:flex-row leading-relaxed justify-center items-center">
+								<div className="sm:w-1/2 mr-2 text-center text-lg">
 									<h1 className="font-semibold">Summary</h1>
 									<p>{build.summary}</p>
 								</div>
-								<div className="self-start w-1/2 ml-2 text-center text-lg h-full">
+								<div className="sm:w-1/2 ml-2 text-center text-lg h-full">
 									<div className="w-full">
 										<h1 className="font-semibold">Strengths</h1>
 										<p>{build.strengths}</p>
@@ -155,17 +186,17 @@ export default function AIBuild() {
 					</div>
 				</div>
 			)}
-			<div className="flex justify-center items-center">
-				<div className={`${showDescription ? "animate-slideDown" : "animate-slideUp"} flex flex-wrap justify-center`}>
-					{build &&
-						[...build.items.keys()].map((c: ItemCategory, i: number) => (
-							<React.Fragment key={i}>
-								{/* TODO: fix this garbage ... actually is it garbage, or is it just practicing K.I.S.S.? */}
-								{!ArmorCategories.has(c) && <CardColumn key={i} items={build.items.get(c) ?? []} reroll={null} />}
-								{c === ItemCategory.Helm && <CardColumn key={i} items={armors} reroll={null} />}
-							</React.Fragment>
-						))}{" "}
-				</div>
+			<div className="grid grid-cols-1 sm:grid-cols-2 2lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 2.5xl:grid-cols-6 3xl:grid-cols-7 4xl:grid-cols-8 gap-4 auto-cols-auto">
+				{build &&
+					[...build.items.keys()].map((c: ItemCategory, i: number) => (
+						<React.Fragment key={i}>
+							{/* TODO: fix this garbage ... actually is it garbage, or is it just practicing K.I.S.S.? */}
+							{!ArmorCategories.has(c) && (
+								<CardColumn key={i} items={build.items.get(c) ?? []} reroll={null} isAIBuild={true} />
+							)}
+							{c === ItemCategory.Helm && <CardColumn key={i} items={armors} reroll={null} isAIBuild={true} />}
+						</React.Fragment>
+					))}{" "}
 			</div>
 		</div>
 	);

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 export default function NavbarMenu({ theme, setTheme }: { theme: string; setTheme: (theme: string) => void }) {
 	const navigate = useNavigate();
 
+	const regexp = new RegExp("/ai/*");
 	return (
 		<>
 			<li>
@@ -50,8 +51,11 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 				</select>
 			</li>
 			<li>
-				<button className="btn btn-lg ml-4 text-center mr-2" onClick={() => navigate("/ai")}>
-					AI Builds
+				<button
+					className="btn btn-lg ml-4 text-center mr-2"
+					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
+				>
+					{regexp.test(window.location.href) ? "Random Builds" : "AI Builds"}
 				</button>
 			</li>
 		</>

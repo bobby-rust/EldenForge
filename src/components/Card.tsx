@@ -1,9 +1,15 @@
+import React from "react";
 import { Item } from "../classes/Item";
 import { ItemCategory } from "../types/enums";
 import { GiBroadsword, GiWeight } from "react-icons/gi";
 import { TbDropletDown } from "react-icons/tb";
 
-export default function Card(props: { item: Item; reroll: ((c: ItemCategory, i: number | undefined) => void) | null }) {
+export default function Card(props: {
+	item: Item;
+	reroll: ((c: ItemCategory, i: number | undefined) => void) | null;
+	isAIBuild: boolean;
+}) {
+	const [loading, setLoading] = React.useState(true);
 	if (props.item.category === ItemCategory.Classes) return null;
 
 	let name = props.item.name;
@@ -12,19 +18,27 @@ export default function Card(props: { item: Item; reroll: ((c: ItemCategory, i: 
 		name = props.item.name.split("Ash Of War: ")[1];
 	}
 
+	// React.useEffect(() => {
+	// 	setLoading(false);
+	// }, [props.item]);
+	React.useEffect(() => {
+		console.log("Loading is: ", loading);
+	}, [loading]);
+
 	// TODO: compress / downscale images for better rendering performance
 	return (
 		<>
 			<div className="flex text-sm flex-col w-60 h-60 bg-slate-100 shadow-xl m-3 rounded-lg">
 				<div className="relative h-full p-3 text-slate-700">
 					<a href={`${props.item.wikiUrl}`} target="_blank" rel="noreferrer" className="flex">
-						<figure className="w-[50%]">
+						<figure className={`${loading ? "flex justify-center align-center h-[100px] w-[100px]" : ""} w-[50%]`}>
 							<img
 								height={100}
 								width={100}
 								src={`${props.item.image}`}
 								alt={`${props.item.name}`}
-								className="rounded-xl h-[100px] w-[100px]"
+								onLoad={() => setLoading(false)}
+								className={`${loading ? "loading loading-spinner loading-lg" : ""} rounded-xl`}
 							/>
 						</figure>
 						<div className="flex justify-center w-[50%]">
@@ -36,9 +50,9 @@ export default function Card(props: { item: Item; reroll: ((c: ItemCategory, i: 
 									<div className="flex flex-col p-2">
 										{props.item.dmgNegation && <h1>Damage Negation</h1>}
 										{props.item.dmgNegation &&
-											props.item.dmgNegation.map((obj: any) => {
+											props.item.dmgNegation.map((obj: any, i: number) => {
 												return (
-													<div>
+													<div key={i}>
 														<div className="tracking-wide">
 															{obj.name}: {obj.amount}
 														</div>
@@ -49,9 +63,9 @@ export default function Card(props: { item: Item; reroll: ((c: ItemCategory, i: 
 									<div className="flex flex-col p-2">
 										{props.item.resistance && <h1>Resistance</h1>}
 										{props.item.resistance &&
-											props.item.resistance.map((obj: any) => {
+											props.item.resistance.map((obj: any, i: number) => {
 												return (
-													<div className="tracking-wide">
+													<div className="tracking-wide" key={i}>
 														{obj.name}: {obj.amount}
 													</div>
 												);
@@ -116,12 +130,14 @@ export default function Card(props: { item: Item; reroll: ((c: ItemCategory, i: 
 				</div>
 				<div className="flex flex-col justify-center items-center text-center w-full">
 					<div className="bg-slate-400 w-full h-10 flex justify-end items-center p-2 rounded-b-lg">
-						<button
-							onClick={() => props.reroll?.(props.item.category, props.item.index)}
-							className="btn btn-primary btn-sm h-6 min-h-6 rounded-md"
-						>
-							Reroll Item
-						</button>
+						{!props.isAIBuild && (
+							<button
+								onClick={() => props.reroll?.(props.item.category, props.item.index)}
+								className="btn btn-primary btn-sm h-6 min-h-6 rounded-md"
+							>
+								Reroll Item
+							</button>
+						)}
 					</div>
 				</div>
 			</div>

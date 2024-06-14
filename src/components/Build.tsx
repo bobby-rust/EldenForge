@@ -65,25 +65,27 @@ export default function Build() {
 
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
-			<div className="App px-14">
-				<div className="flex w-full justify-center align-center p-3">
+			<div className="App px-14 py-8">
+				<div className="flex w-full justify-center align-center mb-10 p-3">
 					<button className="btn btn-lg btn-primary" onClick={handleReroll}>
 						<h1>Generate New Build</h1>
 					</button>
 				</div>
-				<div className="flex justify-center align-center">
+				<div className="flex justify-center align-center max-w-full">
 					{/* <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 "> */}
-					<div className="flex flex-wrap justify-center align-center">
+					<div className="grid grid-cols-1 sm:grid-cols-2 2lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 2.5xl:grid-cols-6 3xl:grid-cols-7 4xl:grid-cols-8 gap-4 auto-cols-auto">
 						{build &&
 							[...build.keys()].map((c: ItemCategory, i: number) => (
 								<>
 									{/* TODO: fix this garbage */}
 									{!ArmorCategories.has(c) && (
-										<CardColumn key={i} items={build.get(c) ?? []} reroll={handleRerollItem} />
+										<CardColumn key={i} items={build.get(c) ?? []} reroll={handleRerollItem} isAIBuild={false} />
 									)}
-									{c === ItemCategory.Helm && <CardColumn key={i} items={armors} reroll={handleRerollItem} />}
+									{c === ItemCategory.Helm && (
+										<CardColumn key={i} items={armors} reroll={handleRerollItem} isAIBuild={false} />
+									)}
 								</>
-							))}{" "}
+							))}
 					</div>
 				</div>
 			</div>

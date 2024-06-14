@@ -1,5 +1,4 @@
 :root {
   font-family: "Cormorant Garamond", system-ui, Avenir, Helvetica, Arial, sans-serif;
-  width: 100vw;
+  max-width: 100vw;
 }
-

@@ -43,7 +43,7 @@ export default class AI {
 	 * @returns {Promise<string>} the AI response
 	 */
 	public async getAIBuild(): Promise<AIBuildType> {
-		console.log("Prompting LLM...");
+		console.log(`Prompting LLM... ${this._prompt}`);
 		const result = await this._chat.sendMessage(this._prompt);
 		const response = await result.response;
 		// console.log(response.text());
