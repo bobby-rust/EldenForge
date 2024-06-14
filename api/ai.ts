@@ -55,7 +55,6 @@ export default async function handler(request: VercelRequest, response: VercelRe
 	}
 
 	const genAI = new GoogleGenerativeAI(API_KEY);
-	const { body } = request;
 
 	const buildType = request.body.build_type ?? "";
 	const prompt =
