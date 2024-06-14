@@ -1,60 +1,28 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import data from "../data/new_data.json";
 import { ItemCategory } from "../types/enums";
-import { sysPrompt } from "../types/constants";
 import { Item } from "./Item";
-import { AIBuildType, AIOutput } from "../types/types";
+import { AIBuildType } from "../types/types";
 import BuildGenerator from "./BuildGenerator";
 
 export default class AI {
-	private _API_KEY: string = import.meta.env.VITE_API_KEY;
-	private _genAI = new GoogleGenerativeAI(this._API_KEY);
-
-	// private _generationConfig: GenerationConfig = {
-	// 	temperature: 0.7, // maximum randomness
-	// 	topP: 0.95, // The cumulative probability of potential tokens in which to stop considering subsequent tokens, 1.0 is max
-	// 	topK: 50, // Consider the top K tokens
-	// 	responseMimeType: "application/json",
-	// };
-
-	private _prompt: string;
-
-	constructor(buildType: string) {
-		console.log("New ai generator initialized");
-		this._prompt =
-			buildType !== ""
-				? `Generate a(n) different ${buildType} Elden Ring build.`
-				: "Generate a different Elden Ring build.";
-	}
-
-	/**
-	 * TODO: add history parameter to model. See https://ai.google.dev/gemini-api/docs/api-overview
-	 */
-	private _model: any = this._genAI.getGenerativeModel({
-		model: "gemini-1.5-pro",
-		// generationConfig: { ...this._generationConfig },
-		systemInstruction: sysPrompt,
-	});
-
-	_chat = this._model.startChat();
-
 	/**
 	 * Prompts the LLM and returns the response
 	 * @returns {Promise<string>} the AI response
 	 */
-	public async getAIBuild(): Promise<AIBuildType> {
-		console.log(`Prompting LLM... ${this._prompt}`);
-		const result = await this._chat.sendMessage(this._prompt);
-		const response = await result.response;
-		// console.log(response.text());
-		const aiBuild = this.parseResponse(response.text());
+	public async getAIBuild(buildType: string): Promise<AIBuildType> {
+		const r = await fetch("/api/ai", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				build_type: buildType,
+				hello_world: "Hello, World!",
+			}),
+		});
 
-		console.log("Created AI Build: ");
-		// const jsonObj = JSON.parse(response.text());
-		console.log(this._chat);
-		// console.log(jsonObj);
-		console.dir(aiBuild);
-		return aiBuild;
+		const res = await r.json();
+		return this.parseResponse(res.body.build.candidates[0].content.parts[0].text);
 	}
 
 	/**
@@ -161,9 +129,6 @@ export default class AI {
 				if (name.toLowerCase() === "none") return;
 				if (!name) return;
 				const item = this.getItemFromName(key, name);
-				if (!item) {
-					console.log(`Item not found: ${key} ${name}`);
-				}
 				buildMap.set(key as ItemCategory, [...(buildMap.get(key as ItemCategory) ?? []), item]);
 			});
 		});
@@ -277,7 +242,6 @@ export default class AI {
 			case "ashes of war":
 				return "ashes";
 			default:
-				console.log("Invalid category: ", cat);
 				return "";
 		}
 	}

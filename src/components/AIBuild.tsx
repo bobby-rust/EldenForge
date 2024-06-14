@@ -62,8 +62,6 @@ export default function AIBuild() {
 		generator.buildType = buildType;
 	}, [buildType]);
 
-	build && console.log(build.items.size);
-
 	return (
 		<div className="flex flex-col justify-center items-center xl:px-14 py-8 ">
 			<div className="flex flex-col items-center xl:flex-row justify-evenly w-full mb-10">

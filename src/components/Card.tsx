@@ -18,13 +18,6 @@ export default function Card(props: {
 		name = props.item.name.split("Ash Of War: ")[1];
 	}
 
-	// React.useEffect(() => {
-	// 	setLoading(false);
-	// }, [props.item]);
-	React.useEffect(() => {
-		console.log("Loading is: ", loading);
-	}, [loading]);
-
 	// TODO: compress / downscale images for better rendering performance
 	return (
 		<>

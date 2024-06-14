@@ -1,5 +1,4 @@
 import { ItemCategory } from "./enums";
-import data from "../data/new_data.json";
 export const ArmorCategories = new Set([
 	ItemCategory.Helm,
 	ItemCategory.Chest,
@@ -3773,7 +3772,7 @@ The way to play this build is to just go up to enemies and bonk them to death wi
 //                             Proritize generating unique, creative, and different builds.
 //                             Make sure the items generated have the required stats.`;
 
-export const sysPrompt = `You are an Elden Ring build generator. You generate Elden Ring builds in this structured format: 
+const sysPrompt = `You are an Elden Ring build generator. You generate Elden Ring builds in this structured format: 
 Name=<Name>
 Vigor=<Vigor>
 Mind=<Mind>
@@ -3812,3 +3811,4 @@ Provide a strengths and weaknesses summary at the end.
 The strengths and weaknesses should be full, grammatically correct sentences. The strengths and weaknesses should be no more than 2 sentences each.
 If you generate any incantations, be sure to generate the necessary Sacred Seal used to cast it.
 Make sure the items generated have the required stats to use them.`;
+export default sysPrompt;

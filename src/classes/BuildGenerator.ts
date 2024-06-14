@@ -25,7 +25,6 @@ export default class BuildGenerator {
 	private _buildType = "";
 
 	set buildType(buildType: string) {
-		console.log("Setting build type in class instance to: ", buildType);
 		this._buildType = buildType;
 	}
 
@@ -42,7 +41,7 @@ export default class BuildGenerator {
 		if (typeof this._ai === "undefined") {
 			this.initAIGenerator();
 		}
-		const build = await this._ai?.getAIBuild();
+		const build = await this._ai?.getAIBuild(this._buildType);
 
 		if (!build) return null;
 
@@ -246,19 +245,6 @@ export default class BuildGenerator {
 		return this._build.getItemsFromBuild();
 	}
 
-	/**
-	 * Gets an item object from its type and index.
-	 * @param type the type of item
-	 * @param index the index of the item in the raw data
-	 * @returns {Item | Armor} the item.
-	 */
-	private getItem(type: ItemCategory, index: number): Item | null {
-		const itemData = data[type as keyof typeof data].items[index]; // Just pleasing TypeScript...
-		const item = itemData ? new Item(type, itemData, index) : null;
-
-		return item;
-	}
-
 	public parseAIBuildFromUrl(url: string): AIBuildType {
 		const buildMap = this.parseBuildFromMap(this.parseBuildMapFromUrl(url));
 
@@ -363,26 +349,7 @@ export default class BuildGenerator {
 		return buildMap;
 	}
 
-	private getPreviouslyRolledForCategory(category: ItemCategory) {
-		return this._buildGenerationConfig[category].previouslyRolled;
-	}
-
-	private getPreviouslyRolledNameArray(): string[] {
-		const nameArray: string[] = [];
-		for (const category of Object.keys(this._itemData)) {
-			if (category === ItemCategory.Seals || category === ItemCategory.Tears) continue;
-			const previouslyRolled = this.getPreviouslyRolledForCategory(category as ItemCategory);
-
-			for (const i of previouslyRolled) {
-				const item = this.getItem(category as ItemCategory, i);
-				item && nameArray.push(item.name);
-			}
-		}
-
-		return nameArray;
-	}
-
 	private initAIGenerator() {
-		this._ai = new AIGenerator(this._buildType);
+		this._ai = new AIGenerator();
 	}
 }

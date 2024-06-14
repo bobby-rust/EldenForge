@@ -1,30 +1,14 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { ThemeContext } from "./ThemeProvider";
-import { useNavigate } from "react-router-dom";
 import NavbarMenu from "./NavbarMenu";
 
 export default function Navbar() {
-	const [isMobile, setIsMobile] = React.useState<boolean>(window.innerWidth < 768);
-
 	const themeContext = useContext(ThemeContext);
 	if (!themeContext) {
 		throw new Error("ThemeContext is undefined");
 	}
 	const { theme, setTheme } = themeContext;
 
-	React.useEffect(() => {
-		const handleResize = () => {
-			setIsMobile(window.innerWidth < 768);
-		};
-		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
-
-	const navigate = useNavigate();
-
-	React.useEffect(() => {
-		console.log("Mobile is: ", isMobile);
-	}, [isMobile]);
 	return (
 		<div className="drawer z-10">
 			<input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
