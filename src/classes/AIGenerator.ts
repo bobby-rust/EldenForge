@@ -22,7 +22,7 @@ export default class AI {
 		});
 
 		const res = await r.json();
-		console.log(res);
+
 		return this.parseResponse(res.body.build.candidates[0].content.parts[0].text);
 	}
 
