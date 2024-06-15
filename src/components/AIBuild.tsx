@@ -6,6 +6,7 @@ import { ArmorCategories } from "../types/constants";
 import { AIBuildType } from "../types/types";
 import CardColumn from "./CardColumn";
 import BuildGenerator from "../classes/BuildGenerator";
+import { useNavigate } from "react-router-dom";
 
 const generator = new BuildGenerator();
 
@@ -24,6 +25,8 @@ export default function AIBuild() {
 	const [armors, setArmors] = React.useState<Item[]>([]);
 	const [buildType, setBuildType] = React.useState("");
 
+	const navigate = useNavigate();
+
 	const handleRegenerateAIBuild = async () => {
 		setLoading(true);
 		const newUrl = (await generator.generateAIUrl()) ?? "";
@@ -31,6 +34,7 @@ export default function AIBuild() {
 		setLoading(false);
 		setDisabled(true);
 		setCountdown(30);
+		navigate("/ai/" + newUrl);
 	};
 
 	const handleChangeBuildType = (e: React.ChangeEvent<HTMLSelectElement>) => {
