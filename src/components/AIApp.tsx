@@ -17,9 +17,8 @@ export default function AIApp() {
 
 	return (
 		<div className="flex flex-col items-center justify-center align-center p-10">
-			{/* <h1 className="text-2xl">Asking Gideon for a build...</h1>
-			<div className="loading loading-dots h-32 w-32"></div> */}
-			<h1 className="text-2xl">Sorry! This isn't working right now. A fix is currently being investigated.</h1>
+			<h1 className="text-2xl">Asking Gideon for a build...</h1>
+			<div className="loading loading-dots h-32 w-32"></div>
 		</div>
 	);
 }
