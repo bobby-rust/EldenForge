@@ -91,7 +91,7 @@ export default class AI {
 			let currKeyValPair = el.trim().split("=");
 			currKeyValPair[0] = currKeyValPair[0].toLowerCase();
 			if (currKeyValPair[0] === "name") build.name = currKeyValPair[1];
-			if (currKeyValPair[0] === "summary") build.summary = currKeyValPair[1];
+			if (currKeyValPair[0] === "summary") build.summary = currKeyValPair[1].replaceAll("?", "%3F"); // %3F is the encoding for a question mark
 			if (currKeyValPair[0] === "strengths") build.strengths = currKeyValPair[1];
 			if (currKeyValPair[0] === "weaknesses") build.weaknesses = currKeyValPair[1];
 
