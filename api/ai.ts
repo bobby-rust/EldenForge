@@ -72,7 +72,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
 		"Fire Damage",
 	];
 
-	const buildType = request.body.build_type ?? Math.floor(Math.random() * buildTypes.length);
+	const buildType = request.body.build_type ?? buildTypes[Math.floor(Math.random() * buildTypes.length)];
 
 	const prompt = `Generate a unique and creative ${buildType} Elden Ring build.`;
 
