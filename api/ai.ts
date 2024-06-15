@@ -44,6 +44,10 @@ If you generate any incantations, be sure to generate the necessary Sacred Seal 
 Make sure the items generated have the required stats to use them.`;
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
+	console.log("Got request body: " + JSON.stringify(request.body));
+	console.log("Got request headers: " + JSON.stringify(request.headers));
+	console.log("Got request: ", request);
+
 	const API_KEY = process.env.API_KEY;
 	if (!API_KEY) {
 		response.status(500).json({
@@ -69,20 +73,13 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
 	const chat = model.startChat();
 
-	/**
-	 * Prompts the LLM and returns the response
-	 * @returns {Promise<string>} the AI response
-	 */
-	async function getAIBuild(): Promise<string> {
-		const result = await chat.sendMessage(prompt);
-		const response = await result.response;
+	const result = await chat.sendMessage(prompt);
+	const res = await result.response;
 
-		return response;
-	}
-
+	console.log("Got response from gemini: " + res);
 	response.status(200).json({
 		body: {
-			build: await getAIBuild(),
+			build: res,
 		},
 	});
 }
