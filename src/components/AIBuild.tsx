@@ -30,7 +30,10 @@ export default function AIBuild() {
 	const handleRegenerateAIBuild = async () => {
 		setLoading(true);
 		const newUrl = (await generator.generateAIUrl()) ?? "";
-		setBuild(generator.parseAIBuildFromUrl(newUrl));
+		const newBuild = generator.parseAIBuildFromUrl(newUrl);
+		newBuild.summary = decodeURIComponent(newBuild.summary);
+
+		setBuild(newBuild);
 		setLoading(false);
 		setDisabled(true);
 		setCountdown(30);
