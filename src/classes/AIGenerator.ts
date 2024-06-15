@@ -17,7 +17,6 @@ export default class AI {
 			},
 			body: JSON.stringify({
 				build_type: buildType,
-				hello_world: "Hello, World!",
 			}),
 		});
 
