@@ -14,7 +14,7 @@ export default function Navbar() {
 			<input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
 			<div className="drawer-content flex flex-col">
 				{/* Navbar */}
-				<div className="w-full navbar bg-base-300">
+				<div className="w-full navbar lg:justify-between bg-base-300">
 					<div className="flex-none lg:hidden">
 						<label htmlFor="my-drawer-3" aria-label="open sidebar" className="btn btn-square btn-ghost">
 							<svg
@@ -27,7 +27,10 @@ export default function Navbar() {
 							</svg>
 						</label>
 					</div>
-					<div className="flex-1 px-2 mx-2 text-2xl font-semibold">EldenForge</div>
+					<a className="btn btn-ghost px-2 mx-2 w-36 text-2xl font-semibold" href="/">
+						EldenForge
+					</a>
+					{/* <div className="flex-none hidden lg:block"> */}
 					<div className="flex-none hidden lg:block">
 						<ul className="menu menu-horizontal">
 							{/* Navbar menu content here */}

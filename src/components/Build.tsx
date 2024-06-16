@@ -9,6 +9,7 @@ import BuildGenerator from "../classes/BuildGenerator";
 import { ArmorCategories } from "../types/constants";
 const generator = new BuildGenerator();
 
+// TODO: Make this a reusable component to use with AI builds.
 export default function Build() {
 	const [armors, setArmors] = React.useState<Item[]>([]);
 
@@ -41,6 +42,10 @@ export default function Build() {
 		setBuild(generator.generateBuildFromUrl(newUrl));
 	};
 
+	const handleChangeNumItems = (c: ItemCategory, numItems: number) => {
+		generator.setNumItems(c, numItems);
+	};
+
 	React.useEffect(() => {
 		if (build) {
 			const newArmors: Item[] = [];
@@ -69,10 +74,22 @@ export default function Build() {
 								<>
 									{/* TODO: fix this garbage */}
 									{!ArmorCategories.has(c) && (
-										<CardColumn key={i} items={build.get(c) ?? []} reroll={handleRerollItem} isAIBuild={false} />
+										<CardColumn
+											key={i}
+											items={build.get(c) ?? []}
+											reroll={handleRerollItem}
+											setNumItems={handleChangeNumItems}
+											isAIBuild={false}
+										/>
 									)}
 									{c === ItemCategory.Helm && (
-										<CardColumn key={i} items={armors} reroll={handleRerollItem} isAIBuild={false} />
+										<CardColumn
+											key={i}
+											items={armors}
+											reroll={handleRerollItem}
+											setNumItems={handleChangeNumItems}
+											isAIBuild={false}
+										/>
 									)}
 								</>
 							))}

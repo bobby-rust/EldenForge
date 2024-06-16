@@ -4,7 +4,7 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 
 	const regexp = new RegExp("/ai/*");
 	return (
-		<>
+		<div className="flex flex-col lg:flex-row">
 			<li>
 				<select
 					className="select select-lg text-slate-700 focus:text-slate-100 z-50  focus:bg-slate-900 hover:text-slate-100 hover:bg-slate-900 select-bordered w-full"
@@ -58,6 +58,6 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 					{regexp.test(window.location.href) ? "Random Builds" : "AI Builds"}
 				</button>
 			</li>
-		</>
+		</div>
 	);
 }

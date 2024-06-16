@@ -48,6 +48,10 @@ export default class BuildGenerator {
 		return this.createAIUrlFromAIBuild(build);
 	}
 
+	public setNumItems(category: ItemCategory, numItems: number): void {
+		this._buildGenerationConfig[category].buildNums = numItems;
+	}
+
 	private createAIUrlFromAIBuild(build: AIBuildType): string {
 		const buildMap = new Map<ItemCategory, number[]>();
 		build.items.forEach((value, key) => {

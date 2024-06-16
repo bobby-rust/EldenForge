@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const generator = new BuildGenerator();
 
+// TODO: Make a reusable build component.
 export default function AIBuild() {
 	const { buildUrl } = useParams();
 	const [showDescription, setShowDescription] = React.useState(true);
@@ -197,9 +198,17 @@ export default function AIBuild() {
 						<React.Fragment key={i}>
 							{/* TODO: fix this garbage ... actually is it garbage, or is it just practicing K.I.S.S.? */}
 							{!ArmorCategories.has(c) && (
-								<CardColumn key={i} items={build.items.get(c) ?? []} reroll={null} isAIBuild={true} />
+								<CardColumn
+									key={i}
+									items={build.items.get(c) ?? []}
+									reroll={null}
+									setNumItems={null}
+									isAIBuild={true}
+								/>
 							)}
-							{c === ItemCategory.Helm && <CardColumn key={i} items={armors} reroll={null} isAIBuild={true} />}
+							{c === ItemCategory.Helm && (
+								<CardColumn key={i} items={armors} reroll={null} setNumItems={null} isAIBuild={true} />
+							)}
 						</React.Fragment>
 					))}{" "}
 			</div>
