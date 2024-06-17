@@ -10,7 +10,7 @@ export default function Navbar() {
 	const { theme, setTheme } = themeContext;
 
 	return (
-		<div className="drawer z-10">
+		<div className="drawer z-10 font-['Cormorant_Garamond']">
 			<input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
 			<div className="drawer-content flex flex-col">
 				{/* Navbar */}

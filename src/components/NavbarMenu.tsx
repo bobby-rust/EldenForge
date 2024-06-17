@@ -1,15 +1,64 @@
 import { useNavigate } from "react-router-dom";
+import { IoCopyOutline } from "react-icons/io5";
+import { LuCopyCheck } from "react-icons/lu";
+import React from "react";
+import { toast } from "sonner";
+
+const ToastMessage = () => {
+	return (
+		<div className="flex justify-between w-full items-center">
+			<div className="flex flex-col justify-center">
+				<h1 className="font-semibold">Copied!</h1>
+				<p>Link copied to clipboard</p>
+			</div>
+			<button className="btn" onClick={() => toast.dismiss()}>
+				Okay
+			</button>
+		</div>
+	);
+};
+
 export default function NavbarMenu({ theme, setTheme }: { theme: string; setTheme: (theme: string) => void }) {
+	const [copied, setCopied] = React.useState(false);
+
 	const navigate = useNavigate();
+	const copyUrl = () => {
+		const textToCopy = window.location.href;
+		navigator.clipboard.writeText(textToCopy);
+		setCopied(true);
+		toast(<ToastMessage />);
+	};
+
+	React.useEffect(() => {
+		const timer = setTimeout(() => {
+			setCopied(false);
+		}, 4000);
+
+		return () => clearInterval(timer);
+	}, [copied]);
 
 	const regexp = new RegExp("/ai/*");
 	return (
-		<div className="flex flex-col lg:flex-row overflow-hidden">
-			<li>
+		<div className="flex flex-col lg:flex-row justify-center items-center overflow-hidden gap-4">
+			<li className="h-16">
+				<button onClick={copyUrl} className="h-full btn btn-secondary">
+					{copied ? <LuCopyCheck /> : <IoCopyOutline />}
+					Copy Build URL
+				</button>
+			</li>
+			<li className="h-16">
+				<button
+					className="btn btn-lg btn-secondary ml-4 text-center mr-2 h-full"
+					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
+				>
+					{regexp.test(window.location.href) ? "Random Builds" : "AI Builds"}
+				</button>
+			</li>
+			<li className="h-16">
 				<select
-					className="select select-lg text-slate-700 focus:text-slate-100 z-50  focus:bg-slate-900 hover:text-slate-100 hover:bg-slate-900 select-bordered w-full"
+					className="select z-50 select-secondary select-lg select-bordered w-full"
 					data-choose-theme
-					data-theme="light"
+					data-theme
 					value={theme}
 					onChange={(e) => setTheme(e.target.value)}
 				>
@@ -49,14 +98,6 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 					<option value="nord">Nord</option>
 					<option value="sunset">Sunset</option>
 				</select>
-			</li>
-			<li>
-				<button
-					className="btn btn-lg ml-4 text-center mr-2"
-					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
-				>
-					{regexp.test(window.location.href) ? "Random Builds" : "AI Builds"}
-				</button>
 			</li>
 		</div>
 	);

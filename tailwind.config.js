@@ -1,69 +1,95 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-	content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+module.exports = {
+	jit: true,
+	darkMode: ["class"],
+	content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+	prefix: "",
 	theme: {
-		extend: {
-			gridAutoColumns: {
-				autofit: "repeat(auto-fit, minmax(200px, 1fr))",
+		container: {
+			center: true,
+			padding: "2rem",
+			screens: {
+				"2xl": "1400px",
 			},
+		},
+		extend: {
+			// colors: {
+			// 	border: "hsl(var(--border))",
+			// 	input: "hsl(var(--input))",
+			// 	ring: "hsl(var(--ring))",
+			// 	background: "hsl(var(--background))",
+			// 	foreground: "hsl(var(--foreground))",
+			// 	// primary: {
+			// 	// 	DEFAULT: "hsl(var(--primary))",
+			// 	// 	foreground: "hsl(var(--primary-foreground))",
+			// 	// },
+			// 	// secondary: {
+			// 	// 	DEFAULT: "hsl(var(--secondary))",
+			// 	// 	foreground: "hsl(var(--secondary-foreground))",
+			// 	// },
+			// 	bgSecondary: {
+			// 		DEFAULT: "var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity)))",
+			// 	},
+			// 	destructive: {
+			// 		DEFAULT: "hsl(var(--destructive))",
+			// 		foreground: "hsl(var(--destructive-foreground))",
+			// 	},
+			// 	muted: {
+			// 		DEFAULT: "hsl(var(--muted))",
+			// 		foreground: "hsl(var(--muted-foreground))",
+			// 	},
+			// 	accent: {
+			// 		DEFAULT: "hsl(var(--accent))",
+			// 		foreground: "hsl(var(--accent-foreground))",
+			// 	},
+			// 	popover: {
+			// 		DEFAULT: "hsl(var(--popover))",
+			// 		foreground: "hsl(var(--popover-foreground))",
+			// 	},
+			// 	card: {
+			// 		DEFAULT: "hsl(var(--card))",
+			// 		foreground: "hsl(var(--card-foreground))",
+			// 	},
+			// },
+			// borderRadius: {
+			// 	lg: "var(--radius)",
+			// 	md: "calc(var(--radius) - 2px)",
+			// 	sm: "calc(var(--radius) - 4px)",
+			// },
 			keyframes: {
-				fadeIn: {
-					"0%": { opacity: 0 },
-					"100%": { opacity: 1 },
+				"accordion-down": {
+					from: { height: "0" },
+					to: { height: "var(--radix-accordion-content-height)" },
 				},
-				fadeOut: {
-					"0%": { opacity: 1 },
-					// "99%": { display: "block" },
-					"100%": { opacity: 0 },
+				"accordion-up": {
+					from: { height: "var(--radix-accordion-content-height)" },
+					to: { height: "0" },
 				},
-				// slideDown: {
-				// 	"0%": { transform: "translateY(-360px)" },
-				// 	"100%": { transform: "translateY(100px)" },
-				// },
-				// slideUp: {
-				// 	"0%": { transform: "translateY(460px)" },
-				// 	// "99%": { transform: "translateY(-400px)" },
-				// 	"100%": { transform: "translateY(0px)" },
-				// },
 			},
 			animation: {
-				fadeIn: "fadeIn 0.5s ease-in-out forwards",
-				fadeOut: "fadeOut 0.5s ease-in-out forwards",
-				// slideDown: "slideDown 0.5s ease-in-out forwards",
-				// slideUp: "slideUp 0.5s ease-in-out forwards",
+				"accordion-down": "accordion-down 0.2s ease-out",
+				"accordion-up": "accordion-up 0.2s ease-out",
 			},
 		},
-		screens: {
-			xs: "320px",
-			sm: "640px",
-			// => @media (min-width: 640px) { ... }
-
-			md: "930px",
-			// => @media (min-width: 768px) { ... }
-
-			lg: "1032px",
-			// => @media (min-width: 1024px) { ... }
-
-			"2lg": "1050px",
-
-			xl: "1225px",
-			// => @media (min-width: 1280px) { ... }
-
-			"2xl": "1550px",
-			// => @media (min-width: 1536px) { ... }
-
-			"2.5xl": "1800px",
-
-			"3xl": "2048px",
-
-			"4xl": "2560px",
-		},
 	},
-	plugins: [require("daisyui")],
+	plugins: [require("tailwindcss-animate"), require("daisyui")],
 	daisyui: {
 		themes: [
-			"light",
-			"dark",
+			// "light",
+			{
+				light: {
+					...require("daisyui/src/theming/themes")["light"],
+					primary: "#ef8b09",
+					secondary: "#1e293b",
+				},
+			},
+			{
+				dark: {
+					...require("daisyui/src/theming/themes")["dark"],
+					primary: "#ef8b09",
+					secondary: "#94a3b8",
+				},
+			},
 			"cupcake",
 			"bumblebee",
 			"emerald",

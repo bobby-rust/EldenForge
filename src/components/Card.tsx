@@ -21,8 +21,8 @@ export default function Card(props: {
 	// TODO: compress / downscale images for better rendering performance
 	return (
 		<>
-			<div className="flex text-sm flex-col w-60 h-60 bg-slate-100 shadow-xl m-3 rounded-lg">
-				<div className="relative h-full p-3 text-slate-700">
+			<div className="flex text-sm flex-col w-60 h-60 shadow-xl m-3 rounded-lg bg-black bg-opacity-5">
+				<div className="relative h-full p-3">
 					<a href={`${props.item.wikiUrl}`} target="_blank" rel="noreferrer" className="flex">
 						<figure className={`${loading ? "flex justify-center align-center h-[100px] w-[100px]" : ""} w-[50%]`}>
 							<img
@@ -35,7 +35,7 @@ export default function Card(props: {
 							/>
 						</figure>
 						<div className="flex justify-center w-[50%]">
-							<h6 className="text-[18px] text-black font-semibold overflow-hidden whitespace-pre-wrap">{name}</h6>
+							<h6 className="text-[18px] font-semibold overflow-hidden whitespace-pre-wrap">{name}</h6>
 						</div>
 						{(props.item.dmgNegation || props.item.resistance) && (
 							<div className="absolute inset-0 rounded-x-lg rounded-t-lg bg-black bg-opacity-80 flex justify-center items-center text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
@@ -121,12 +121,12 @@ export default function Card(props: {
 						</div>
 					)}
 				</div>
-				<div className="flex flex-col justify-center items-center text-center w-full">
-					<div className="bg-slate-400 w-full h-10 flex justify-end items-center p-2 rounded-b-lg">
+				<div className="flex flex-col justify-center items-center text-center w-full bg-secondary rounded-b-lg">
+					<div className="w-full h-10 flex justify-end items-center p-2">
 						{!props.isAIBuild && (
 							<button
 								onClick={() => props.reroll?.(props.item.category, props.item.index)}
-								className="btn btn-primary btn-sm h-6 min-h-6 rounded-md"
+								className="btn btn-primary btn-sm h-6 min-h-6"
 							>
 								Reroll Item
 							</button>
