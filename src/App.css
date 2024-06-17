@@ -10,6 +10,10 @@
   font-family: "Cormorant Garamond";
 }
 
+* {
+    font-family: "Cormorant Garamond";
+}
+
 :root {
     --primary: "#ef8b09";
     --secondary: "#94a3b8";
