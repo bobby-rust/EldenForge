@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-	jit: true,
 	darkMode: ["class"],
 	content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
 	prefix: "",
@@ -13,49 +12,6 @@ module.exports = {
 			},
 		},
 		extend: {
-			// colors: {
-			// 	border: "hsl(var(--border))",
-			// 	input: "hsl(var(--input))",
-			// 	ring: "hsl(var(--ring))",
-			// 	background: "hsl(var(--background))",
-			// 	foreground: "hsl(var(--foreground))",
-			// 	// primary: {
-			// 	// 	DEFAULT: "hsl(var(--primary))",
-			// 	// 	foreground: "hsl(var(--primary-foreground))",
-			// 	// },
-			// 	// secondary: {
-			// 	// 	DEFAULT: "hsl(var(--secondary))",
-			// 	// 	foreground: "hsl(var(--secondary-foreground))",
-			// 	// },
-			// 	bgSecondary: {
-			// 		DEFAULT: "var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity)))",
-			// 	},
-			// 	destructive: {
-			// 		DEFAULT: "hsl(var(--destructive))",
-			// 		foreground: "hsl(var(--destructive-foreground))",
-			// 	},
-			// 	muted: {
-			// 		DEFAULT: "hsl(var(--muted))",
-			// 		foreground: "hsl(var(--muted-foreground))",
-			// 	},
-			// 	accent: {
-			// 		DEFAULT: "hsl(var(--accent))",
-			// 		foreground: "hsl(var(--accent-foreground))",
-			// 	},
-			// 	popover: {
-			// 		DEFAULT: "hsl(var(--popover))",
-			// 		foreground: "hsl(var(--popover-foreground))",
-			// 	},
-			// 	card: {
-			// 		DEFAULT: "hsl(var(--card))",
-			// 		foreground: "hsl(var(--card-foreground))",
-			// 	},
-			// },
-			// borderRadius: {
-			// 	lg: "var(--radius)",
-			// 	md: "calc(var(--radius) - 2px)",
-			// 	sm: "calc(var(--radius) - 4px)",
-			// },
 			keyframes: {
 				"accordion-down": {
 					from: { height: "0" },
@@ -71,11 +27,35 @@ module.exports = {
 				"accordion-up": "accordion-up 0.2s ease-out",
 			},
 		},
+		screens: {
+			xs: "320px",
+			sm: "640px",
+			// => @media (min-width: 640px) { ... }
+
+			md: "930px",
+			// => @media (min-width: 768px) { ... }
+
+			lg: "1032px",
+			// => @media (min-width: 1024px) { ... }
+
+			"2lg": "1050px",
+
+			xl: "1225px",
+			// => @media (min-width: 1280px) { ... }
+
+			"2xl": "1550px",
+			// => @media (min-width: 1536px) { ... }
+
+			"2.5xl": "1800px",
+
+			"3xl": "2048px",
+
+			"4xl": "2560px",
+		},
 	},
 	plugins: [require("tailwindcss-animate"), require("daisyui")],
 	daisyui: {
 		themes: [
-			// "light",
 			{
 				light: {
 					...require("daisyui/src/theming/themes")["light"],
@@ -87,7 +67,7 @@ module.exports = {
 				dark: {
 					...require("daisyui/src/theming/themes")["dark"],
 					primary: "#ef8b09",
-					secondary: "#94a3b8",
+					secondary: "#475569",
 				},
 			},
 			"cupcake",
