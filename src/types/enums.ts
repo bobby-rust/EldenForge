@@ -40,3 +40,16 @@ export enum ItemCategory {
 	Spirits = "spirits",
 	Talismans = "talismans",
 }
+
+export enum UIItemCategory {
+	Armors = "Armors",
+	Weapons = "Weapons",
+	Shields = "Shields",
+	Classes = "Starting Class",
+	Tears = "Crystal Tears",
+	Incants = "Incantations",
+	Seals = "Sacred Seals",
+	Spirits = "Spirit Ashes",
+	Talismans = "Talismans",
+	Sorcs = "Sorceries",
+}

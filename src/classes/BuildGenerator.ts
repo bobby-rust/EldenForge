@@ -238,6 +238,9 @@ export default class BuildGenerator {
 	public parseBuildFromMap(map: Map<ItemCategory, number[]>): Map<ItemCategory, Item[]> {
 		this.resetItems();
 		for (const [key, val] of map) {
+			if (val.length === 0) {
+				this._build._items.set(key, []);
+			}
 			val.forEach((val: number) => {
 				if (isNaN(val)) {
 					return;

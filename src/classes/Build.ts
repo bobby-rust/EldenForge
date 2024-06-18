@@ -47,6 +47,7 @@ export class Build {
 		const items = new Map<ItemCategory, Item[]>();
 
 		this._items.forEach((value, key) => {
+			items.set(key, []);
 			value.forEach((index) => {
 				if (index === -1) return;
 				if (!Object.values(ItemCategory).includes(key)) return;

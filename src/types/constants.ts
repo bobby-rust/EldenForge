@@ -6,6 +6,19 @@ export const ArmorCategories = new Set([
 	ItemCategory.Leg,
 ]);
 
+export const readableItemCategory = new Map<ItemCategory, string>([
+	[ItemCategory.Weapons, "Weapons"],
+	[ItemCategory.Helm, "Armors"],
+	[ItemCategory.Ashes, "Ashes Of War"],
+	[ItemCategory.Incants, "Incantations"],
+	[ItemCategory.Sorcs, "Sorceries"],
+	[ItemCategory.Talismans, "Talismans"],
+	[ItemCategory.Spirits, "Spirit Ashes"],
+	[ItemCategory.Shields, "Shields"],
+	[ItemCategory.Tears, "Crystal Tears"],
+	[ItemCategory.Seals, "Sacred Seals"],
+]);
+
 export const buildInspirations = `ELDEN RING SPELLSWORD BUILD (ALL GAME)
 Spellblade is a quality build that utilizes Claymore and Glintblade Phalanx Ashes of War. Primarily scales with strength and intelligence and heavily relies on periodic stance-breaking and critical hits. Rendering enemies unable to retaliate.
 

@@ -56,8 +56,13 @@ export default function Build() {
 			});
 			setArmors(newArmors);
 		}
+
+		console.log(build);
 	}, [build]);
 
+	React.useEffect(() => {
+		console.log(armors);
+	}, [armors]);
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
 			<div className="App px-14 py-8">
@@ -67,19 +72,18 @@ export default function Build() {
 					</button>
 				</div>
 				<div className="flex justify-center align-center max-w-full">
-					{/* <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 "> */}
 					<div className="grid grid-cols-1 sm:grid-cols-2 2lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 2.5xl:grid-cols-6 3xl:grid-cols-7 4xl:grid-cols-8 gap-4 auto-cols-auto">
 						{build &&
 							[...build.keys()].map((c: ItemCategory, i: number) => (
 								<>
-									{/* TODO: fix this garbage */}
-									{!ArmorCategories.has(c) && (
+									{!ArmorCategories.has(c) && c !== ItemCategory.Classes && (
 										<CardColumn
 											key={i}
 											items={build.get(c) ?? []}
 											reroll={handleRerollItem}
 											setNumItems={handleChangeNumItems}
 											isAIBuild={false}
+											category={c}
 										/>
 									)}
 									{c === ItemCategory.Helm && (
@@ -89,6 +93,7 @@ export default function Build() {
 											reroll={handleRerollItem}
 											setNumItems={handleChangeNumItems}
 											isAIBuild={false}
+											category={c}
 										/>
 									)}
 								</>
