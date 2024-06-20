@@ -6,10 +6,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.App {
-  font-family: "Cormorant Garamond";
-}
-
 * {
     font-family: "Cormorant Garamond";
 }

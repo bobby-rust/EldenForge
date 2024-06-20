@@ -12,13 +12,17 @@ export default function CardColumn(props: {
 	setNumItems: ((c: ItemCategory, numItems: number) => void) | null;
 	isAIBuild: boolean;
 	category: ItemCategory;
+	regenerateCategory: ((c: ItemCategory) => void) | null;
 }) {
-	console.log(props);
-	console.log(props.items[0]);
-
 	const [selectNumItems, setSelectNumItems] = React.useState(
 		typeof props.items[0] !== "undefined" ? defaultBuildGenerationConfig[props.items[0].category].buildNums : 0
 	);
+
+	const handleAddCategory = () => {
+		props.regenerateCategory?.(props.category);
+		setSelectNumItems(defaultBuildGenerationConfig[props.category].buildNums);
+		props.setNumItems?.(props.category, defaultBuildGenerationConfig[props.category].buildNums);
+	};
 
 	const handleChangeNumItems = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const numItems = parseInt(e.target.value);
@@ -30,9 +34,12 @@ export default function CardColumn(props: {
 		setSelectNumItems(props.items.length);
 	}, [props.items]);
 
+	if (props.category === ItemCategory.Classes) return null;
 	return (
 		<div className="flex justify-center">
-			{props.items.length === 0 && <AddCategoryButton category={props.category} />}
+			{props.items.length === 0 && (
+				<AddCategoryButton category={props.category} regenerateCategory={handleAddCategory} />
+			)}
 			{props.items.length > 0 && (
 				<div className="flex flex-col">
 					{!props.isAIBuild ? (

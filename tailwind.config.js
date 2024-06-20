@@ -21,10 +21,57 @@ module.exports = {
 					from: { height: "var(--radix-accordion-content-height)" },
 					to: { height: "0" },
 				},
+				"fade-in": {
+					from: { opacity: 0 },
+					to: { opacity: 1 },
+				},
+
+				"border-shine": {
+					"100%": {
+						transform: "rotate(-360deg)",
+					},
+				},
+
+				"slide-down": {
+					"0%": { transform: "translateY(-15%)", opacity: 0 },
+					"25%": { opacity: 0 },
+					"100%": { transform: "translateY(0)", opacity: 1 },
+				},
+
+				"slide-up": {
+					"0%": { transform: "translateY(0)", opacity: 1 },
+					"50%": { opacity: 0 },
+					"100%": { transform: "translateY(-15%)", opacity: 0 },
+				},
+				"grid-slide-down": {
+					from: { transform: "translateY(var(--description-height))" },
+					to: { transform: "translateY(0)" },
+				},
+				"grid-slide-up": {
+					from: { transform: "translateY(0)" },
+					to: { transform: "translateY(var(--description-height))" },
+				},
+				"landing-slide-up": {
+					from: { transform: "translateY(100%)", opacity: 0 },
+					"50%": { opacity: 0.25 },
+					to: { transform: "translateY(0)", opacity: 1 },
+				},
+				wiggle: {
+					"0%, 100%": { transform: "rotate(-0.3deg)" },
+					"50%": { transform: "rotate(0.3deg)" },
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
+				"fade-in": "fade-in 0.4s ease-out",
+				wiggle: "wiggle 0.5s ease-in-out infinite",
+				"description-slide-down": "slide-down 0.5s ease-out",
+				"description-slide-up": "slide-up 0.2s ease-out forwards",
+				"grid-slide-down": "grid-slide-down 0.5s ease-out",
+				"grid-slide-up": "grid-slide-up 0.5s ease-out forwards",
+				"landing-slide-up": "landing-slide-up 0.5s ease-out",
+				"border-shine": "border-shine 3s ease-in-out infinite",
 			},
 		},
 		screens: {

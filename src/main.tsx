@@ -2,12 +2,12 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Build from "./components/Build";
 import AIBuild from "./components/AIBuild";
 import AIApp from "./components/AIApp";
 import Navbar from "./components/Navbar";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
+import Footer from "./components/Footer";
 
 const Err = () => (
 	<div className="flex justify-center items-center h-screen">
@@ -21,13 +21,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 		<ThemeProvider>
 			<Navbar />
 			<Routes>
-				<Route path="/" element={<App />} />
 				<Route path="/ai" element={<AIApp />} />
 				<Route path="/ai/:buildUrl" element={<AIBuild />} />
-				<Route path="/:buildUrl" element={<Build />} />
-				<Route path="/*" element={<Err />} />
+				<Route path="/:buildUrl" element={<App />} />
+				<Route path="/" element={<App />} />
+				<Route path="*" element={<Err />} />
 			</Routes>
 			<Toaster />
+			<Footer />
 		</ThemeProvider>
 	</BrowserRouter>
 	// </React.StrictMode>

@@ -2,22 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { IoCopyOutline } from "react-icons/io5";
 import { LuCopyCheck } from "react-icons/lu";
 import React from "react";
+import { ToastMessage } from "./ToastMessage";
 import { toast } from "sonner";
-
-const ToastMessage = () => {
-	return (
-		<div className="flex justify-between w-full items-center">
-			<div className="flex flex-col justify-center">
-				<h1 className="font-semibold">Copied!</h1>
-				<p>Link copied to clipboard</p>
-			</div>
-			<button className="btn" onClick={() => toast.dismiss()}>
-				Okay
-			</button>
-		</div>
-	);
-};
-
 export default function NavbarMenu({ theme, setTheme }: { theme: string; setTheme: (theme: string) => void }) {
 	const [copied, setCopied] = React.useState(false);
 
@@ -26,7 +12,17 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 		const textToCopy = window.location.href;
 		navigator.clipboard.writeText(textToCopy);
 		setCopied(true);
-		toast(<ToastMessage />);
+		toast(
+			<ToastMessage
+				title="Copied!"
+				message="The link has been copied to your clipboard."
+				buttons={
+					<button className="btn" onClick={() => toast.dismiss()}>
+						Okay
+					</button>
+				}
+			/>
+		);
 	};
 
 	React.useEffect(() => {
@@ -37,26 +33,31 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 		return () => clearInterval(timer);
 	}, [copied]);
 
-	const regexp = new RegExp("/ai/*");
+	const isAIPage = new RegExp("/ai/*");
+	const isLandingPage = new RegExp("/$");
 	return (
 		<div className="flex flex-col lg:flex-row justify-center items-center overflow-hidden gap-4">
 			<li className="h-16">
-				<button onClick={copyUrl} className="h-full btn btn-secondary">
-					{copied ? <LuCopyCheck /> : <IoCopyOutline />}
-					Copy Build URL
-				</button>
+				{!isLandingPage.test(window.location.href) && (
+					<button onClick={copyUrl} className="h-full btn btn-sm btn-secondary w-36">
+						{copied ? <LuCopyCheck /> : <IoCopyOutline />}
+						Copy Build URL
+					</button>
+				)}
 			</li>
 			<li className="h-16">
-				<button
-					className="btn btn-lg btn-secondary ml-4 text-center mr-2 h-full"
-					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
-				>
-					{regexp.test(window.location.href) ? "Random Builds" : "AI Builds"}
-				</button>
+				{!isLandingPage.test(window.location.href) && (
+					<button
+						className="btn btn-sm btn-secondary w-36 text-center h-full"
+						onClick={isAIPage.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
+					>
+						{isAIPage.test(window.location.href) ? "Random Builds" : "AI Generated Builds"}
+					</button>
+				)}
 			</li>
-			<li className="h-16">
+			<li className="h-16 flex items-center justify-center">
 				<select
-					className="select z-50 select-secondary select-lg select-bordered w-full"
+					className="select z-50 select-secondary select-bordered w-full overflow-hidden"
 					data-choose-theme
 					data-theme
 					value={theme}

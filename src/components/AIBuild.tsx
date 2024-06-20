@@ -18,6 +18,9 @@ export default function AIBuild() {
 	const [countdown, setCountdown] = React.useState(0);
 	const [disabled, setDisabled] = React.useState(false);
 
+	const descriptionRef: React.MutableRefObject<HTMLDivElement | null> = React.useRef(null);
+	const [descriptionHeight, setDescriptionHeight] = React.useState(0);
+
 	if (!buildUrl) {
 		throw new Error("Invalid path");
 	}
@@ -55,6 +58,10 @@ export default function AIBuild() {
 	}, [countdown]);
 
 	React.useEffect(() => {
+		setDescriptionHeight(descriptionRef.current?.offsetHeight ?? 0);
+	}, [descriptionRef]);
+
+	React.useEffect(() => {
 		if (build) {
 			const newArmors: Item[] = [];
 			[...build.items.keys()].forEach((c: ItemCategory) => {
@@ -69,6 +76,24 @@ export default function AIBuild() {
 	React.useEffect(() => {
 		generator.buildType = buildType;
 	}, [buildType]);
+
+	React.useEffect(() => {
+		const handleResize = () => {
+			if (!descriptionRef || !descriptionRef.current) return;
+			setDescriptionHeight(descriptionRef.current.offsetHeight);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	React.useEffect(() => {
+		if (!descriptionRef || !descriptionRef.current) return;
+		!showDescription && setDescriptionHeight(descriptionRef.current.offsetHeight + 80);
+	}, [showDescription]);
 
 	return (
 		<div className="flex flex-col justify-center items-center xl:px-14 py-8 ">
@@ -94,7 +119,7 @@ export default function AIBuild() {
 				</div>
 				<div className="flex justify-center items-center w-1/3 p-3">
 					<button
-						className={`btn btn-lg btn-primary ${loading && "loading loading-dots"}`}
+						className={`btn btn-lg hover:animate-wiggle btn-primary ${loading && "loading loading-dots"}`}
 						disabled={disabled}
 						onClick={handleRegenerateAIBuild}
 						aria-disabled={disabled}
@@ -151,48 +176,60 @@ export default function AIBuild() {
 					</button>
 				</div>
 			</div>
-			{build && (
-				<div className={`max-w-[80vw] md:max-w-[70vw] xl:max-w-[60vw] mb-20 ${showDescription ? "" : "hidden"}`}>
-					<div className="w-full bg-gray-100 text-center p-2 relative">
-						<h1 className="font-bold text-slate-800 text-2xl self-start">{build.name}</h1>
-						<button
-							className="btn btn-sm btn-square absolute right-1.5 top-1.5"
-							onClick={() => setShowDescription(false)}
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="h-6 w-6"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
+			<div className={`flex justify-center items-center flex-col w-full `}>
+				{build && (
+					<div
+						className={`max-w-[80vw] md:max-w-[70vw] xl:max-w-[60vw] mb-20 ${
+							showDescription ? "animate-description-slide-down" : "animate-description-slide-up"
+						}`}
+						ref={descriptionRef}
+					>
+						<div className="w-full bg-gray-100 text-center p-2 relative">
+							<h1 className="font-bold text-slate-800 text-2xl self-start">{build.name}</h1>
+							<button
+								className="btn btn-sm btn-square absolute right-1.5 top-1.5"
+								onClick={() => setShowDescription(false)}
 							>
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-							</svg>
-						</button>
-					</div>
-					<div className="flex justify-center items-center rounded-lg shadow-lg p-8 h-full">
-						<div className="flex w-full justify-center items-center pb-6">
-							<div className="flex flex-col sm:flex-row leading-relaxed justify-center items-center">
-								<div className="sm:w-1/2 mr-2 text-center text-lg">
-									<h1 className="font-semibold">Summary</h1>
-									<p>{build.summary}</p>
-								</div>
-								<div className="sm:w-1/2 ml-2 text-center text-lg h-full">
-									<div className="w-full">
-										<h1 className="font-semibold">Strengths</h1>
-										<p>{build.strengths}</p>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-6 w-6"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+								</svg>
+							</button>
+						</div>
+						<div className="flex justify-center items-center rounded-lg shadow-lg p-8 h-full">
+							<div className="flex w-full justify-center items-center pb-6">
+								<div className="flex flex-col sm:flex-row leading-relaxed justify-center items-center">
+									<div className="sm:w-1/2 mr-2 text-center text-lg">
+										<h1 className="font-semibold">Summary</h1>
+										<p>{build.summary}</p>
 									</div>
-									<div className="w-full">
-										<h1 className="font-semibold">Weaknesses</h1>
-										<p>{build.weaknesses}</p>
+									<div className="sm:w-1/2 ml-2 text-center text-lg h-full">
+										<div className="w-full">
+											<h1 className="font-semibold">Strengths</h1>
+											<p>{build.strengths}</p>
+										</div>
+										<div className="w-full">
+											<h1 className="font-semibold">Weaknesses</h1>
+											<p>{build.weaknesses}</p>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			)}
-			<div className="grid grid-cols-1 sm:grid-cols-2 2lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 2.5xl:grid-cols-6 3xl:grid-cols-7 4xl:grid-cols-8 gap-4 auto-cols-auto">
+				)}
+			</div>
+			<div
+				className={`grid grid-cols-1 sm:grid-cols-2 2lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 2.5xl:grid-cols-6 3xl:grid-cols-7 4xl:grid-cols-8 gap-4 ${
+					showDescription ? "animate-grid-slide-down" : "animate-grid-slide-up"
+				}`}
+				style={{ "--description-height": `-${descriptionHeight}px` } as React.CSSProperties}
+			>
 				{build &&
 					[...build.items.keys()].map((c: ItemCategory, i: number) => (
 						<React.Fragment key={i}>
@@ -204,10 +241,20 @@ export default function AIBuild() {
 									reroll={null}
 									setNumItems={null}
 									isAIBuild={true}
+									category={c}
+									regenerateCategory={null}
 								/>
 							)}
 							{c === ItemCategory.Helm && (
-								<CardColumn key={i} items={armors} reroll={null} setNumItems={null} isAIBuild={true} />
+								<CardColumn
+									key={i}
+									items={armors}
+									reroll={null}
+									setNumItems={null}
+									isAIBuild={true}
+									category={c}
+									regenerateCategory={null}
+								/>
 							)}
 						</React.Fragment>
 					))}{" "}

@@ -52,6 +52,23 @@ export default class BuildGenerator {
 		this._buildGenerationConfig[category].buildNums = numItems;
 	}
 
+	public generateItemsForCategory(category: ItemCategory) {
+		this._buildGenerationConfig[category].previouslyRolled.clear();
+		this._buildGenerationConfig[category].buildNums = defaultBuildGenerationConfig[category].buildNums;
+
+		// This function should only be called when the build has no items for the category
+		if (this._build._items.get(category)?.length !== 0) {
+			return this._build._items;
+		}
+
+		for (let i = 0; i < defaultBuildGenerationConfig[category].buildNums; i++) {
+			const item = this.generateItem(category);
+			typeof item !== "undefined" && this._build.addItem(category, item);
+		}
+
+		return this._build._items;
+	}
+
 	private createAIUrlFromAIBuild(build: AIBuildType): string {
 		const buildMap = new Map<ItemCategory, number[]>();
 		build.items.forEach((value, key) => {
@@ -77,6 +94,9 @@ export default class BuildGenerator {
 	}
 
 	public rerollItem(category: ItemCategory, oldItem: number): Map<ItemCategory, number[]> {
+		// category === ItemCategory.Seals &&
+		// console.log("Previously rolled seals: ", this._buildGenerationConfig[category].previouslyRolled);
+
 		const newItem = this.generateItem(category);
 		if (typeof newItem === "undefined") return this._build._items;
 		this._build.replaceItem(category, oldItem, newItem);
@@ -87,9 +107,10 @@ export default class BuildGenerator {
 	/**
 	 * Generates a Build object from a base64 encoded URL.
 	 * @param encoded The base64 encoded url.
-	 * @returns {Build} A build object cont_aining the items of `encoded`
+	 * @returns {Build} A build object containing the items of `encoded`
 	 */
 	public generateBuildFromUrl(encoded: string): Map<ItemCategory, Item[]> {
+		if (encoded === "") return new Map<ItemCategory, Item[]>();
 		const url = encoded;
 		const buildMap = this.parseBuildMapFromUrl(url);
 		const build: Map<ItemCategory, Item[]> = this.parseBuildFromMap(buildMap);
@@ -101,8 +122,7 @@ export default class BuildGenerator {
 	 * If `_excludePreviouslyRolled` is true, it generates an index of an unrolled item.
 	 *
 	 * @param {ItemCategory} category - The category of the item to generate.
-	 * @returns {number} - The index of the generated item.
-	 *                     -1 if all items in the category have been rolled.
+	 * @returns {number | undefined} - The index of the generated item or undefined if all items in the category have been rolled.
 	 */
 	public generateItem(category: ItemCategory): number | undefined {
 		// Get the count of items in the category
@@ -114,6 +134,9 @@ export default class BuildGenerator {
 		// Get the set of previously rolled items for the category
 		const prevRolledItems = this._buildGenerationConfig[category].previouslyRolled;
 
+		// wtf is going on
+		// category === ItemCategory.Seals && console.log(`PreviouslyRolled ${category}: `, prevRolledItems);
+
 		// If all items in the category have been rolled, return -1
 		if (prevRolledItems.size >= count) {
 			return;
@@ -124,6 +147,9 @@ export default class BuildGenerator {
 		while (this._buildGenerationConfig[category].excludePreviouslyRolled && prevRolledItems.has(randomIndex)) {
 			randomIndex = Math.floor(Math.random() * count);
 		}
+
+		// Add the generated index to the set of previously rolled items
+		this.addItemToPreviouslyRolled(category, randomIndex);
 
 		// Return the generated index
 		return randomIndex;
@@ -178,7 +204,7 @@ export default class BuildGenerator {
 					return;
 				}
 
-				this.addItemToPreviouslyRolled(category, num);
+				// this.addItemToPreviouslyRolled(category, num);
 				url += i === items.length - 1 ? num.toString() : num.toString() + ",";
 			});
 		}
@@ -227,6 +253,14 @@ export default class BuildGenerator {
 	 */
 	private addItemToPreviouslyRolled(category: ItemCategory, item: number) {
 		this._buildGenerationConfig[category].previouslyRolled.add(item);
+	}
+
+	public addItemsToPreviouslyRolled(items: Map<ItemCategory, number[]>) {
+		items.forEach((items, category) => {
+			items.forEach((item) => {
+				this.addItemToPreviouslyRolled(category, item);
+			});
+		});
 	}
 
 	/**
