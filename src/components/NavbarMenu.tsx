@@ -20,22 +20,22 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 				width < 1032 ? "flex-col-reverse" : ""
 			}`}
 		>
-			<div>
+			<div className="h-16 flex justify-center items-center w-60 lg:w-auto">
 				<a href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
 					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=efb809&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
 				</a>
 			</div>
-			<li className="h-16">
+			<li className="h-16 flex justify-center items-center">
 				<button
-					className="btn btn-lg btn-secondary ml-4 text-center mr-2 h-full"
+					className="btn btn-secondary text-center w-60 lg:w-28"
 					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
 				>
-					{regexp.test(window.location.href) ? "Random Builds" : "AI Builds"}
+					{regexp.test(window.location.href) ? "Randomizer" : "AI Builds"}
 				</button>
 			</li>
-			<li className="h-16">
+			<li className="h-16 flex justify-center items-center w-60 lg:w-28">
 				<select
-					className="select z-50 select-secondary select-lg select-bordered w-full"
+					className="select z-50 select-secondary select-bordered w-full overflow-hidden"
 					data-choose-theme
 					data-theme
 					value={theme}

@@ -93,7 +93,7 @@ export default function Build() {
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
 			<div className="App px-14 pb-8">
-				<div className="flex flex-col xl:flex-row w-full justify-evenly items-center gap-5 p-10">
+				<div className="flex flex-col xl:flex-row w-full justify-evenly items-center gap-5 sm:p-10">
 					<div className="w-1/3 h-1"></div>
 					<div className="flex justify-center items-center w-1/3">
 						<button className="btn btn-lg btn-primary" onClick={handleReroll}>
@@ -101,7 +101,7 @@ export default function Build() {
 						</button>
 					</div>
 					<div className="flex justify-center items-center w-1/3 mr-0 xl:mr-6">
-						<button onClick={copyUrl} className="h-full btn btn-secondary">
+						<button onClick={copyUrl} className="btn btn-lg">
 							{copied ? <LuCopyCheck /> : <IoCopyOutline />}
 							Copy Build URL
 						</button>

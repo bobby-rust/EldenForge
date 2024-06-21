@@ -12,7 +12,7 @@ export default function CardColumn(props: {
 }) {
 	if (props.items.length === 0) return null;
 	if (props.items[0].category === ItemCategory.Classes) return null;
-
+	const [width, setWidth] = React.useState(window.innerWidth);
 	const [selectNumItems, setSelectNumItems] = React.useState(
 		defaultBuildGenerationConfig[props.items[0].category].buildNums
 	);
@@ -39,6 +39,15 @@ export default function CardColumn(props: {
 	React.useEffect(() => {
 		setSelectNumItems(props.items.length);
 	}, [props.items]);
+
+	React.useEffect(() => {
+		function handleResize() {
+			setWidth(window.innerWidth);
+		}
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	return (
 		<>
@@ -76,9 +85,9 @@ export default function CardColumn(props: {
 								4 {readableItemCategory.get(props.items[0].category)}
 							</option>
 						</select>
-					) : (
+					) : width > 640 ? (
 						<div className="h-12"></div>
-					)
+					) : null
 				) : null}
 				<h1 className="text-center text-xl font-bold p-3">{readableItemCategory.get(props.items[0].category)}</h1>
 				{props.items.map((item: Item, i: number) => (
