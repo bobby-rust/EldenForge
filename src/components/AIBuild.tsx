@@ -17,7 +17,7 @@ export default function AIBuild() {
 	const [loading, setLoading] = React.useState(false);
 	const [countdown, setCountdown] = React.useState(0);
 	const [disabled, setDisabled] = React.useState(false);
-
+	const [width, setWidth] = React.useState(window.innerWidth);
 	if (!buildUrl) {
 		throw new Error("Invalid path");
 	}
@@ -70,6 +70,15 @@ export default function AIBuild() {
 		generator.buildType = buildType;
 	}, [buildType]);
 
+	React.useEffect(() => {
+		function handleResize() {
+			setWidth(window.innerWidth);
+		}
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
 	return (
 		<div className="flex flex-col justify-center items-center xl:px-14 py-8 ">
 			<div className="flex flex-col items-center xl:flex-row justify-evenly w-full mb-10">
@@ -103,7 +112,7 @@ export default function AIBuild() {
 						<span>
 							{disabled
 								? `Wait ${countdown}s...`
-								: window.innerWidth < 400
+								: width < 400
 								? "Ask Gideon"
 								: "Ask Sir Gideon Ofnir, The All-Knowing"}
 						</span>

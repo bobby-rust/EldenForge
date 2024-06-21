@@ -8,6 +8,7 @@ import AIApp from "./components/AIApp";
 import Navbar from "./components/Navbar";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
+import Footer from "./components/Footer";
 
 const Err = () => (
 	<div className="flex justify-center items-center h-screen">
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 				<Route path="/:buildUrl" element={<Build />} />
 				<Route path="/*" element={<Err />} />
 			</Routes>
+			<Footer />
 			<Toaster />
 		</ThemeProvider>
 	</BrowserRouter>

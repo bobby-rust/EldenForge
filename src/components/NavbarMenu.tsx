@@ -1,51 +1,30 @@
 import { useNavigate } from "react-router-dom";
-import { IoCopyOutline } from "react-icons/io5";
-import { LuCopyCheck } from "react-icons/lu";
 import React from "react";
-import { toast } from "sonner";
-
-const ToastMessage = () => {
-	return (
-		<div className="flex justify-between w-full items-center">
-			<div className="flex flex-col justify-center">
-				<h1 className="font-semibold">Copied!</h1>
-				<p>Link copied to clipboard</p>
-			</div>
-			<button className="btn" onClick={() => toast.dismiss()}>
-				Okay
-			</button>
-		</div>
-	);
-};
-
 export default function NavbarMenu({ theme, setTheme }: { theme: string; setTheme: (theme: string) => void }) {
-	const [copied, setCopied] = React.useState(false);
-
 	const navigate = useNavigate();
-	const copyUrl = () => {
-		const textToCopy = window.location.href;
-		navigator.clipboard.writeText(textToCopy);
-		setCopied(true);
-		toast(<ToastMessage />);
-	};
-
-	React.useEffect(() => {
-		const timer = setTimeout(() => {
-			setCopied(false);
-		}, 4000);
-
-		return () => clearInterval(timer);
-	}, [copied]);
 
 	const regexp = new RegExp("/ai/*");
+
+	const [width, setWidth] = React.useState(window.innerWidth);
+	React.useEffect(() => {
+		function handleResize() {
+			setWidth(window.innerWidth);
+		}
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 	return (
-		<div className="flex flex-col lg:flex-row justify-center items-center overflow-hidden gap-4">
-			<li className="h-16">
-				<button onClick={copyUrl} className="h-full btn btn-secondary">
-					{copied ? <LuCopyCheck /> : <IoCopyOutline />}
-					Copy Build URL
-				</button>
-			</li>
+		<div
+			className={`flex flex-col lg:flex-row justify-center items-center overflow-hidden gap-4 ${
+				width < 1032 ? "flex-col-reverse" : ""
+			}`}
+		>
+			<div>
+				<a href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
+					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=efb809&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
+				</a>
+			</div>
 			<li className="h-16">
 				<button
 					className="btn btn-lg btn-secondary ml-4 text-center mr-2 h-full"

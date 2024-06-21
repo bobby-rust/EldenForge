@@ -1,14 +1,22 @@
 import { useContext } from "react";
 import { ThemeContext } from "./ThemeProvider";
 import NavbarMenu from "./NavbarMenu";
-
+import React from "react";
 export default function Navbar() {
+	const [width, setWidth] = React.useState(window.innerWidth);
 	const themeContext = useContext(ThemeContext);
 	if (!themeContext) {
 		throw new Error("ThemeContext is undefined");
 	}
 	const { theme, setTheme } = themeContext;
+	React.useEffect(() => {
+		function handleResize() {
+			setWidth(window.innerWidth);
+		}
 
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 	return (
 		<div className="drawer z-10 font-['Cormorant_Garamond']">
 			<input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
@@ -30,6 +38,7 @@ export default function Navbar() {
 					<a className="btn btn-ghost px-2 mx-2 w-36 text-2xl font-semibold" href="/">
 						EldenForge
 					</a>
+					<p>Made with ❤️{width > 410 ? " by Bobby Rust" : ""}</p>
 					{/* <div className="flex-none hidden lg:block"> */}
 					<div className="flex-none hidden lg:block">
 						<ul className="menu menu-horizontal">
