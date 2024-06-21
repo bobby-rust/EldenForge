@@ -16,9 +16,11 @@ export default function AIApp() {
 	}, []);
 
 	return (
-		<div className="flex flex-col items-center justify-center align-center p-10 gap-2">
-			<h1 className="text-2xl">Asking Gideon for a build...</h1>
-			<div className="loading loading-spinner h-16 w-16"></div>
+		<div className="flex justify-center p-10 h-[80vh]">
+			<div className="flex flex-col items-center justify-center gap-10">
+				<h1 className="text-2xl 4xl:text-4xl">Asking Gideon for a build...</h1>
+				<div className="loading loading-spinner h-12 w-12"></div>
+			</div>
 		</div>
 	);
 }
