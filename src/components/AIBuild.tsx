@@ -32,8 +32,8 @@ export default function AIBuild() {
 	const { buildUrl } = useParams();
 	const [showDescription, setShowDescription] = React.useState(true);
 	const [loading, setLoading] = React.useState(false);
-	const [countdown, setCountdown] = React.useState(0);
-	const [disabled, setDisabled] = React.useState(false);
+	const [countdown, setCountdown] = React.useState(30);
+	const [disabled, setDisabled] = React.useState(true);
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const [copied, setCopied] = React.useState(false);
 	const copyUrl = () => {
