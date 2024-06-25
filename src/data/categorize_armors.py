@@ -50,7 +50,7 @@ with open(indir, "r") as fi:
             gauntlets["count"] += 1
             gauntlets["items"].append(item)
 
-    outdir = path.join(cwd, "src/data/new_data.json")
+    outdir = path.join(cwd, "src/data/new_new_data.json")
 
     with open(outdir, "w") as fo:
         for category in data:

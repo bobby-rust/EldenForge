@@ -41,6 +41,7 @@ type BuildInfo = {
 };
 
 type BuildGenerationConfig = {
+	includeDlc: boolean;
 	helms: BuildInfo;
 	chests: BuildInfo;
 	gauntlets: BuildInfo;
@@ -55,10 +56,11 @@ type BuildGenerationConfig = {
 	tears: BuildInfo;
 	incants: BuildInfo;
 	seals: BuildInfo;
-	[key: string]: BuildInfo;
+	[key: string]: BuildInfo | boolean;
 };
 
 const defaultBuildGenerationConfig: BuildGenerationConfig = {
+	includeDlc: true,
 	helms: {
 		excludePreviouslyRolled: true,
 		buildNums: 1,

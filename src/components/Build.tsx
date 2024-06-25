@@ -10,6 +10,7 @@ import { ArmorCategories } from "../types/constants";
 import { toast } from "sonner";
 import { IoCopyOutline } from "react-icons/io5";
 import { LuCopyCheck } from "react-icons/lu";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ToastMessage = () => {
 	return (
@@ -30,8 +31,9 @@ const generator = new BuildGenerator();
 // TODO: Make this a reusable component to use with AI builds.
 export default function Build() {
 	const [armors, setArmors] = React.useState<Item[]>([]);
-
 	const [copied, setCopied] = React.useState(false);
+	const [includeSote, setIncludeSote] = React.useState(true);
+
 	const copyUrl = () => {
 		const textToCopy = window.location.href;
 		navigator.clipboard.writeText(textToCopy);
@@ -54,7 +56,7 @@ export default function Build() {
 	const navigate = useNavigate();
 
 	const [build, setBuild] = React.useState<Map<ItemCategory, Item[]> | null>(generator.generateBuildFromUrl(buildUrl));
-
+	const [width, setWidth] = React.useState(window.innerWidth);
 	const handleReroll = () => {
 		// if i keep track of the state of the build separately, i can avoid refreshing the page
 		// every time the build changes.
@@ -78,6 +80,14 @@ export default function Build() {
 		generator.setNumItems(c, numItems);
 	};
 
+	const handleSetIncludeSote = () => {
+		setIncludeSote(!includeSote);
+	};
+
+	React.useEffect(() => {
+		generator._buildGenerationConfig.includeDlc = includeSote;
+	}, [includeSote]);
+
 	React.useEffect(() => {
 		if (build) {
 			const newArmors: Item[] = [];
@@ -90,11 +100,25 @@ export default function Build() {
 		}
 	}, [build]);
 
+	React.useEffect(() => {
+		function handleResize() {
+			setWidth(window.innerWidth);
+		}
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
 			<div className="App px-14 pb-8">
 				<div className="flex flex-col xl:flex-row w-full justify-evenly items-center gap-5 sm:p-10">
-					<div className="w-1/3 h-1"></div>
+					<div className="xl:w-1/3 flex justify-center gap-2 items-center mt-3 lg:mt-0">
+						<Checkbox checked={includeSote} onCheckedChange={handleSetIncludeSote} />
+						<h1 className="text-sm lg:text-md xl:text-lg w-full xl:w-auto text-center">
+							{width < 334 ? "Include Shadow of the Erdtree" : "Include Shadow of the Erdree Items"}
+						</h1>
+					</div>
 					<div className="flex justify-center items-center w-1/3">
 						<button className="btn btn-lg btn-primary" onClick={handleReroll}>
 							<h1>Generate New Build</h1>

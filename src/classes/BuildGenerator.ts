@@ -1,9 +1,24 @@
 import { AIBuildType, BuildGenerationConfig, ItemData, defaultBuildGenerationConfig } from "../types/types";
-import data from "../data/new_data.json";
+import data from "../data/new_new_data.json";
 import { ItemCategory } from "../types/enums";
 import { Build } from "./Build";
 import { Item } from "./Item";
 import AIGenerator from "./AIGenerator";
+import {
+	NUM_SOTE_ASHES,
+	NUM_SOTE_CHESTS,
+	NUM_SOTE_GAUNTLETS,
+	NUM_SOTE_HELMS,
+	NUM_SOTE_INCANTS,
+	NUM_SOTE_ITEMS,
+	NUM_SOTE_LEGS,
+	NUM_SOTE_SEALS,
+	NUM_SOTE_SHIELDS,
+	NUM_SOTE_SORCS,
+	NUM_SOTE_SPIRITS,
+	NUM_SOTE_TALISMANS,
+	NUM_SOTE_WEAPONS,
+} from "@/types/constants";
 
 /**
  * The BuildGenerator needs to generate a valid build and return a base64 encoded
@@ -96,6 +111,56 @@ export default class BuildGenerator {
 		return build;
 	}
 
+	private calculateCount(category: ItemCategory): number {
+		if (this._buildGenerationConfig.includeDlc) {
+			return this._itemData[category]["count"];
+		}
+
+		let difference;
+		switch (category) {
+			case ItemCategory.Helm:
+				difference = NUM_SOTE_HELMS;
+				break;
+			case ItemCategory.Chest:
+				difference = NUM_SOTE_CHESTS;
+				break;
+			case ItemCategory.Gauntlets:
+				difference = NUM_SOTE_GAUNTLETS;
+				break;
+			case ItemCategory.Leg:
+				difference = NUM_SOTE_LEGS;
+				break;
+			case ItemCategory.Ashes:
+				difference = NUM_SOTE_ASHES;
+				break;
+			case ItemCategory.Incants:
+				difference = NUM_SOTE_INCANTS;
+				break;
+			case ItemCategory.Shields:
+				difference = NUM_SOTE_SHIELDS;
+				break;
+			case ItemCategory.Talismans:
+				difference = NUM_SOTE_TALISMANS;
+				break;
+			case ItemCategory.Seals:
+				difference = NUM_SOTE_SEALS;
+				break;
+			case ItemCategory.Sorcs:
+				difference = NUM_SOTE_SORCS;
+				break;
+			case ItemCategory.Spirits:
+				difference = NUM_SOTE_SPIRITS;
+				break;
+			case ItemCategory.Weapons:
+				difference = NUM_SOTE_WEAPONS;
+				break;
+			default:
+				return this._itemData[category]["count"];
+		}
+
+		return this._itemData[category]["count"] - difference;
+	}
+
 	/**
 	 * Generates a random index of an item from a given category.
 	 * If `_excludePreviouslyRolled` is true, it generates an index of an unrolled item.
@@ -106,8 +171,7 @@ export default class BuildGenerator {
 	 */
 	public generateItem(category: ItemCategory): number | undefined {
 		// Get the count of items in the category
-		const count = this._itemData[category]["count"];
-
+		const count = this.calculateCount(category);
 		// Generate a random index between 0 and count - 1
 		let randomIndex = Math.floor(Math.random() * count);
 
@@ -198,7 +262,7 @@ export default class BuildGenerator {
 		const buildMap: Map<ItemCategory, number[]> = new Map<ItemCategory, number[]>();
 
 		for (const category of Object.keys(this._itemData)) {
-			const numItemsToRoll = this._buildGenerationConfig[category].buildNums;
+			const numItemsToRoll = this._buildGenerationConfig[category as ItemCategory].buildNums;
 			buildMap.set(category as ItemCategory, []);
 			for (let i = 0; i < numItemsToRoll; ++i) {
 				const itemIndex = this.generateItem(category as ItemCategory);
@@ -240,6 +304,7 @@ export default class BuildGenerator {
 		for (const [key, val] of map) {
 			val.forEach((val: number) => {
 				if (isNaN(val)) {
+					console.log("Invalid item index: ", val);
 					return;
 				}
 				this._build.addItem(key, val);

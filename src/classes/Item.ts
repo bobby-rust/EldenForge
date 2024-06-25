@@ -25,6 +25,7 @@ export class Item {
 	constructor(category: ItemCategory, rawItemData: any, index: number) {
 		this._category = category;
 		if (!rawItemData) {
+			console.log("Got no data");
 			return;
 		}
 		this.name = rawItemData["name"];

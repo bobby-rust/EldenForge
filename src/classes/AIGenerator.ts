@@ -1,4 +1,4 @@
-import data from "../data/new_data.json";
+import data from "../data/new_new_data.json";
 import { ItemCategory } from "../types/enums";
 import { Item } from "./Item";
 import { AIBuildType } from "../types/types";

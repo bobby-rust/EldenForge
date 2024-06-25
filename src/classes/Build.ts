@@ -1,6 +1,6 @@
 import { ItemCategory } from "../types/enums";
 import { Item } from "./Item";
-import data from "../data/new_data.json";
+import data from "../data/new_new_data.json";
 
 /**
  * Represents a generated build.
