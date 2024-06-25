@@ -85,7 +85,14 @@ export class Item {
 	 */
 	set name(name: string) {
 		this._name = name;
-		this._wikiUrl = "https://eldenring.wiki.fextralife.com/" + this._name.split(" ").join("+"); // or replaceAll(" ", "+") ? not sure which is more efficient
+		if (name.includes("+")) {
+			let wikiName: string | string[] = this._name.split(" ");
+			wikiName.pop();
+			wikiName = wikiName.join("+");
+			this._wikiUrl = "https://eldenring.wiki.fextralife.com/" + wikiName;
+		} else {
+			this._wikiUrl = "https://eldenring.wiki.fextralife.com/" + this._name.split(" ").join("+"); // or replaceAll(" ", "+") ? not sure which is more efficient
+		}
 	}
 
 	/**
