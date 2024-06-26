@@ -14,6 +14,9 @@ export default function CardColumn(props: {
 	category: ItemCategory;
 	regenerateCategory: ((c: ItemCategory) => void) | null;
 }) {
+	if (props.items.length === 0) return null;
+	if (props.items[0].category === ItemCategory.Classes) return null;
+	const [width, setWidth] = React.useState(window.innerWidth);
 	const [selectNumItems, setSelectNumItems] = React.useState(
 		typeof props.items[0] !== "undefined" ? defaultBuildGenerationConfig[props.items[0].category].buildNums : 0
 	);
@@ -33,6 +36,14 @@ export default function CardColumn(props: {
 	React.useEffect(() => {
 		setSelectNumItems(props.items.length);
 	}, [props.items]);
+	React.useEffect(() => {
+		function handleResize() {
+			setWidth(window.innerWidth);
+		}
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	if (props.category === ItemCategory.Classes) return null;
 	return (

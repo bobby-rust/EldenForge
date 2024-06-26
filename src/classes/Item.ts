@@ -25,6 +25,7 @@ export class Item {
 	constructor(category: ItemCategory, rawItemData: any, index: number) {
 		this._category = category;
 		if (!rawItemData) {
+			console.log("Got no data");
 			return;
 		}
 		this.name = rawItemData["name"];
@@ -84,7 +85,14 @@ export class Item {
 	 */
 	set name(name: string) {
 		this._name = name;
-		this._wikiUrl = "https://eldenring.wiki.fextralife.com/" + this._name.split(" ").join("+"); // or replaceAll(" ", "+") ? not sure which is more efficient
+		if (name.includes("+")) {
+			let wikiName: string | string[] = this._name.split(" ");
+			wikiName.pop();
+			wikiName = wikiName.join("+");
+			this._wikiUrl = "https://eldenring.wiki.fextralife.com/" + wikiName;
+		} else {
+			this._wikiUrl = "https://eldenring.wiki.fextralife.com/" + this._name.split(" ").join("+"); // or replaceAll(" ", "+") ? not sure which is more efficient
+		}
 	}
 
 	/**

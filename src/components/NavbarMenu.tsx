@@ -1,61 +1,40 @@
 import { useNavigate } from "react-router-dom";
-import { IoCopyOutline } from "react-icons/io5";
-import { LuCopyCheck } from "react-icons/lu";
 import React from "react";
-import { ToastMessage } from "./ToastMessage";
-import { toast } from "sonner";
 export default function NavbarMenu({ theme, setTheme }: { theme: string; setTheme: (theme: string) => void }) {
-	const [copied, setCopied] = React.useState(false);
-
 	const navigate = useNavigate();
-	const copyUrl = () => {
-		const textToCopy = window.location.href;
-		navigator.clipboard.writeText(textToCopy);
-		setCopied(true);
-		toast(
-			<ToastMessage
-				title="Copied!"
-				message="The link has been copied to your clipboard."
-				buttons={
-					<button className="btn" onClick={() => toast.dismiss()}>
-						Okay
-					</button>
-				}
-			/>
-		);
-	};
-
-	React.useEffect(() => {
-		const timer = setTimeout(() => {
-			setCopied(false);
-		}, 4000);
-
-		return () => clearInterval(timer);
-	}, [copied]);
 
 	const isAIPage = new RegExp("/ai/*");
+
+	const [width, setWidth] = React.useState(window.innerWidth);
+	React.useEffect(() => {
+		function handleResize() {
+			setWidth(window.innerWidth);
+		}
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 	const isLandingPage = new RegExp("/$");
 	return (
-		<div className="flex flex-col lg:flex-row justify-center items-center overflow-hidden gap-4">
-			<li className="h-16">
-				{!isLandingPage.test(window.location.href) && (
-					<button onClick={copyUrl} className="h-full btn btn-sm btn-secondary w-36">
-						{copied ? <LuCopyCheck /> : <IoCopyOutline />}
-						Copy Build URL
-					</button>
-				)}
+		<div
+			className={`flex flex-col lg:flex-row justify-center items-center overflow-hidden gap-4 ${
+				width < 1032 ? "flex-col-reverse" : ""
+			}`}
+		>
+			<div className="h-16 flex justify-center items-center w-60 lg:w-auto">
+				<a href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
+					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=efb809&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
+				</a>
+			</div>
+			<li className="h-16 flex justify-center items-center">
+				<button
+					className="btn btn-secondary text-center w-60 lg:w-28"
+					onClick={isAIPage.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
+				>
+					{isAIPage.test(window.location.href) ? "Randomizer" : "AI Builds"}
+				</button>
 			</li>
-			<li className="h-16">
-				{!isLandingPage.test(window.location.href) && (
-					<button
-						className="btn btn-sm btn-secondary w-36 text-center h-full"
-						onClick={isAIPage.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
-					>
-						{isAIPage.test(window.location.href) ? "Random Builds" : "AI Generated Builds"}
-					</button>
-				)}
-			</li>
-			<li className="h-16 flex items-center justify-center">
+			<li className="h-16 flex justify-center items-center w-60 lg:w-28">
 				<select
 					className="select z-50 select-secondary select-bordered w-full overflow-hidden"
 					data-choose-theme

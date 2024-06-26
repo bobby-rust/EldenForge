@@ -9,9 +9,6 @@ export default function Navbar() {
 		throw new Error("ThemeContext is undefined");
 	}
 	const { theme, setTheme } = themeContext;
-
-	const navigate = useNavigate();
-
 	return (
 		<div className="drawer z-10 font-['Cormorant_Garamond']">
 			<input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
@@ -30,12 +27,10 @@ export default function Navbar() {
 							</svg>
 						</label>
 					</div>
-					<button
-						className="btn btn-ghost px-2 mx-2 w-36 text-2xl font-semibold"
-						onClick={() => navigate("/", { replace: true, state: { toLanding: true } })}
-					>
-						EldenForge
-					</button>
+					<a className="px-2 flex flex-col mx-2 w-40 text-2xl font-semibold" href="/">
+						<div className="text-center">EldenForge</div>
+						<div className="text-xs font-normal">Made with ❤️ by Bobby Rust</div>
+					</a>
 					{/* <div className="flex-none hidden lg:block"> */}
 					<div className="flex-none hidden lg:block">
 						<ul className="menu menu-horizontal">
@@ -47,7 +42,7 @@ export default function Navbar() {
 			</div>
 			<div className="drawer-side">
 				<label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
-				<ul className="menu p-4 w-80 min-h-full bg-base-200 overflow-hidden">
+				<ul className="menu p-4 w-72 min-h-full bg-base-200">
 					{/* Sidebar content here */}
 					<NavbarMenu theme={theme} setTheme={setTheme} />
 				</ul>

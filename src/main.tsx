@@ -27,6 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 				<Route path="/" element={<App />} />
 				<Route path="*" element={<Err />} />
 			</Routes>
+			<Footer />
 			<Toaster />
 			<Footer />
 		</ThemeProvider>

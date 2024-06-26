@@ -16,6 +16,7 @@ export default function Card(props: {
 	const nameArr = props.item.name.split(" ");
 	if (props.item.category === ItemCategory.Ashes && nameArr[0] !== "Lost" && nameArr[0] !== "Through") {
 		name = props.item.name.split("Ash Of War: ")[1];
+		if (!name) name = props.item.name.split("Ash of War: ")[1];
 	}
 
 	// TODO: compress / downscale images for better rendering performance
