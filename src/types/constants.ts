@@ -155,7 +155,7 @@ export const quotes = [
 	[["O, Death. Become my blade once more."], ["Maliketh, the Black Blade"]],
 	[
 		[
-			"To stand before the Elden Ring. To become Elden Lord. What a sad state of affairs. \
+			"Ahh, I knew you'd come. To stand before the Elden Ring. To become Elden Lord. What a sad state of affairs. \
             I commend your spirit, but alas, none shall take the throne. Queen Marika has high hopes for us. That we continue to \
 		    struggle. Unto eternity.",
 		],
