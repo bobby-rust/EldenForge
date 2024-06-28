@@ -152,7 +152,7 @@ export const quotes = [
 		["Rennala, Queen of the Full Moon"],
 	],
 	[["Now, we can devour the gods, together!"], ["Rykard, Lord of Blasphemy"]],
-	[["O, Death. Become my blade once more."], ["Maliketh, the Black Blade"]],
+	[["O, Death. O Destined Death... Become my blade, once more."], ["Maliketh, the Black Blade"]],
 	[
 		[
 			"Ahh, I knew you'd come. To stand before the Elden Ring. To become Elden Lord. What a sad state of affairs. \
