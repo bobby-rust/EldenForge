@@ -84,9 +84,9 @@ export default function CardColumn(props: {
 									4 {readableItemCategory.get(props.items[0].category)}
 								</option>
 							</select>
-						) : (
+						) : width > 640 ? (
 							<div className="h-12"></div>
-						)
+						) : null
 					) : null}
 					<h1 className="text-center text-xl font-bold p-3">{readableItemCategory.get(props.items[0].category)}</h1>
 					{props.items.map((item: Item, i: number) => (

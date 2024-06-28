@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { ThemeContext } from "./ThemeProvider";
 import NavbarMenu from "./NavbarMenu";
-import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
 	const themeContext = useContext(ThemeContext);
