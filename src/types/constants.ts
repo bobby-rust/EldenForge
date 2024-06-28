@@ -138,7 +138,7 @@ export const quotes = [
 	],
 	[
 		[
-			"That will be all. Thou didst me good service, Serosh. I've given thee courtesy, enough. Now I fight as Hourah Loux! Warrior!,",
+			"That will be all. Thou didst me good service, Serosh. I've given thee courtesy, enough. Now I fight as Hourah Loux! Warrior!",
 		],
 		["Godfrey, First Elden Lord"],
 	],
