@@ -114,7 +114,7 @@ export default function AIBuild() {
 	return (
 		<div className="flex flex-col justify-center items-center xl:px-14 py-8 ">
 			<div className="flex flex-col items-center 2xl:flex-row justify-evenly w-full mb-10">
-				<div className="flex justify-center items-center w-72 sm:w-80 2xl:w-1/3">
+				<div className="flex justify-center items-center w-64 sm:w-80 2xl:w-1/3">
 					<select className="select select-bordered max-w-xs w-full" onChange={handleChangeBuildType}>
 						<option selected value="">
 							Select a build type
@@ -158,7 +158,7 @@ export default function AIBuild() {
 						</button>
 					</div>
 					<div className="dropdown">
-						<div tabIndex={0} role="button" className="btn btn-lg w-72 sm:w-80 text-sm 3xl:text-md lg:w-40 xl:w-44 m-3">
+						<div tabIndex={0} role="button" className="btn btn-lg w-64 sm:w-80 text-sm 3xl:text-md lg:w-40 xl:w-44 m-3">
 							Show Stats{" "}
 						</div>
 						<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
@@ -195,7 +195,7 @@ export default function AIBuild() {
 					</div>
 					<div className="">
 						<button
-							className="btn btn-lg w-72 sm:w-80 lg:w-44 xl:w-44 text-sm 3xl:text-md"
+							className="btn btn-lg w-64 sm:w-80 lg:w-44 xl:w-44 text-sm 3xl:text-md"
 							onClick={() => setShowDescription(!showDescription)}
 						>
 							Show Description
