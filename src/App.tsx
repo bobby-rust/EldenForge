@@ -17,13 +17,15 @@ import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { cn } from "./lib/utils";
+import { quotes } from "./types/constants";
 
 const generator = new BuildGenerator();
+const quote = quotes[Math.floor(Math.random() * quotes.length)];
 
 // TODO: Make this a reusable component to use with AI builds.
 export default function App() {
@@ -32,7 +34,7 @@ export default function App() {
 	const { buildUrl } = useParams();
 	const [copied, setCopied] = React.useState(false);
 	const [includeSote, setIncludeSote] = React.useState(true);
-	const [firstRoll, setFirstRoll] = React.useState(true);
+	const [dialogOpen, setDialogOpen] = React.useState(false);
 
 	const copyUrl = () => {
 		const textToCopy = window.location.href;
@@ -61,10 +63,14 @@ export default function App() {
 	);
 
 	const handleReroll = () => {
-		if (window.location.pathname === "/") {
-			console.log("Would you like to hide DLC spoilers?");
-			setFirstRoll(false);
+		console.log("huh");
+		console.log("Include dlc: ", localStorage.getItem("include-dlc"));
+		if (localStorage.getItem("include-dlc") === null) {
+			console.log("WHAT");
+			setDialogOpen(true);
 		}
+
+		console.log("WHATv2");
 
 		const newUrl = generator.generateUrl();
 
@@ -83,6 +89,8 @@ export default function App() {
 		}
 		setBuild(newBuild);
 	};
+
+	React.useEffect(() => {}, [dialogOpen]);
 
 	const handleClearPreviouslyRolled = (c: ItemCategory) => {
 		generator._buildGenerationConfig[c].previouslyRolled.clear();
@@ -146,6 +154,15 @@ export default function App() {
 	const handleSetIncludeSote = () => {
 		generator.setIncludeDlc(!includeSote);
 		setIncludeSote(!includeSote);
+		localStorage.setItem("include-dlc", (!includeSote).toString());
+	};
+
+	const handleDialogChoice = (choice: boolean) => {
+		setIncludeSote(choice);
+		generator.setIncludeDlc(choice);
+		localStorage.setItem("include-dlc", choice.toString());
+		setDialogOpen(false);
+		handleReroll();
 	};
 
 	React.useEffect(() => {
@@ -158,6 +175,8 @@ export default function App() {
 			});
 			setArmors(newArmors);
 		}
+
+		console.log(window.location.pathname);
 	}, [build]);
 
 	React.useEffect(() => {
@@ -178,52 +197,49 @@ export default function App() {
 
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
-			<div className={`lg:px-14 py-8 ${build?.size === 0 && "overflow-y-hidden h-[77vh]"}`}>
+			<div className={`lg:px-14 pt-8 ${build?.size === 0 && "overflow-y-hidden h-[83vh]"}`}>
 				<div
 					className={`flex ${
 						build?.size === 0 && " h-full items-center flex-col gap-6 animate-landing-slide-up"
 					} justify-center mb-10 p-3`}
 				>
 					{build?.size === 0 && (
-						<div className="flex flex-col gap-6">
-							<h1 className="md:text-2xl 2xl:text-5xl font-bold text-center">Ahh, I knew you'd come.</h1>
-							<blockquote className="md:text-xl 2xl:text-3xl italic text-gray-600 text-center w-[50vw] tracking-tighter md:leading-loose">
-								"...To stand before the Elden Ring. To become Elden Lord. What a sad state of affairs. I commend your
-								spirit, but alas, none shall take the throne. Queen Marika has high hopes for us. That we continue to
-								struggle. Unto eternity." <br></br>- Sir Gideon Ofnir, the All-Knowing
+						<div className="flex flex-col gap-6 md:gap-10">
+							<h1 className="md:text-2xl 2xl:text-5xl font-bold text-center tracking-wide">EldenForge</h1>
+							<blockquote className="md:text-xl 2xl:text-3xl italic text-gray-600 text-center w-[50vw] md:tracking-tight leading-loose  md:mb-10">
+								"{quote[0]}" <br></br>- {quote[1]}
 							</blockquote>
 						</div>
 					)}
-					<div className="flex gap-6">
-						{window.location.pathname === "/" ? (
-							<Dialog>
+					<div className="flex gap-3 md:gap-6">
+						{window.location.pathname === "/" && (
+							<Dialog open={dialogOpen} onOpenChange={() => setDialogOpen(!dialogOpen)}>
 								<DialogTrigger>
 									<button
 										className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
-										onClick={firstRoll ? () => setFirstRoll(true) : handleReroll}
+										onClick={localStorage.getItem("include-dlc") === null ? undefined : handleReroll}
 									>
 										<span className="lg:text-xl">Randomize Build</span>
 									</button>
 								</DialogTrigger>
 								<DialogContent>
 									<DialogHeader>
-										<DialogTitle>Would you like to hide DLC spoilers?</DialogTitle>
-										<DialogDescription>
-											If you select yes, only base game content will be generated. You'll be able to toggle this setting
-											later on the build page.
+										<DialogTitle className="text-xl">Would you like to include DLC content?</DialogTitle>
+										<DialogDescription className="text-lg">
+											You'll be able to toggle this setting later on the build page.
 										</DialogDescription>
 									</DialogHeader>
+									<DialogFooter>
+										<button className="btn w-24 btn-primary" onClick={() => handleDialogChoice(true)}>
+											Yes
+										</button>
+										<button className="btn w-24 btn-secondary" onClick={() => handleDialogChoice(false)}>
+											No
+										</button>
+									</DialogFooter>
 								</DialogContent>
 							</Dialog>
-						) : (
-							<button
-								className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
-								onClick={handleReroll}
-							>
-								<span className="lg:text-xl">Randomize Build</span>
-							</button>
 						)}
-
 						{build?.size === 0 && (
 							<button
 								className={`btn lg:btn-lg btn-secondary hover:animate-wiggle ${build?.size === 0 && " "}`}

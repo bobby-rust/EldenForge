@@ -142,4 +142,23 @@ export const quotes = [
 		],
 		["Godfrey, First Elden Lord"],
 	],
+	[["The one who walks alongside flame shall one day meet the road of Destined Death. Good-bye."], ["Melina"]],
+	[["You, please, I can read them. Your fingers, please, your fingers..."], ["Finger Reader Crones"]],
+	[["Unfortunately for you, however, you are maidenless."], ["White Mask Varre"]],
+	[["Arise now, ye Tarnished. Ye dead, who yet live."], ["Narrator"]],
+	[["Before we begin, allow me to paint you the full picture."], ["Witch-Hunter Jerren"]],
+	[
+		["Ah... Thou... Is it thy wish to be born anew? To become a sweeting, reborn of my beloved egg?"],
+		["Rennala, Queen of the Full Moon"],
+	],
+	[["Now, we can devour the gods, together!"], ["Rykard, Lord of Blasphemy"]],
+	[["O, Death. Become my blade once more."], ["Maliketh, the Black Blade"]],
+	[
+		[
+			"To stand before the Elden Ring. To become Elden Lord. What a sad state of affairs. \
+            I commend your spirit, but alas, none shall take the throne. Queen Marika has high hopes for us. That we continue to \
+		    struggle. Unto eternity.",
+		],
+		["Sir Gideon Ofnir, the All-Knowing"],
+	],
 ];
