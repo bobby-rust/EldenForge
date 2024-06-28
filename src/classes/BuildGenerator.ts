@@ -131,7 +131,12 @@ export default class BuildGenerator {
 		return build;
 	}
 
+	public setIncludeDlc(includeDlc: boolean) {
+		this._buildGenerationConfig.includeDlc = includeDlc;
+	}
+
 	private calculateCount(category: ItemCategory): number {
+		console.log(this._buildGenerationConfig.includeDlc);
 		if (this._buildGenerationConfig.includeDlc) {
 			return this._itemData[category]["count"];
 		}

@@ -145,6 +145,8 @@ export default function Build() {
 											reroll={handleRerollItem}
 											setNumItems={handleChangeNumItems}
 											isAIBuild={false}
+											category={c}
+											regenerateCategory={generator.generateItemsForCategory}
 										/>
 									)}
 									{c === ItemCategory.Helm && (
@@ -154,6 +156,8 @@ export default function Build() {
 											reroll={handleRerollItem}
 											setNumItems={handleChangeNumItems}
 											isAIBuild={false}
+											category={c}
+											regenerateCategory={generator.generateItemsForCategory}
 										/>
 									)}
 								</>

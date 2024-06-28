@@ -29,7 +29,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 			</Routes>
 			<Footer />
 			<Toaster />
-			<Footer />
 		</ThemeProvider>
 	</BrowserRouter>
 	// </React.StrictMode>

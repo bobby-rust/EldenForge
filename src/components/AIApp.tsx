@@ -4,12 +4,12 @@ import BuildGenerator from "../classes/BuildGenerator";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { quotes } from "../types/constants";
 
-const quote = quotes[Math.floor(Math.random() * quotes.length)];
-console.log(quotes);
-console.log(quote);
 const generator = new BuildGenerator();
 
 export default function AIApp() {
+	const quote = quotes[Math.floor(Math.random() * quotes.length)];
+	// console.log(quotes);
+	console.log(quote);
 	const navigate = useNavigate();
 	React.useEffect(() => {
 		const queryAI = async () => {
@@ -19,7 +19,7 @@ export default function AIApp() {
 
 		queryAI();
 	}, []);
-
+	console.log("rendering AI app");
 	return (
 		<div className="overflow-y-hidden lg:px-14 py-8">
 			<div className="flex flex-col items-center justify-center gap-6 h-[70vh] animate-landing-slide-up">

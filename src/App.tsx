@@ -9,6 +9,19 @@ import { ArmorCategories, readableItemCategory } from "./types/constants";
 import { ToastMessage } from "./components/ToastMessage";
 import { toast } from "sonner";
 import BuildGenerator from "@/classes/BuildGenerator";
+import { LuCopyCheck } from "react-icons/lu";
+import { IoCopyOutline } from "react-icons/io5";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { cn } from "./lib/utils";
 
 const generator = new BuildGenerator();
 
@@ -17,6 +30,26 @@ export default function App() {
 	const [armors, setArmors] = React.useState<Item[]>([]);
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const { buildUrl } = useParams();
+	const [copied, setCopied] = React.useState(false);
+	const [includeSote, setIncludeSote] = React.useState(true);
+	const [firstRoll, setFirstRoll] = React.useState(true);
+
+	const copyUrl = () => {
+		const textToCopy = window.location.href;
+		navigator.clipboard.writeText(textToCopy);
+		setCopied(true);
+		toast(
+			<ToastMessage
+				title="Copied!"
+				message="Link copied to clipboard"
+				buttons={
+					<Button className="" onClick={() => toast.dismiss()}>
+						Okay
+					</Button>
+				}
+			/>
+		);
+	};
 
 	const location = useLocation();
 	const { state } = location;
@@ -28,8 +61,11 @@ export default function App() {
 	);
 
 	const handleReroll = () => {
-		// if i keep track of the state of the build separately, i can avoid refreshing the page
-		// every time the build changes.
+		if (window.location.pathname === "/") {
+			console.log("Would you like to hide DLC spoilers?");
+			setFirstRoll(false);
+		}
+
 		const newUrl = generator.generateUrl();
 
 		navigate(`../${newUrl}`, { replace: true });
@@ -40,7 +76,7 @@ export default function App() {
 					<ToastMessage
 						title={`No ${readableItemCategory.get(c[0])} left to roll`}
 						message={`Would you like to reset ${readableItemCategory.get(c[0])}?`}
-						buttons={<ToastButtons c={c[0]} />}
+						buttons={<ClearCategoryToastButtons c={c[0]} />}
 					/>
 				);
 			}
@@ -52,7 +88,7 @@ export default function App() {
 		generator._buildGenerationConfig[c].previouslyRolled.clear();
 	};
 
-	const ToastButtons = (props: { c: ItemCategory }): JSX.Element => {
+	const ClearCategoryToastButtons = (props: { c: ItemCategory }): JSX.Element => {
 		const { c } = props;
 
 		return (
@@ -87,7 +123,7 @@ export default function App() {
 				<ToastMessage
 					title={`No ${readableItemCategory.get(c)} left to roll`}
 					message={`Would you like to reset ${readableItemCategory.get(c)}?`}
-					buttons={<ToastButtons c={c} />}
+					buttons={<ClearCategoryToastButtons c={c} />}
 				/>
 			);
 		}
@@ -107,6 +143,11 @@ export default function App() {
 		setBuild(generator.generateBuildFromUrl(newUrl));
 	};
 
+	const handleSetIncludeSote = () => {
+		generator.setIncludeDlc(!includeSote);
+		setIncludeSote(!includeSote);
+	};
+
 	React.useEffect(() => {
 		if (build) {
 			const newArmors: Item[] = [];
@@ -117,7 +158,6 @@ export default function App() {
 			});
 			setArmors(newArmors);
 		}
-		console.log("Previouslyly rolled seals: ", generator._buildGenerationConfig.seals.previouslyRolled);
 	}, [build]);
 
 	React.useEffect(() => {
@@ -131,6 +171,10 @@ export default function App() {
 			window.removeEventListener("resize", handleResize);
 		};
 	}, []);
+
+	React.useEffect(() => {
+		console.log("Include sote: ", includeSote);
+	}, [includeSote]);
 
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
@@ -151,12 +195,35 @@ export default function App() {
 						</div>
 					)}
 					<div className="flex gap-6">
-						<button
-							className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
-							onClick={handleReroll}
-						>
-							<span className="lg:text-xl">Randomize Build</span>
-						</button>
+						{window.location.pathname === "/" ? (
+							<Dialog>
+								<DialogTrigger>
+									<button
+										className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
+										onClick={firstRoll ? () => setFirstRoll(true) : handleReroll}
+									>
+										<span className="lg:text-xl">Randomize Build</span>
+									</button>
+								</DialogTrigger>
+								<DialogContent>
+									<DialogHeader>
+										<DialogTitle>Would you like to hide DLC spoilers?</DialogTitle>
+										<DialogDescription>
+											If you select yes, only base game content will be generated. You'll be able to toggle this setting
+											later on the build page.
+										</DialogDescription>
+									</DialogHeader>
+								</DialogContent>
+							</Dialog>
+						) : (
+							<button
+								className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
+								onClick={handleReroll}
+							>
+								<span className="lg:text-xl">Randomize Build</span>
+							</button>
+						)}
+
 						{build?.size === 0 && (
 							<button
 								className={`btn lg:btn-lg btn-secondary hover:animate-wiggle ${build?.size === 0 && " "}`}
@@ -166,6 +233,29 @@ export default function App() {
 							</button>
 						)}
 					</div>
+					{!(window.location.pathname === "/") && (
+						<div className="flex flex-col xl:flex-row w-full justify-evenly items-center gap-5 sm:p-10">
+							<div className="xl:w-1/3 flex justify-center gap-2 items-center mt-3 lg:mt-0">
+								<Switch checked={includeSote} onCheckedChange={handleSetIncludeSote} />
+								<h1 className="text-sm lg:text-md xl:text-lg w-full xl:w-auto text-center">
+									{width < 334 ? "Include Shadow of the Erdtree" : "Include Shadow of the Erdree Items"}
+								</h1>
+							</div>
+							<button
+								className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
+								onClick={handleReroll}
+							>
+								<h1 className="lg:text-xl">Randomize Build</h1>
+							</button>
+
+							<div className="flex justify-center items-center w-1/3 mr-0 xl:mr-6">
+								<button onClick={copyUrl} className="btn btn-lg">
+									{copied ? <LuCopyCheck /> : <IoCopyOutline />}
+									Copy Build URL
+								</button>
+							</div>
+						</div>
+					)}
 				</div>
 				<div className="flex justify-center align-center max-w-full">
 					<div className="grid grid-cols-1 sm:grid-cols-2 2lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 2.5xl:grid-cols-6 3xl:grid-cols-7 4xl:grid-cols-8 gap-4 auto-cols-auto">

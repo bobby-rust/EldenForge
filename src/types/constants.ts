@@ -7,6 +7,19 @@ export const ArmorCategories = new Set([
 	ItemCategory.Leg,
 ]);
 
+export const readableItemCategory = new Map<ItemCategory, string>([
+	[ItemCategory.Weapons, "Weapons"],
+	[ItemCategory.Helm, "Armors"],
+	[ItemCategory.Ashes, "Ashes Of War"],
+	[ItemCategory.Incants, "Incantations"],
+	[ItemCategory.Sorcs, "Sorceries"],
+	[ItemCategory.Talismans, "Talismans"],
+	[ItemCategory.Spirits, "Spirit Ashes"],
+	[ItemCategory.Shields, "Shields"],
+	[ItemCategory.Tears, "Crystal Tears"],
+	[ItemCategory.Seals, "Sacred Seals"],
+]);
+
 const sysPrompt = `You are an Elden Ring build generator. You generate Elden Ring builds in this structured format: 
 Name=<Name>
 Vigor=<Vigor>

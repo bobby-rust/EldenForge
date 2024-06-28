@@ -4,7 +4,7 @@ A web app dedicated to generating challenging Elden Ring scenarios and builds fo
 
 ## Future Roadmap
 
-- Add back categories after deleting them
+- Build generation config (certain item types, scaling levels, required attributes, etc.)
 - Draggable categories for organizing build order
 - Generate challenge runs
 - Create a build page with stats (?)

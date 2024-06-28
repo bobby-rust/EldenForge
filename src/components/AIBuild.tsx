@@ -50,9 +50,6 @@ export default function AIBuild() {
 
 		return () => clearInterval(timer);
 	}, [copied]);
-	const descriptionRef: React.MutableRefObject<HTMLDivElement | null> = React.useRef(null);
-	const [descriptionHeight, setDescriptionHeight] = React.useState(0);
-
 	if (!buildUrl) {
 		throw new Error("Invalid path");
 	}
@@ -90,10 +87,6 @@ export default function AIBuild() {
 	}, [countdown]);
 
 	React.useEffect(() => {
-		setDescriptionHeight(descriptionRef.current?.offsetHeight ?? 0);
-	}, [descriptionRef]);
-
-	React.useEffect(() => {
 		if (build) {
 			const newArmors: Item[] = [];
 			[...build.items.keys()].forEach((c: ItemCategory) => {
@@ -108,6 +101,15 @@ export default function AIBuild() {
 	React.useEffect(() => {
 		generator.buildType = buildType;
 	}, [buildType]);
+
+	React.useEffect(() => {
+		function handleResize() {
+			setWidth(window.innerWidth);
+		}
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	return (
 		<div className="flex flex-col justify-center items-center xl:px-14 py-8 ">
@@ -133,7 +135,7 @@ export default function AIBuild() {
 				</div>
 				<div className="flex justify-center items-center lg:w-1/3 p-6 lg:p-3">
 					<button
-						className={`btn btn-lg btn-primary ${loading && "loading loading-dots"}`}
+						className={`btn btn-lg btn-primary ${loading && "loading loading-dots"} w-72 sm:w-80 xl:w-auto`}
 						disabled={disabled}
 						onClick={handleRegenerateAIBuild}
 						aria-disabled={disabled}
@@ -202,9 +204,9 @@ export default function AIBuild() {
 				</div>
 			</div>
 			{build && (
-				<div className={`max-w-[80vw] md:max-w-[70vw] xl:max-w-[60vw] mb-20 ${showDescription ? "" : "hidden"}`}>
+				<div className={`max-w-[85vw] 2xl:max-w-[60vw] mb-20 ${showDescription ? "" : "hidden"}`}>
 					<div className="w-full bg-gray-100 text-center p-2 relative">
-						<h1 className="font-bold text-slate-800 text-2xl self-start">{build.name}</h1>
+						<h1 className="font-bold text-slate-800 sm:text-2xl self-start px-8">{build.name}</h1>
 						<button
 							className="btn btn-sm btn-square absolute right-1.5 top-1.5"
 							onClick={() => setShowDescription(false)}
@@ -223,11 +225,11 @@ export default function AIBuild() {
 					<div className="flex justify-center items-center rounded-lg shadow-lg p-8 h-full">
 						<div className="flex w-full justify-center items-center pb-6">
 							<div className="flex flex-col sm:flex-row leading-relaxed justify-center items-center">
-								<div className="sm:w-1/2 mr-2 text-center text-lg">
+								<div className="sm:w-1/2 mr-2 text-center sm:text-lg">
 									<h1 className="font-semibold">Summary</h1>
 									<p>{build.summary}</p>
 								</div>
-								<div className="sm:w-1/2 ml-2 text-center text-lg h-full">
+								<div className="sm:w-1/2 ml-2 text-center sm:text-lg h-full">
 									<div className="w-full">
 										<h1 className="font-semibold">Strengths</h1>
 										<p>{build.strengths}</p>

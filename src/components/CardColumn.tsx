@@ -14,8 +14,6 @@ export default function CardColumn(props: {
 	category: ItemCategory;
 	regenerateCategory: ((c: ItemCategory) => void) | null;
 }) {
-	if (props.items.length === 0) return null;
-	if (props.items[0].category === ItemCategory.Classes) return null;
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const [selectNumItems, setSelectNumItems] = React.useState(
 		typeof props.items[0] !== "undefined" ? defaultBuildGenerationConfig[props.items[0].category].buildNums : 0
@@ -52,7 +50,7 @@ export default function CardColumn(props: {
 				<AddCategoryButton category={props.category} regenerateCategory={handleAddCategory} />
 			)}
 			{props.items.length > 0 && (
-				<div className="flex flex-col">
+				<div className="flex flex-col items-center">
 					{!props.isAIBuild ? (
 						props.items[0].category !== ItemCategory.Helm ? (
 							<select

@@ -3,7 +3,7 @@ import React from "react";
 export default function NavbarMenu({ theme, setTheme }: { theme: string; setTheme: (theme: string) => void }) {
 	const navigate = useNavigate();
 
-	const isAIPage = new RegExp("/ai/*");
+	const regexp = new RegExp("/ai/*");
 
 	const [width, setWidth] = React.useState(window.innerWidth);
 	React.useEffect(() => {
@@ -14,7 +14,6 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 		window.addEventListener("resize", handleResize);
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
-	const isLandingPage = new RegExp("/$");
 	return (
 		<div
 			className={`flex flex-col lg:flex-row justify-center items-center overflow-hidden gap-4 ${
@@ -29,9 +28,9 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 			<li className="h-16 flex justify-center items-center">
 				<button
 					className="btn btn-secondary text-center w-60 lg:w-28"
-					onClick={isAIPage.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
+					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
 				>
-					{isAIPage.test(window.location.href) ? "Randomizer" : "AI Builds"}
+					{regexp.test(window.location.href) ? "Randomizer" : "AI Builds"}
 				</button>
 			</li>
 			<li className="h-16 flex justify-center items-center w-60 lg:w-28">
