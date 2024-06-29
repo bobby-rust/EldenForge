@@ -222,18 +222,18 @@ export default function App() {
 										<span className="lg:text-xl">Randomize Build</span>
 									</button>
 								</DialogTrigger>
-								<DialogContent>
+								<DialogContent className="max-w-[90vw] sm:w-auto">
 									<DialogHeader>
 										<DialogTitle className="text-xl">Would you like to include DLC content?</DialogTitle>
 										<DialogDescription className="text-lg">
 											You'll be able to toggle this setting later on the build page.
 										</DialogDescription>
 									</DialogHeader>
-									<DialogFooter>
-										<button className="btn w-24 btn-primary" onClick={() => handleDialogChoice(true)}>
+									<DialogFooter className="justify-center items-center gap-3 flex-col sm:flex-row">
+										<button className="btn w-36 sm:w-24 btn-primary" onClick={() => handleDialogChoice(true)}>
 											Yes
 										</button>
-										<button className="btn w-24 btn-secondary" onClick={() => handleDialogChoice(false)}>
+										<button className="btn w-36 sm:w-24 btn-secondary" onClick={() => handleDialogChoice(false)}>
 											No
 										</button>
 									</DialogFooter>
