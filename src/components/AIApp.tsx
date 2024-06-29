@@ -15,6 +15,7 @@ export default function AIApp() {
 		const queryAI = async () => {
 			const url = await generator.generateAIUrl();
 			navigate(`/ai/${url}`, { replace: true });
+			window.location.reload();
 		};
 
 		queryAI();

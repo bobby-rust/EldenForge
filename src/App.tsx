@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { Item } from "./classes/Item";
 import { ItemCategory } from "./types/enums";
 import "./App.css";
@@ -31,7 +31,7 @@ const quote = quotes[Math.floor(Math.random() * quotes.length)];
 export default function App() {
 	const [armors, setArmors] = React.useState<Item[]>([]);
 	const [width, setWidth] = React.useState(window.innerWidth);
-	const { buildUrl } = useParams();
+	const [buildUrl, _] = useSearchParams();
 	const [copied, setCopied] = React.useState(false);
 	const [includeSote, setIncludeSote] = React.useState(true);
 	const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -59,22 +59,19 @@ export default function App() {
 	const navigate = useNavigate();
 
 	const [build, setBuild] = React.useState<Map<ItemCategory, Item[]> | null>(
-		state ? null : generator.generateBuildFromUrl(buildUrl ?? "")
+		state ? null : generator.generateBuildFromUrl(buildUrl.toString())
 	);
 
 	const handleReroll = () => {
-		console.log("huh");
-		console.log("Include dlc: ", localStorage.getItem("include-dlc"));
 		if (localStorage.getItem("include-dlc") === null) {
-			console.log("WHAT");
 			setDialogOpen(true);
+		} else {
+			setDialogOpen(false);
 		}
-
-		console.log("WHATv2");
 
 		const newUrl = generator.generateUrl();
 
-		navigate(`../${newUrl}`, { replace: true });
+		navigate(`../${newUrl}`);
 		const newBuild = generator.generateBuildFromUrl(newUrl);
 		for (const c of newBuild) {
 			if (c[0] !== ItemCategory.Classes && c[1].length === 0 && generator._buildGenerationConfig[c[0]].buildNums > 0) {
@@ -126,7 +123,7 @@ export default function App() {
 		const newBuildMap = generator.rerollItem(c, i);
 		const newUrl = generator.createUrlFromBuildMap(newBuildMap);
 
-		if (newUrl === buildUrl) {
+		if (newUrl === "?" + buildUrl.toString()) {
 			toast(
 				<ToastMessage
 					title={`No ${readableItemCategory.get(c)} left to roll`}
@@ -176,7 +173,7 @@ export default function App() {
 			setArmors(newArmors);
 		}
 
-		console.log(window.location.pathname);
+		console.log("build: ", generator._build._items);
 	}, [build]);
 
 	React.useEffect(() => {
@@ -191,9 +188,9 @@ export default function App() {
 		};
 	}, []);
 
-	React.useEffect(() => {
-		console.log("Include sote: ", includeSote);
-	}, [includeSote]);
+	const shouldDialogOpen = () => {
+		return window.location.pathname === "/" && localStorage.getItem("include-dlc") === null;
+	};
 
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
@@ -212,33 +209,42 @@ export default function App() {
 						</div>
 					)}
 					<div className="flex gap-3 md:gap-6">
-						{window.location.pathname === "/" && (
-							<Dialog open={dialogOpen} onOpenChange={() => setDialogOpen(!dialogOpen)}>
+						{window.location.pathname === "/" && window.location.search === "" && shouldDialogOpen() ? (
+							<Dialog>
 								<DialogTrigger>
 									<button
 										className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
-										onClick={localStorage.getItem("include-dlc") === null ? undefined : handleReroll}
 									>
-										<span className="lg:text-xl">Randomize Build</span>
+										<span className="lg:text-xl">Randomizer</span>
 									</button>
 								</DialogTrigger>
-								<DialogContent>
+								<DialogContent className="max-w-[90vw] sm:w-auto">
 									<DialogHeader>
 										<DialogTitle className="text-xl">Would you like to include DLC content?</DialogTitle>
 										<DialogDescription className="text-lg">
 											You'll be able to toggle this setting later on the build page.
 										</DialogDescription>
 									</DialogHeader>
-									<DialogFooter>
-										<button className="btn w-24 btn-primary" onClick={() => handleDialogChoice(true)}>
+									<DialogFooter className="justify-center items-center gap-3 flex-col sm:flex-row">
+										<button className="btn w-36 sm:w-24 btn-primary" onClick={() => handleDialogChoice(true)}>
 											Yes
 										</button>
-										<button className="btn w-24 btn-secondary" onClick={() => handleDialogChoice(false)}>
+										<button className="btn w-36 sm:w-24 btn-secondary" onClick={() => handleDialogChoice(false)}>
 											No
 										</button>
 									</DialogFooter>
 								</DialogContent>
 							</Dialog>
+						) : (
+							window.location.search === "" &&
+							window.location.pathname === "/" && (
+								<button
+									className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
+									onClick={handleReroll}
+								>
+									<span className="lg:text-xl">Randomizer</span>
+								</button>
+							)
 						)}
 						{build?.size === 0 && (
 							<button
@@ -249,7 +255,7 @@ export default function App() {
 							</button>
 						)}
 					</div>
-					{!(window.location.pathname === "/") && (
+					{!(window.location.search === "") && (
 						<div className="flex flex-col xl:flex-row w-full justify-evenly items-center gap-5 sm:p-10">
 							<div className="xl:w-1/3 flex justify-center gap-2 items-center mt-3 lg:mt-0">
 								<Switch checked={includeSote} onCheckedChange={handleSetIncludeSote} />
@@ -265,7 +271,7 @@ export default function App() {
 							</button>
 
 							<div className="flex justify-center items-center w-1/3 mr-0 xl:mr-6">
-								<button onClick={copyUrl} className="btn btn-lg">
+								<button onClick={copyUrl} className="btn btn-wide">
 									{copied ? <LuCopyCheck /> : <IoCopyOutline />}
 									Copy Build URL
 								</button>

@@ -44,7 +44,7 @@ export default class BuildGenerator {
 
 	/**
 	 * Generates a URL representing a build.
-	 * The build cont_ains unique items if _excludePreviouslyRolled is false.
+	 * The build contains unique items if _excludePreviouslyRolled is false.
 	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
 	 */
 	public generateUrl(): string {
@@ -260,9 +260,12 @@ export default class BuildGenerator {
 	 *                   `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
 	 */
 	public createUrlFromBuildMap(rolled: Map<ItemCategory, number[]>): string {
+		console.log("Creating url from build map", rolled);
 		let url = "";
+		let first = true;
 		for (const category of rolled.keys()) {
-			url += `&${category}=`;
+			url += first ? `?${category}=` : `&${category}=`;
+			first = false;
 
 			// IDK why TypeScript finds this necessary, rolled CLEARLY has category as we are LOOPING OVER ITS KEYS (ts 5.5 save me)
 			const items = rolled.get(category) ?? [];
@@ -278,6 +281,7 @@ export default class BuildGenerator {
 		}
 
 		url = url.slice(0, url.length); // remove last comma
+		console.log("returning uuuuuu: ", url);
 		return url;
 	}
 
@@ -338,6 +342,7 @@ export default class BuildGenerator {
 	 * @returns {Build} the Build object.
 	 */
 	public parseBuildFromMap(map: Map<ItemCategory, number[]>): Map<ItemCategory, Item[]> {
+		console.log("items in parse build from map: ", this._build._items);
 		this.resetItems();
 		for (const [key, val] of map) {
 			if (val.length === 0) {
@@ -407,7 +412,7 @@ export default class BuildGenerator {
 	}
 
 	/**
-	 * Parses a string of the form `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
+	 * Parses a string of the form `?weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
 	 * into a build map cont_aining categories as keys and the indices of build items as values
 	 */
 	private parseBuildMapFromUrl(str: string): Map<ItemCategory, number[]> {
@@ -415,7 +420,7 @@ export default class BuildGenerator {
 
 		for (let i = 0; i < str.length; ++i) {
 			// If we are at an ampersand, slice out the entire category.
-			if (str[i] === "&") {
+			if (str[i] === "&" || str[i] === "?") {
 				let catStart = i + 1;
 				let catStop = catStart;
 

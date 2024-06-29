@@ -16,7 +16,14 @@ export class Build {
 	 * @param item the index of the item to add.
 	 */
 	public addItem(category: ItemCategory, item: number) {
+		if (category === ItemCategory.Helm) {
+			console.log("Adding helm: ", item);
+		}
 		this._items.set(category, [...(this._items.get(category) ?? []), item]);
+
+		if (category === ItemCategory.Helm) {
+			console.log("Added helm: ", this._items);
+		}
 	}
 
 	/**
@@ -49,7 +56,6 @@ export class Build {
 		this._items.forEach((value, key) => {
 			items.set(key, []);
 			value.forEach((index) => {
-				if (index === -1) return;
 				if (!Object.values(ItemCategory).includes(key)) return;
 
 				const item = new Item(key, data[key as keyof typeof data].items[index], index);
