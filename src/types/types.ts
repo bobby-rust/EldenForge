@@ -184,5 +184,26 @@ type AIOutput = {
 	weaknesses: string;
 };
 
-export type { AIOutput, BuildGenerationConfig, ItemData, BuildInfo, AIBuildType, Stat };
+type AnsweredToast = {
+	ashes: boolean;
+	incants: boolean;
+	seals: boolean;
+	shields: boolean;
+	sorcs: boolean;
+	spirits: boolean;
+	talismans: boolean;
+	tears: boolean;
+	weapons: boolean;
+	[key: string]: boolean;
+};
+
+export type {
+	AIOutput,
+	BuildGenerationConfig,
+	ItemData,
+	BuildInfo,
+	AIBuildType,
+	Stat,
+	AnsweredToast,
+};
 export { defaultBuildGenerationConfig };

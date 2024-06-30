@@ -1,4 +1,9 @@
-import { AIBuildType, BuildGenerationConfig, ItemData, defaultBuildGenerationConfig } from "../types/types";
+import {
+	AIBuildType,
+	BuildGenerationConfig,
+	ItemData,
+	defaultBuildGenerationConfig,
+} from "../types/types";
 import data from "../data/new_new_data.json";
 import { ItemCategory } from "../types/enums";
 import { Build } from "./Build";
@@ -68,7 +73,8 @@ export default class BuildGenerator {
 
 	public generateItemsForCategory(category: ItemCategory) {
 		this._buildGenerationConfig[category].previouslyRolled.clear();
-		this._buildGenerationConfig[category].buildNums = defaultBuildGenerationConfig[category].buildNums;
+		this._buildGenerationConfig[category].buildNums =
+			defaultBuildGenerationConfig[category].buildNums;
 
 		// This function should only be called when the build has no items for the category
 		if (this._build._items.get(category)?.length !== 0) {
@@ -108,9 +114,6 @@ export default class BuildGenerator {
 	}
 
 	public rerollItem(category: ItemCategory, oldItem: number): Map<ItemCategory, number[]> {
-		// category === ItemCategory.Seals &&
-		// console.log("Previously rolled seals: ", this._buildGenerationConfig[category].previouslyRolled);
-
 		const newItem = this.generateItem(category);
 		if (typeof newItem === "undefined") return this._build._items;
 		this._build.replaceItem(category, oldItem, newItem);
@@ -136,7 +139,6 @@ export default class BuildGenerator {
 	}
 
 	private calculateCount(category: ItemCategory): number {
-		console.log(this._buildGenerationConfig.includeDlc);
 		if (this._buildGenerationConfig.includeDlc) {
 			return this._itemData[category]["count"];
 		}
@@ -202,17 +204,17 @@ export default class BuildGenerator {
 		// Get the set of previously rolled items for the category
 		const prevRolledItems = this._buildGenerationConfig[category].previouslyRolled;
 
-		// wtf is going on
-		// category === ItemCategory.Seals && console.log(`PreviouslyRolled ${category}: `, prevRolledItems);
-
-		// If all items in the category have been rolled, return -1
+		// If all items in the category have been rolled, return undefined
 		if (prevRolledItems.size >= count) {
 			return;
 		}
 
 		// If `_excludePreviouslyRolled` is true and the generated index is of a previously rolled item,
 		// generate a new index until an unrolled item is found.
-		while (this._buildGenerationConfig[category].excludePreviouslyRolled && prevRolledItems.has(randomIndex)) {
+		while (
+			this._buildGenerationConfig[category].excludePreviouslyRolled &&
+			prevRolledItems.has(randomIndex)
+		) {
 			randomIndex = Math.floor(Math.random() * count);
 		}
 
@@ -260,7 +262,6 @@ export default class BuildGenerator {
 	 *                   `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
 	 */
 	public createUrlFromBuildMap(rolled: Map<ItemCategory, number[]>): string {
-		console.log("Creating url from build map", rolled);
 		let url = "";
 		let first = true;
 		for (const category of rolled.keys()) {
@@ -281,7 +282,6 @@ export default class BuildGenerator {
 		}
 
 		url = url.slice(0, url.length); // remove last comma
-		console.log("returning uuuuuu: ", url);
 		return url;
 	}
 
@@ -310,7 +310,11 @@ export default class BuildGenerator {
 		return this.createUrlFromBuildMap(buildMap);
 	}
 
-	private addItemToBuildMap(category: ItemCategory, item: number, map: Map<ItemCategory, number[]>) {
+	private addItemToBuildMap(
+		category: ItemCategory,
+		item: number,
+		map: Map<ItemCategory, number[]>
+	) {
 		/**
 		 * This is needed because Map and Set's get method can return undefined,
 		 * in which case a new Map or Set needs to be initialized in order for an item to be added
@@ -342,7 +346,6 @@ export default class BuildGenerator {
 	 * @returns {Build} the Build object.
 	 */
 	public parseBuildFromMap(map: Map<ItemCategory, number[]>): Map<ItemCategory, Item[]> {
-		console.log("items in parse build from map: ", this._build._items);
 		this.resetItems();
 		for (const [key, val] of map) {
 			if (val.length === 0) {
@@ -420,7 +423,7 @@ export default class BuildGenerator {
 
 		for (let i = 0; i < str.length; ++i) {
 			// If we are at an ampersand, slice out the entire category.
-			if (str[i] === "&" || str[i] === "?") {
+			if (str[i] === "&" || i === 0) {
 				let catStart = i + 1;
 				let catStop = catStart;
 

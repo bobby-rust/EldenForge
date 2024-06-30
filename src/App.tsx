@@ -23,9 +23,22 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { quotes } from "./types/constants";
+import { AnsweredToast } from "./types/types";
 
 const generator = new BuildGenerator();
 const quote = quotes[Math.floor(Math.random() * quotes.length)];
+
+const initialAnsweredToast: AnsweredToast = {
+	ashes: false,
+	incants: false,
+	seals: false,
+	shields: false,
+	sorcs: false,
+	spirits: false,
+	talismans: false,
+	tears: false,
+	weapons: false,
+};
 
 // TODO: Make this a reusable component to use with AI builds.
 export default function App() {
@@ -35,6 +48,7 @@ export default function App() {
 	const [copied, setCopied] = React.useState(false);
 	const [includeSote, setIncludeSote] = React.useState(true);
 	const [dialogOpen, setDialogOpen] = React.useState(false);
+	const [answeredToast, setAnsweredToast] = React.useState(initialAnsweredToast);
 
 	const copyUrl = () => {
 		const textToCopy = window.location.href;
@@ -59,7 +73,9 @@ export default function App() {
 	const navigate = useNavigate();
 
 	const [build, setBuild] = React.useState<Map<ItemCategory, Item[]> | null>(
-		state ? null : generator.generateBuildFromUrl(buildUrl.toString())
+		state
+			? null
+			: generator.generateBuildFromUrl("?" + buildUrl.toString().replaceAll("%2C", ","))
 	);
 
 	const handleReroll = () => {
@@ -74,7 +90,12 @@ export default function App() {
 		navigate(`../${newUrl}`);
 		const newBuild = generator.generateBuildFromUrl(newUrl);
 		for (const c of newBuild) {
-			if (c[0] !== ItemCategory.Classes && c[1].length === 0 && generator._buildGenerationConfig[c[0]].buildNums > 0) {
+			if (
+				c[0] !== ItemCategory.Classes &&
+				c[1].length === 0 &&
+				generator._buildGenerationConfig[c[0]].buildNums > 0 &&
+				!answeredToast[c[0]]
+			) {
 				toast(
 					<ToastMessage
 						title={`No ${readableItemCategory.get(c[0])} left to roll`}
@@ -93,6 +114,13 @@ export default function App() {
 		generator._buildGenerationConfig[c].previouslyRolled.clear();
 	};
 
+	const handleSetAnsweredToast = (c: ItemCategory) => {
+		const newAnsweredToast = answeredToast;
+		newAnsweredToast[c as string] = true;
+		setAnsweredToast(newAnsweredToast);
+		toast.dismiss();
+	};
+
 	const ClearCategoryToastButtons = (props: { c: ItemCategory }): JSX.Element => {
 		const { c } = props;
 
@@ -109,7 +137,7 @@ export default function App() {
 				>
 					Yes
 				</button>
-				<button className="btn" onClick={() => toast.dismiss()}>
+				<button className="btn" onClick={() => handleSetAnsweredToast(c)}>
 					No
 				</button>
 			</div>
@@ -144,6 +172,11 @@ export default function App() {
 	const handleRegenerateCategory = (c: ItemCategory) => {
 		const newBuildMap = generator.generateItemsForCategory(c);
 		const newUrl = generator.createUrlFromBuildMap(newBuildMap);
+
+		const newAnsweredToast = answeredToast;
+		newAnsweredToast[c] = false;
+		setAnsweredToast(newAnsweredToast);
+
 		navigate(`../${newUrl}`, { replace: true });
 		setBuild(generator.generateBuildFromUrl(newUrl));
 	};
@@ -172,8 +205,6 @@ export default function App() {
 			});
 			setArmors(newArmors);
 		}
-
-		console.log("build: ", generator._build._items);
 	}, [build]);
 
 	React.useEffect(() => {
@@ -197,39 +228,55 @@ export default function App() {
 			<div className={`lg:px-14 pt-8 ${build?.size === 0 && "overflow-y-hidden h-[83vh]"}`}>
 				<div
 					className={`flex ${
-						build?.size === 0 && " h-full items-center flex-col gap-6 animate-landing-slide-up"
+						build?.size === 0 &&
+						" h-full items-center flex-col gap-6 animate-landing-slide-up"
 					} justify-center mb-10 p-3`}
 				>
 					{build?.size === 0 && (
 						<div className="flex flex-col gap-6 md:gap-10">
-							<h1 className="md:text-2xl 2xl:text-5xl font-bold text-center tracking-wide">EldenForge</h1>
+							<h1 className="md:text-2xl 2xl:text-5xl font-bold text-center tracking-wide">
+								EldenForge
+							</h1>
 							<blockquote className="md:text-xl 2xl:text-3xl italic text-gray-600 text-center w-[50vw] md:tracking-tight leading-loose  md:mb-10">
 								"{quote[0]}" <br></br>- {quote[1]}
 							</blockquote>
 						</div>
 					)}
 					<div className="flex gap-3 md:gap-6">
-						{window.location.pathname === "/" && window.location.search === "" && shouldDialogOpen() ? (
+						{window.location.pathname === "/" &&
+						window.location.search === "" &&
+						shouldDialogOpen() ? (
 							<Dialog>
 								<DialogTrigger>
 									<button
-										className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
+										className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${
+											build?.size === 0 && " "
+										}`}
 									>
 										<span className="lg:text-xl">Randomizer</span>
 									</button>
 								</DialogTrigger>
 								<DialogContent className="max-w-[90vw] sm:w-auto">
 									<DialogHeader>
-										<DialogTitle className="text-xl">Would you like to include DLC content?</DialogTitle>
+										<DialogTitle className="text-xl">
+											Would you like to include DLC content?
+										</DialogTitle>
 										<DialogDescription className="text-lg">
-											You'll be able to toggle this setting later on the build page.
+											You'll be able to toggle this setting later on the build
+											page.
 										</DialogDescription>
 									</DialogHeader>
 									<DialogFooter className="justify-center items-center gap-3 flex-col sm:flex-row">
-										<button className="btn w-36 sm:w-24 btn-primary" onClick={() => handleDialogChoice(true)}>
+										<button
+											className="btn w-36 sm:w-24 btn-primary"
+											onClick={() => handleDialogChoice(true)}
+										>
 											Yes
 										</button>
-										<button className="btn w-36 sm:w-24 btn-secondary" onClick={() => handleDialogChoice(false)}>
+										<button
+											className="btn w-36 sm:w-24 btn-secondary"
+											onClick={() => handleDialogChoice(false)}
+										>
 											No
 										</button>
 									</DialogFooter>
@@ -239,7 +286,9 @@ export default function App() {
 							window.location.search === "" &&
 							window.location.pathname === "/" && (
 								<button
-									className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
+									className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${
+										build?.size === 0 && " "
+									}`}
 									onClick={handleReroll}
 								>
 									<span className="lg:text-xl">Randomizer</span>
@@ -248,7 +297,9 @@ export default function App() {
 						)}
 						{build?.size === 0 && (
 							<button
-								className={`btn lg:btn-lg btn-secondary hover:animate-wiggle ${build?.size === 0 && " "}`}
+								className={`btn lg:btn-lg btn-secondary hover:animate-wiggle ${
+									build?.size === 0 && " "
+								}`}
 								onClick={() => navigate("/ai")}
 							>
 								<h1>Ask Gideon</h1>
@@ -258,13 +309,20 @@ export default function App() {
 					{!(window.location.search === "") && (
 						<div className="flex flex-col xl:flex-row w-full justify-evenly items-center gap-5 sm:p-10">
 							<div className="xl:w-1/3 flex justify-center gap-2 items-center mt-3 lg:mt-0">
-								<Switch checked={includeSote} onCheckedChange={handleSetIncludeSote} />
+								<Switch
+									checked={includeSote}
+									onCheckedChange={handleSetIncludeSote}
+								/>
 								<h1 className="text-sm lg:text-md xl:text-lg w-full xl:w-auto text-center">
-									{width < 334 ? "Include Shadow of the Erdtree" : "Include Shadow of the Erdree Items"}
+									{width < 334
+										? "Include Shadow of the Erdtree"
+										: "Include Shadow of the Erdree Items"}
 								</h1>
 							</div>
 							<button
-								className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
+								className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${
+									build?.size === 0 && " "
+								}`}
 								onClick={handleReroll}
 							>
 								<h1 className="lg:text-xl">Randomize Build</h1>
