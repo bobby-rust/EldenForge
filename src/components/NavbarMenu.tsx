@@ -12,7 +12,6 @@ import {
 import BuildGenerator from "@/classes/BuildGenerator";
 import { ItemCategory } from "@/types/enums";
 import { BuildGenerationConfig } from "@/types/types";
-import { Button } from "./ui/button";
 
 export default function NavbarMenu({
 	generator,
