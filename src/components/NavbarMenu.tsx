@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
-import { Button } from "./ui/button";
 import { IoSettingsOutline } from "react-icons/io5";
 import {
 	DropdownMenu,
@@ -13,6 +12,7 @@ import {
 import BuildGenerator from "@/classes/BuildGenerator";
 import { ItemCategory } from "@/types/enums";
 import { BuildGenerationConfig } from "@/types/types";
+import { Button } from "./ui/button";
 
 export default function NavbarMenu({
 	generator,
@@ -71,7 +71,7 @@ export default function NavbarMenu({
 			</div>
 			<li className="h-16 flex justify-center items-center">
 				<button
-					className="btn btn-secondary text-center w-60 lg:w-28"
+					className="btn btn-secondary text-center w-60 lg:w-28 tracking-widest font-semibold"
 					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
 				>
 					{regexp.test(window.location.href) ? "Randomizer" : "AI Builds"}
@@ -122,12 +122,12 @@ export default function NavbarMenu({
 					<option value="sunset">Sunset</option>
 				</select>
 			</li>
-			<li className="h-16 w-60 lg:w-28 justify-center items-center">
+			<li className="h-16 justify-center items-center">
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant="outline">
+						<button className="btn btn-secondary w-60 lg:w-28 tracking-widest">
 							<IoSettingsOutline /> Settings
-						</Button>
+						</button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent className="w-56">
 						<DropdownMenuLabel>Exclude Previously Rolled</DropdownMenuLabel>
