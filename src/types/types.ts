@@ -1,5 +1,5 @@
 import { Item } from "../classes/Item";
-import { Armors, ItemCategory } from "./enums";
+import { ItemCategory } from "./enums";
 
 /**
  * An item category has `count` items and a list of that category's items
@@ -67,7 +67,6 @@ for (const c of Object.values(ItemCategory)) {
 		});
 	}
 }
-
 const defaultBuildInfo: BuildInfo = {
 	categoryConfigs: defaultCategoryBuildInfo,
 };

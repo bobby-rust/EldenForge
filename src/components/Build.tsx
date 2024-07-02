@@ -70,6 +70,12 @@ export default function Build() {
 		if (typeof i === "undefined") return;
 
 		const newBuildMap = generator.rerollItem(c, i);
+
+		if (typeof newBuildMap === "boolean") {
+			toast.error("Could not reroll item");
+			return;
+		}
+
 		const newUrl = generator.createUrlFromBuildMap(newBuildMap);
 
 		navigate(`../${newUrl}`, { replace: true });

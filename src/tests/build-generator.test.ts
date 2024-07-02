@@ -25,7 +25,10 @@ describe("BuildGenerator", () => {
 	describe("generateRandom", () => {
 		it("should generate a random build"),
 			() => {
-				buildGenerator._buildGenerationConfig.seals.excludePreviouslyRolled = false;
+				buildGenerator._buildGenerationConfig.buildInfo.categoryConfigs.get(
+					ItemCategory.Seals
+				)!.excludePreviouslyRolled = false;
+
 				let isNonUnique = false;
 				const rolledItems = new Map<ItemCategory, Set<number>>();
 
@@ -47,7 +50,7 @@ describe("BuildGenerator", () => {
 		it("should generate a unique build", () => {
 			buildGenerator = new BuildGenerator();
 			let isUnique = true;
-			buildGenerator._buildGenerationConfig.seals.buildNums = 1;
+			buildGenerator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Seals)!.buildNums = 1;
 			const rolledSeals = new Set<number>();
 
 			for (let i = 0; i < 9; ++i) {
@@ -86,7 +89,9 @@ describe("BuildGenerator", () => {
 				// not using structuredClone would cause prevRolled to be a reference, so when we generate the build
 				// it would reflect in prevRolled, so when we check if prevRolled has the index, it would be true
 				// causing the test to throw a false-negative failure
-				const prevRolled = structuredClone(buildGenerator._buildGenerationConfig.helms.previouslyRolled);
+				const prevRolled = structuredClone(
+					buildGenerator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Helm)!.previouslyRolled
+				);
 
 				const url = buildGenerator.generateUrl();
 				const build = buildGenerator.generateBuildFromUrl(url);
@@ -105,11 +110,14 @@ describe("BuildGenerator", () => {
 			expect(build.get(ItemCategory.Helm)?.[0]).toBeUndefined();
 
 			// The first 167 rolls should contain valid armors
-			expect(buildGenerator._buildGenerationConfig.helms.previouslyRolled.has(-1)).toBe(false);
+			expect(
+				buildGenerator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Helm)!.previouslyRolled.has(-1)
+			).toBe(false);
 
 			expect(isUnique).toBe(true);
-			expect(buildGenerator._buildGenerationConfig.helms.previouslyRolled.has(-1)).toBe(false);
-			expect(buildGenerator._buildGenerationConfig.helms.previouslyRolled.size).toBe(167);
+			expect(
+				buildGenerator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Helm)!.previouslyRolled.size
+			).toBe(167);
 		});
 	});
 });
