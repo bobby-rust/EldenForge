@@ -8,8 +8,6 @@ const generator = new BuildGenerator();
 
 export default function AIApp() {
 	const quote = quotes[Math.floor(Math.random() * quotes.length)];
-	// console.log(quotes);
-	console.log(quote);
 	const navigate = useNavigate();
 	React.useEffect(() => {
 		const queryAI = async () => {
@@ -19,7 +17,7 @@ export default function AIApp() {
 
 		queryAI();
 	}, []);
-	console.log("rendering AI app");
+
 	return (
 		<div className="overflow-y-hidden lg:px-14 pt-8">
 			<div className="flex flex-col items-center justify-center gap-10 h-[80vh] animate-landing-slide-up">

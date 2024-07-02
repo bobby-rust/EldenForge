@@ -1,13 +1,17 @@
 import { useContext } from "react";
 import { ThemeContext } from "./ThemeProvider";
 import NavbarMenu from "./NavbarMenu";
+import BuildGenerator from "@/classes/BuildGenerator";
 
-export default function Navbar() {
+export default function Navbar(props: { generator: BuildGenerator }) {
+	const { generator } = props;
+
 	const themeContext = useContext(ThemeContext);
 	if (!themeContext) {
 		throw new Error("ThemeContext is undefined");
 	}
 	const { theme, setTheme } = themeContext;
+
 	return (
 		<div className="drawer z-10 font-['Cormorant_Garamond']">
 			<input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
@@ -34,7 +38,7 @@ export default function Navbar() {
 					<div className="flex-none hidden lg:block">
 						<ul className="menu menu-horizontal">
 							{/* Navbar menu content here */}
-							<NavbarMenu theme={theme} setTheme={setTheme} />
+							<NavbarMenu generator={generator} theme={theme} setTheme={setTheme} />
 						</ul>
 					</div>
 				</div>
@@ -43,7 +47,7 @@ export default function Navbar() {
 				<label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
 				<ul className="menu p-4 w-72 min-h-full bg-base-200">
 					{/* Sidebar content here */}
-					<NavbarMenu theme={theme} setTheme={setTheme} />
+					<NavbarMenu generator={generator} theme={theme} setTheme={setTheme} />
 				</ul>
 			</div>
 		</div>

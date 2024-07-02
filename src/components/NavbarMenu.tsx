@@ -1,11 +1,54 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
-export default function NavbarMenu({ theme, setTheme }: { theme: string; setTheme: (theme: string) => void }) {
-	const navigate = useNavigate();
+import { Button } from "./ui/button";
+import { IoSettingsOutline } from "react-icons/io5";
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import BuildGenerator from "@/classes/BuildGenerator";
+import { ItemCategory } from "@/types/enums";
+import { BuildGenerationConfig } from "@/types/types";
 
+export default function NavbarMenu({
+	generator,
+	theme,
+	setTheme,
+}: {
+	generator: BuildGenerator;
+	theme: string;
+	setTheme: (theme: string) => void;
+}) {
+	const [config, setConfig] = React.useState<BuildGenerationConfig>(generator._buildGenerationConfig);
+	const [toggleValue, setToggleValue] = React.useState(true);
+	const [width, setWidth] = React.useState(window.innerWidth);
+
+	const navigate = useNavigate();
 	const regexp = new RegExp("/ai/*");
 
-	const [width, setWidth] = React.useState(window.innerWidth);
+	const toggleAll = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		e.preventDefault();
+		const newConfig: BuildGenerationConfig = { ...config };
+		for (const [c, _] of newConfig.buildInfo.categoryConfigs.entries()) {
+			newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled = toggleValue;
+		}
+		setToggleValue(!toggleValue);
+		setConfig(newConfig);
+	};
+
+	function handleConfigChange(e: React.MouseEvent<HTMLDivElement, MouseEvent>, c: ItemCategory) {
+		e.preventDefault();
+		const newConfig: BuildGenerationConfig = { ...config };
+
+		newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled =
+			!newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled;
+		setConfig(newConfig);
+	}
+
 	React.useEffect(() => {
 		function handleResize() {
 			setWidth(window.innerWidth);
@@ -14,9 +57,10 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 		window.addEventListener("resize", handleResize);
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
+
 	return (
 		<div
-			className={`flex flex-col lg:flex-row justify-center items-center overflow-hidden gap-4 ${
+			className={`flex flex-col lg:flex-row flex-wrap justify-center items-center gap-4 ${
 				width < 1032 ? "flex-col-reverse" : ""
 			}`}
 		>
@@ -35,7 +79,7 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 			</li>
 			<li className="h-16 flex justify-center items-center w-60 lg:w-28">
 				<select
-					className="select z-50 select-secondary select-bordered w-full overflow-hidden"
+					className="select z-50 select-secondary select-bordered w-full"
 					data-choose-theme
 					data-theme
 					value={theme}
@@ -77,6 +121,74 @@ export default function NavbarMenu({ theme, setTheme }: { theme: string; setThem
 					<option value="nord">Nord</option>
 					<option value="sunset">Sunset</option>
 				</select>
+			</li>
+			<li className="h-16 w-60 lg:w-28 justify-center items-center">
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button variant="outline">
+							<IoSettingsOutline /> Settings
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent className="w-56">
+						<DropdownMenuLabel>Exclude Previously Rolled</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuCheckboxItem onClick={toggleAll}>Toggle All</DropdownMenuCheckboxItem>
+						<DropdownMenuCheckboxItem
+							onClick={(e) => handleConfigChange(e, ItemCategory.Weapons)}
+							checked={config.buildInfo.categoryConfigs.get(ItemCategory.Weapons)!.excludePreviouslyRolled}
+						>
+							Weapons
+						</DropdownMenuCheckboxItem>
+						<DropdownMenuCheckboxItem
+							onClick={(e) => handleConfigChange(e, ItemCategory.Ashes)}
+							checked={config.buildInfo.categoryConfigs.get(ItemCategory.Ashes)!.excludePreviouslyRolled}
+						>
+							Ashes Of War
+						</DropdownMenuCheckboxItem>
+						<DropdownMenuCheckboxItem
+							onClick={(e) => handleConfigChange(e, ItemCategory.Seals)}
+							checked={config.buildInfo.categoryConfigs.get(ItemCategory.Seals)!.excludePreviouslyRolled}
+						>
+							Sacred Seals
+						</DropdownMenuCheckboxItem>
+						<DropdownMenuCheckboxItem
+							onClick={(e) => handleConfigChange(e, ItemCategory.Sorcs)}
+							checked={config.buildInfo.categoryConfigs.get(ItemCategory.Sorcs)!.excludePreviouslyRolled}
+						>
+							Sorceries
+						</DropdownMenuCheckboxItem>
+						<DropdownMenuCheckboxItem
+							onClick={(e) => handleConfigChange(e, ItemCategory.Incants)}
+							checked={config.buildInfo.categoryConfigs.get(ItemCategory.Incants)!.excludePreviouslyRolled}
+						>
+							Incantations
+						</DropdownMenuCheckboxItem>
+						<DropdownMenuCheckboxItem
+							onClick={(e) => handleConfigChange(e, ItemCategory.Shields)}
+							checked={config.buildInfo.categoryConfigs.get(ItemCategory.Shields)!.excludePreviouslyRolled}
+						>
+							Shields
+						</DropdownMenuCheckboxItem>
+						<DropdownMenuCheckboxItem
+							onClick={(e) => handleConfigChange(e, ItemCategory.Tears)}
+							checked={config.buildInfo.categoryConfigs.get(ItemCategory.Tears)!.excludePreviouslyRolled}
+						>
+							Crystal Tears
+						</DropdownMenuCheckboxItem>
+						<DropdownMenuCheckboxItem
+							onClick={(e) => handleConfigChange(e, ItemCategory.Spirits)}
+							checked={config.buildInfo.categoryConfigs.get(ItemCategory.Spirits)!.excludePreviouslyRolled}
+						>
+							Spirit Ashes
+						</DropdownMenuCheckboxItem>
+						<DropdownMenuCheckboxItem
+							onClick={(e) => handleConfigChange(e, ItemCategory.Talismans)}
+							checked={config.buildInfo.categoryConfigs.get(ItemCategory.Talismans)!.excludePreviouslyRolled}
+						>
+							Talismans
+						</DropdownMenuCheckboxItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</li>
 		</div>
 	);

@@ -16,13 +16,18 @@ export default function CardColumn(props: {
 }) {
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const [selectNumItems, setSelectNumItems] = React.useState(
-		typeof props.items[0] !== "undefined" ? defaultBuildGenerationConfig[props.items[0].category].buildNums : 0
+		typeof props.items[0] !== "undefined"
+			? defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(props.category)!.buildNums
+			: 0
 	);
 
 	const handleAddCategory = () => {
 		props.regenerateCategory?.(props.category);
-		setSelectNumItems(defaultBuildGenerationConfig[props.category].buildNums);
-		props.setNumItems?.(props.category, defaultBuildGenerationConfig[props.category].buildNums);
+		setSelectNumItems(defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(props.category)!.buildNums);
+		props.setNumItems?.(
+			props.category,
+			defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(props.category)!.buildNums
+		);
 	};
 
 	const handleChangeNumItems = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -34,6 +39,7 @@ export default function CardColumn(props: {
 	React.useEffect(() => {
 		setSelectNumItems(props.items.length);
 	}, [props.items]);
+
 	React.useEffect(() => {
 		function handleResize() {
 			setWidth(window.innerWidth);

@@ -24,11 +24,11 @@ import {
 } from "@/components/ui/dialog";
 import { quotes } from "./types/constants";
 
-const generator = new BuildGenerator();
 const quote = quotes[Math.floor(Math.random() * quotes.length)];
 
 // TODO: Make this a reusable component to use with AI builds.
-export default function App() {
+export default function App(props: { generator: BuildGenerator }) {
+	const { generator } = props;
 	const [armors, setArmors] = React.useState<Item[]>([]);
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const { buildUrl } = useParams();
@@ -63,21 +63,21 @@ export default function App() {
 	);
 
 	const handleReroll = () => {
-		console.log("huh");
-		console.log("Include dlc: ", localStorage.getItem("include-dlc"));
 		if (localStorage.getItem("include-dlc") === null) {
-			console.log("WHAT");
 			setDialogOpen(true);
 		}
-
-		console.log("WHATv2");
 
 		const newUrl = generator.generateUrl();
 
 		navigate(`../${newUrl}`, { replace: true });
 		const newBuild = generator.generateBuildFromUrl(newUrl);
 		for (const c of newBuild) {
-			if (c[0] !== ItemCategory.Classes && c[1].length === 0 && generator._buildGenerationConfig[c[0]].buildNums > 0) {
+			if (
+				c[0] !== ItemCategory.Classes &&
+				c[1].length === 0 &&
+				generator._buildGenerationConfig.buildInfo.categoryConfigs.get(c[0])!.buildNums > 0 &&
+				generator._buildGenerationConfig.buildInfo.categoryConfigs.get(c[0])!.excludePreviouslyRolled
+			) {
 				toast(
 					<ToastMessage
 						title={`No ${readableItemCategory.get(c[0])} left to roll`}
@@ -90,10 +90,8 @@ export default function App() {
 		setBuild(newBuild);
 	};
 
-	React.useEffect(() => {}, [dialogOpen]);
-
 	const handleClearPreviouslyRolled = (c: ItemCategory) => {
-		generator._buildGenerationConfig[c].previouslyRolled.clear();
+		generator._buildGenerationConfig.buildInfo.categoryConfigs.get(c)!.previouslyRolled.clear();
 	};
 
 	const ClearCategoryToastButtons = (props: { c: ItemCategory }): JSX.Element => {
@@ -124,9 +122,7 @@ export default function App() {
 		}
 
 		const newBuildMap = generator.rerollItem(c, i);
-		const newUrl = generator.createUrlFromBuildMap(newBuildMap);
-
-		if (newUrl === buildUrl) {
+		if (typeof newBuildMap === "boolean") {
 			toast(
 				<ToastMessage
 					title={`No ${readableItemCategory.get(c)} left to roll`}
@@ -134,7 +130,9 @@ export default function App() {
 					buttons={<ClearCategoryToastButtons c={c} />}
 				/>
 			);
+			return;
 		}
+		const newUrl = generator.createUrlFromBuildMap(newBuildMap);
 
 		navigate(`../${newUrl}`, { replace: true });
 		setBuild(generator.generateBuildFromUrl(newUrl));
@@ -175,8 +173,6 @@ export default function App() {
 			});
 			setArmors(newArmors);
 		}
-
-		console.log(window.location.pathname);
 	}, [build]);
 
 	React.useEffect(() => {
@@ -190,10 +186,6 @@ export default function App() {
 			window.removeEventListener("resize", handleResize);
 		};
 	}, []);
-
-	React.useEffect(() => {
-		console.log("Include sote: ", includeSote);
-	}, [includeSote]);
 
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
@@ -215,12 +207,12 @@ export default function App() {
 						{window.location.pathname === "/" && (
 							<Dialog open={dialogOpen} onOpenChange={() => setDialogOpen(!dialogOpen)}>
 								<DialogTrigger>
-									<button
+									<div
 										className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${build?.size === 0 && " "}`}
 										onClick={localStorage.getItem("include-dlc") === null ? undefined : handleReroll}
 									>
 										<span className="lg:text-xl">Randomize Build</span>
-									</button>
+									</div>
 								</DialogTrigger>
 								<DialogContent className="max-w-[90vw] sm:w-auto">
 									<DialogHeader>

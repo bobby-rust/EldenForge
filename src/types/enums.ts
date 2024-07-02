@@ -53,3 +53,10 @@ export enum UIItemCategory {
 	Talismans = "Talismans",
 	Sorcs = "Sorceries",
 }
+
+export enum Armors {
+	Helm = "helm",
+	Chest = "chest",
+	Gauntlets = "gauntlets",
+	Leg = "leg",
+}
