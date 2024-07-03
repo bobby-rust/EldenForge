@@ -20,6 +20,10 @@ export default class AI {
 			}),
 		});
 
+		if (r.status !== 200) {
+			throw new Error(`Error: ${r.status} - ${await r.text()}`);
+		}
+
 		const res = await r.json();
 
 		return this.parseResponse(res.body.build.candidates[0].content.parts[0].text);

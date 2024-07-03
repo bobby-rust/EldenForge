@@ -61,6 +61,11 @@ export default function AIApp() {
 	const handleRegenerateAIBuild = async () => {
 		setLoading(true);
 		const newUrl = (await generator.generateAIUrl()) ?? "";
+		if (newUrl === "") {
+			toast.error("The server is busy. Wait 60 seconds and try again.");
+			setCountdown(60);
+			return;
+		}
 		const newBuild = generator.parseAIBuildFromUrl(newUrl);
 		newBuild.summary = decodeURIComponent(newBuild.summary);
 
@@ -97,6 +102,10 @@ export default function AIApp() {
 	}, [build]);
 
 	React.useEffect(() => {
+		setBuild(generator.parseAIBuildFromUrl(decodeURIComponent(buildUrl.toString().replaceAll("+", " "))));
+	}, [buildUrl]);
+
+	React.useEffect(() => {
 		generator.buildType = buildType;
 	}, [buildType]);
 
@@ -112,7 +121,7 @@ export default function AIApp() {
 	React.useEffect(() => {
 		const queryAI = async () => {
 			const newUrl = await generator.generateAIUrl();
-			navigate(`./${newUrl}`);
+			navigate(`/ai/${newUrl}`);
 		};
 
 		queryAI();

@@ -55,8 +55,14 @@ export default class BuildGenerator {
 		if (typeof this._ai === "undefined") {
 			this.initAIGenerator();
 		}
-		const build = await this._ai?.getAIBuild(this._buildType);
 
+		let build;
+		try {
+			build = await this._ai?.getAIBuild(this._buildType);
+		} catch (e) {
+			// TODO: generate useful error messages and error page for user
+			console.error(e);
+		}
 		if (!build) return null;
 
 		return this.createAIUrlFromAIBuild(build);
@@ -212,7 +218,6 @@ export default class BuildGenerator {
 				prevRolledItems.has(randomIndex)) ||
 			this._build._items.get(category)?.includes(randomIndex)
 		) {
-			console.log("x");
 			randomIndex = Math.floor(Math.random() * count);
 		}
 
