@@ -1,3 +1,7 @@
+/**
+ * TODO: Patch AI spam exploit
+ */
+
 import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import BuildGenerator from "../classes/BuildGenerator";
@@ -11,11 +15,13 @@ import CardColumn from "./CardColumn";
 import { toast } from "sonner";
 import { IoCopyOutline } from "react-icons/io5";
 import { LuCopyCheck } from "react-icons/lu";
+import { ToastMessage } from "./ToastMessage";
+import { Button } from "./ui/button";
 
 const generator = new BuildGenerator();
 const quote = quotes[Math.floor(Math.random() * quotes.length)];
 
-const ToastMessage = () => {
+const CopiedMessage = () => {
 	return (
 		<div className="flex justify-between w-full items-center">
 			<div className="flex flex-col justify-center">
@@ -31,17 +37,18 @@ const ToastMessage = () => {
 
 export default function AIApp() {
 	const [buildUrl, _] = useSearchParams();
-	const [showDescription, setShowDescription] = React.useState(true);
+	const [showDescription, setShowDescription] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [countdown, setCountdown] = React.useState(30);
 	const [disabled, setDisabled] = React.useState(true);
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const [copied, setCopied] = React.useState(false);
+	const [hintShowed, setHintShowed] = React.useState(false);
 
 	const copyUrl = () => {
 		navigator.clipboard.writeText(window.location.href);
 		setCopied(true);
-		toast(<ToastMessage />);
+		toast(<CopiedMessage />);
 	};
 
 	React.useEffect(() => {
@@ -58,12 +65,28 @@ export default function AIApp() {
 	const [armors, setArmors] = React.useState<Item[]>([]);
 	const [buildType, setBuildType] = React.useState("");
 
+	const showHint = () => {
+		toast(
+			<ToastMessage
+				title="Hint"
+				message="Try selecting a build type in the top left for a better result."
+				buttons={
+					<Button className="" onClick={() => toast.dismiss()}>
+						Got it
+					</Button>
+				}
+			/>
+		);
+		setHintShowed(true);
+	};
+
 	const handleRegenerateAIBuild = async () => {
 		setLoading(true);
 		const newUrl = (await generator.generateAIUrl()) ?? "";
 		if (newUrl === "") {
 			toast.error("The server is busy. Wait 60 seconds and try again.");
 			setCountdown(60);
+			setLoading(false);
 			return;
 		}
 		const newBuild = generator.parseAIBuildFromUrl(newUrl);
@@ -122,9 +145,11 @@ export default function AIApp() {
 		const queryAI = async () => {
 			const newUrl = await generator.generateAIUrl();
 			navigate(`/ai/${newUrl}`);
+			!hintShowed && showHint();
 		};
 
-		queryAI();
+		if (window.location.search === "") queryAI();
+		setShowDescription(true);
 	}, []);
 
 	return (
@@ -155,9 +180,7 @@ export default function AIApp() {
 							<option value="Strength">Strength</option>
 							<option value="Dexterity">Dexterity</option>
 							<option value="Arcane">Arcane</option>
-							<option value="Strike Damage">Strike Damage</option>
-							<option value="Slash Damage">Slash Damage</option>
-							<option value="Pierce Damage">Pierce Damage</option>
+							<option value="Physical Damage">Physical Damage</option>
 							<option value="Magic Damage">Magic Damage</option>
 							<option value="Holy Damage">Holy Damage</option>
 							<option value="Fire Damage">Fire Damage</option>
