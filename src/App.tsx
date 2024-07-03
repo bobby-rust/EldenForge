@@ -237,7 +237,7 @@ export default function App(props: { generator: BuildGenerator }) {
 						{window.location.pathname === "/" && window.location.search === "" && shouldDialogOpen() ? (
 							<Dialog>
 								<DialogTrigger>
-									<button className="btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle">
+									<button className="btn lg:btn-wide btn-primary hover:animate-wiggle btn-lg">
 										<span className="lg:text-2xl">Randomizer</span>
 									</button>
 								</DialogTrigger>
