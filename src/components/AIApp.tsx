@@ -1,5 +1,6 @@
 /**
  * TODO: Patch AI spam exploit
+ * TODO: Fix bug causing AI page to be loaded after cancelling on the AI landing page
  */
 
 import React from "react";
@@ -69,7 +70,7 @@ export default function AIApp() {
 		toast(
 			<ToastMessage
 				title="Hint"
-				message="Try selecting a build type in the top left for a better result."
+				message="Try selecting a build type at the top for a better result."
 				buttons={
 					<Button className="" onClick={() => toast.dismiss()}>
 						Got it
@@ -146,10 +147,10 @@ export default function AIApp() {
 			const newUrl = await generator.generateAIUrl();
 			navigate(`/ai/${newUrl}`);
 			!hintShowed && showHint();
+			setShowDescription(true);
 		};
 
 		if (window.location.search === "") queryAI();
-		setShowDescription(true);
 	}, []);
 
 	return (
