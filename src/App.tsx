@@ -141,10 +141,8 @@ export default function App(props: { generator: BuildGenerator }) {
 		}
 
 		const newBuildMap = generator.rerollItem(c, i);
-		const newUrl = generator.createUrlFromBuildMap(newBuildMap);
-
-		if (newUrl === "?" + buildUrl.toString()) {
-			toast(
+		if (typeof newBuildMap === "undefined") {
+			toast.error(
 				<ToastMessage
 					title={`No ${readableItemCategory.get(c)} left to roll`}
 					message={`Would you like to reset ${readableItemCategory.get(c)}?`}
@@ -153,6 +151,19 @@ export default function App(props: { generator: BuildGenerator }) {
 			);
 			return;
 		}
+
+		const newUrl = generator.createUrlFromBuildMap(newBuildMap);
+
+		// if (newUrl === "?" + buildUrl.toString()) {
+		// 	toast.error(
+		// 		<ToastMessage
+		// 			title={`No ${readableItemCategory.get(c)} left to roll`}
+		// 			message={`Would you like to reset ${readableItemCategory.get(c)}?`}
+		// 			buttons={<ClearCategoryToastButtons c={c} />}
+		// 		/>
+		// 	);
+		// 	return;
+		// }
 
 		navigate(`../${newUrl}`, { replace: true });
 		setBuild(generator.generateBuildFromUrl(newUrl));

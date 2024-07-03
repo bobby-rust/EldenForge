@@ -108,10 +108,10 @@ export default class BuildGenerator {
 		this._build._items = new Map<ItemCategory, number[]>();
 	}
 
-	public rerollItem(category: ItemCategory, oldItem: number): Map<ItemCategory, number[]> {
+	public rerollItem(category: ItemCategory, oldItem: number): Map<ItemCategory, number[]> | undefined {
 		const newItem = this.generateItem(category);
 
-		if (typeof newItem === "undefined") return new Map<ItemCategory, number[]>();
+		if (typeof newItem === "undefined") return;
 		this._build.replaceItem(category, oldItem, newItem);
 
 		return this._build._items;
@@ -212,6 +212,7 @@ export default class BuildGenerator {
 				prevRolledItems.has(randomIndex)) ||
 			this._build._items.get(category)?.includes(randomIndex)
 		) {
+			console.log("x");
 			randomIndex = Math.floor(Math.random() * count);
 		}
 
