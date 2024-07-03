@@ -1,9 +1,4 @@
-import {
-	AIBuildType,
-	BuildGenerationConfig,
-	ItemData,
-	defaultBuildGenerationConfig,
-} from "../types/types";
+import { AIBuildType, BuildGenerationConfig, ItemData, defaultBuildGenerationConfig } from "../types/types";
 import data from "../data/new_new_data.json";
 import { ItemCategory } from "../types/enums";
 import { Build } from "./Build";
@@ -68,20 +63,20 @@ export default class BuildGenerator {
 	}
 
 	public setNumItems(category: ItemCategory, numItems: number): void {
-		this._buildGenerationConfig[category].buildNums = numItems;
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums = numItems;
 	}
 
 	public generateItemsForCategory(category: ItemCategory) {
-		this._buildGenerationConfig[category].previouslyRolled.clear();
-		this._buildGenerationConfig[category].buildNums =
-			defaultBuildGenerationConfig[category].buildNums;
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.clear();
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums =
+			defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
 
 		// This function should only be called when the build has no items for the category
 		if (this._build._items.get(category)?.length !== 0) {
 			return this._build._items;
 		}
 
-		for (let i = 0; i < defaultBuildGenerationConfig[category].buildNums; i++) {
+		for (let i = 0; i < defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums; i++) {
 			const item = this.generateItem(category);
 			typeof item !== "undefined" && this._build.addItem(category, item);
 		}
@@ -115,7 +110,8 @@ export default class BuildGenerator {
 
 	public rerollItem(category: ItemCategory, oldItem: number): Map<ItemCategory, number[]> {
 		const newItem = this.generateItem(category);
-		if (typeof newItem === "undefined") return this._build._items;
+
+		if (typeof newItem === "undefined") return new Map<ItemCategory, number[]>();
 		this._build.replaceItem(category, oldItem, newItem);
 
 		return this._build._items;
@@ -202,9 +198,9 @@ export default class BuildGenerator {
 		let randomIndex = Math.floor(Math.random() * count);
 
 		// Get the set of previously rolled items for the category
-		const prevRolledItems = this._buildGenerationConfig[category].previouslyRolled;
+		const prevRolledItems = this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled;
 
-		// If all items in the category have been rolled, return undefined
+		// If all items in the category have been rolled, return -1
 		if (prevRolledItems.size >= count) {
 			return;
 		}
@@ -212,25 +208,27 @@ export default class BuildGenerator {
 		// If `_excludePreviouslyRolled` is true and the generated index is of a previously rolled item,
 		// generate a new index until an unrolled item is found.
 		while (
-			this._buildGenerationConfig[category].excludePreviouslyRolled &&
-			prevRolledItems.has(randomIndex)
+			(this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled &&
+				prevRolledItems.has(randomIndex)) ||
+			this._build._items.get(category)?.includes(randomIndex)
 		) {
 			randomIndex = Math.floor(Math.random() * count);
 		}
 
-		// Add the generated index to the set of previously rolled items
-		this.addItemToPreviouslyRolled(category, randomIndex);
+		// Add the generated index to the set of previously rolled items if `excludePreviouslyRolled` is true
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled &&
+			this.addItemToPreviouslyRolled(category, randomIndex);
 
 		// Return the generated index
 		return randomIndex;
 	}
 
 	public getBuildNumsForCategory(category: ItemCategory) {
-		return this._buildGenerationConfig[category].buildNums;
+		return this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
 	}
 
 	public setBuildNumsForCategory(category: ItemCategory, buildNums: number) {
-		this._buildGenerationConfig[category].buildNums = buildNums;
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums = buildNums;
 	}
 
 	/**
@@ -240,7 +238,7 @@ export default class BuildGenerator {
 	 * @return {boolean} The value of the `excludePreviouslyRolled` property for the specified `category`.
 	 */
 	public getExcludePreviouslyRolledForCategory(category: ItemCategory) {
-		return this._buildGenerationConfig[category].excludePreviouslyRolled;
+		return this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled;
 	}
 
 	/**
@@ -250,8 +248,8 @@ export default class BuildGenerator {
 	 * @param {boolean} exclude - The new value for `excludePreviouslyRolled`.
 	 */
 	public setExcludePreviouslyRolledForCategory(category: ItemCategory, exclude: boolean) {
-		this._buildGenerationConfig[category].excludePreviouslyRolled = exclude;
-		!exclude ? this._buildGenerationConfig[category].previouslyRolled.clear() : null;
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled = exclude;
+		!exclude ? this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.clear() : null;
 	}
 
 	/**
@@ -290,13 +288,15 @@ export default class BuildGenerator {
 	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
 	 */
 	private generateRandom(): string {
+		this.resetItems();
+
 		/**
 		 * Maps the category to the indices of the items rolled for that category for the current build
 		 */
 		const buildMap: Map<ItemCategory, number[]> = new Map<ItemCategory, number[]>();
 
 		for (const category of Object.keys(this._itemData)) {
-			const numItemsToRoll = this._buildGenerationConfig[category as ItemCategory].buildNums;
+			const numItemsToRoll = this.getBuildNumsForCategory(category as ItemCategory);
 			buildMap.set(category as ItemCategory, []);
 			for (let i = 0; i < numItemsToRoll; ++i) {
 				const itemIndex = this.generateItem(category as ItemCategory);
@@ -304,17 +304,14 @@ export default class BuildGenerator {
 					continue;
 				}
 				this.addItemToBuildMap(category as ItemCategory, itemIndex, buildMap);
+				this._build.addItem(category as ItemCategory, itemIndex);
 			}
 		}
 
 		return this.createUrlFromBuildMap(buildMap);
 	}
 
-	private addItemToBuildMap(
-		category: ItemCategory,
-		item: number,
-		map: Map<ItemCategory, number[]>
-	) {
+	private addItemToBuildMap(category: ItemCategory, item: number, map: Map<ItemCategory, number[]>) {
 		/**
 		 * This is needed because Map and Set's get method can return undefined,
 		 * in which case a new Map or Set needs to be initialized in order for an item to be added
@@ -328,7 +325,7 @@ export default class BuildGenerator {
 	 * @param item the index of the item
 	 */
 	private addItemToPreviouslyRolled(category: ItemCategory, item: number) {
-		this._buildGenerationConfig[category].previouslyRolled.add(item);
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.add(item);
 	}
 
 	public addItemsToPreviouslyRolled(items: Map<ItemCategory, number[]>) {
@@ -346,7 +343,6 @@ export default class BuildGenerator {
 	 * @returns {Build} the Build object.
 	 */
 	public parseBuildFromMap(map: Map<ItemCategory, number[]>): Map<ItemCategory, Item[]> {
-		this.resetItems();
 		for (const [key, val] of map) {
 			if (val.length === 0) {
 				this._build._items.set(key, []);
@@ -419,6 +415,8 @@ export default class BuildGenerator {
 	 * into a build map cont_aining categories as keys and the indices of build items as values
 	 */
 	private parseBuildMapFromUrl(str: string): Map<ItemCategory, number[]> {
+		this.resetItems();
+
 		const buildMap = new Map<ItemCategory, number[]>();
 
 		for (let i = 0; i < str.length; ++i) {

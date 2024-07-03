@@ -34,103 +34,46 @@ type ItemData = {
 	[key: string]: Category;
 };
 
-type BuildInfo = {
+type CategoryBuildInfo = {
 	excludePreviouslyRolled: boolean;
 	buildNums: number;
 	previouslyRolled: Set<number>;
 };
 
+type BuildInfo = {
+	categoryConfigs: Map<ItemCategory, CategoryBuildInfo>;
+	[key: string]: Map<ItemCategory, CategoryBuildInfo>;
+};
+
 type BuildGenerationConfig = {
 	includeDlc: boolean;
-	helms: BuildInfo;
-	chests: BuildInfo;
-	gauntlets: BuildInfo;
-	legs: BuildInfo;
-	talismans: BuildInfo;
-	spirits: BuildInfo;
-	ashes: BuildInfo;
-	classes: BuildInfo;
-	shields: BuildInfo;
-	sorcs: BuildInfo;
-	weapons: BuildInfo;
-	tears: BuildInfo;
-	incants: BuildInfo;
-	seals: BuildInfo;
+	buildInfo: BuildInfo;
 	[key: string]: BuildInfo | boolean;
+};
+
+const defaultCategoryBuildInfo: Map<ItemCategory, CategoryBuildInfo> = new Map();
+for (const c of Object.values(ItemCategory)) {
+	if ([ItemCategory.Helm, ItemCategory.Chest, ItemCategory.Gauntlets, ItemCategory.Leg].includes(c)) {
+		defaultCategoryBuildInfo.set(c, {
+			excludePreviouslyRolled: true,
+			buildNums: 1,
+			previouslyRolled: new Set<number>(),
+		});
+	} else {
+		defaultCategoryBuildInfo.set(c, {
+			excludePreviouslyRolled: true,
+			buildNums: 2,
+			previouslyRolled: new Set<number>(),
+		});
+	}
+}
+const defaultBuildInfo: BuildInfo = {
+	categoryConfigs: defaultCategoryBuildInfo,
 };
 
 const defaultBuildGenerationConfig: BuildGenerationConfig = {
 	includeDlc: true,
-	helms: {
-		excludePreviouslyRolled: true,
-		buildNums: 1,
-		previouslyRolled: new Set<number>(),
-	},
-	chests: {
-		excludePreviouslyRolled: true,
-		buildNums: 1,
-		previouslyRolled: new Set<number>(),
-	},
-	gauntlets: {
-		excludePreviouslyRolled: true,
-		buildNums: 1,
-		previouslyRolled: new Set<number>(),
-	},
-	legs: {
-		excludePreviouslyRolled: true,
-		buildNums: 1,
-		previouslyRolled: new Set<number>(),
-	},
-	weapons: {
-		excludePreviouslyRolled: true,
-		buildNums: 2,
-		previouslyRolled: new Set<number>(),
-	},
-	tears: {
-		excludePreviouslyRolled: true,
-		buildNums: 2,
-		previouslyRolled: new Set<number>(),
-	},
-	incants: {
-		excludePreviouslyRolled: true,
-		buildNums: 2,
-		previouslyRolled: new Set<number>(),
-	},
-	talismans: {
-		excludePreviouslyRolled: true,
-		buildNums: 2,
-		previouslyRolled: new Set<number>(),
-	},
-	spirits: {
-		excludePreviouslyRolled: true,
-		buildNums: 2,
-		previouslyRolled: new Set<number>(),
-	},
-	ashes: {
-		excludePreviouslyRolled: true,
-		buildNums: 2,
-		previouslyRolled: new Set<number>(),
-	},
-	classes: {
-		excludePreviouslyRolled: true,
-		buildNums: 2,
-		previouslyRolled: new Set<number>(),
-	},
-	shields: {
-		excludePreviouslyRolled: true,
-		buildNums: 2,
-		previouslyRolled: new Set<number>(),
-	},
-	sorcs: {
-		excludePreviouslyRolled: true,
-		buildNums: 2,
-		previouslyRolled: new Set<number>(),
-	},
-	seals: {
-		excludePreviouslyRolled: true,
-		buildNums: 2,
-		previouslyRolled: new Set<number>(),
-	},
+	buildInfo: defaultBuildInfo,
 };
 
 type Stat = {

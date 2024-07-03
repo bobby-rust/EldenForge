@@ -25,7 +25,6 @@ import {
 import { quotes } from "./types/constants";
 import { AnsweredToast } from "./types/types";
 
-const generator = new BuildGenerator();
 const quote = quotes[Math.floor(Math.random() * quotes.length)];
 
 const initialAnsweredToast: AnsweredToast = {
@@ -41,14 +40,15 @@ const initialAnsweredToast: AnsweredToast = {
 };
 
 // TODO: Make this a reusable component to use with AI builds.
-export default function App() {
+export default function App(props: { generator: BuildGenerator }) {
+	const { generator } = props;
 	const [armors, setArmors] = React.useState<Item[]>([]);
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const [buildUrl, _] = useSearchParams();
 	const [copied, setCopied] = React.useState(false);
 	// if its undefined or "true", set it to true, else if its "false" set it to false.
 	const [includeSote, setIncludeSote] = React.useState(localStorage.getItem("include-dlc") === "false" ? false : true);
-	const [dialogOpen, setDialogOpen] = React.useState(false);
+	// const [dialogOpen, setDialogOpen] = React.useState(false);
 	const [answeredToast, setAnsweredToast] = React.useState(initialAnsweredToast);
 
 	const copyUrl = () => {
@@ -75,22 +75,19 @@ export default function App() {
 	);
 
 	const handleReroll = () => {
-		if (localStorage.getItem("include-dlc") === null) {
-			setDialogOpen(true);
-		} else {
-			setDialogOpen(false);
-		}
-
 		const newUrl = generator.generateUrl();
 
 		navigate(`../${newUrl}`);
 		const newBuild = generator.generateBuildFromUrl(newUrl);
 		for (const c of newBuild) {
+			const buildInfo = generator._buildGenerationConfig.buildInfo.categoryConfigs.get(c[0])!;
 			if (
 				c[0] !== ItemCategory.Classes &&
 				c[1].length === 0 &&
-				generator._buildGenerationConfig[c[0]].buildNums > 0 &&
-				!answeredToast[c[0]]
+				buildInfo.buildNums > 0 &&
+				!answeredToast[c[0]] &&
+				generator._buildGenerationConfig.buildInfo.categoryConfigs.get(c[0])!.buildNums > 0 &&
+				generator._buildGenerationConfig.buildInfo.categoryConfigs.get(c[0])!.excludePreviouslyRolled
 			) {
 				toast(
 					<ToastMessage
@@ -104,10 +101,8 @@ export default function App() {
 		setBuild(newBuild);
 	};
 
-	React.useEffect(() => {}, [dialogOpen]);
-
 	const handleClearPreviouslyRolled = (c: ItemCategory) => {
-		generator._buildGenerationConfig[c].previouslyRolled.clear();
+		generator._buildGenerationConfig.buildInfo.categoryConfigs.get(c)!.previouslyRolled.clear();
 	};
 
 	const handleSetAnsweredToast = (c: ItemCategory) => {
@@ -139,6 +134,7 @@ export default function App() {
 			</div>
 		);
 	};
+
 	const handleRerollItem = (c: ItemCategory, i: number | undefined) => {
 		if (typeof i === "undefined") {
 			return;
@@ -155,6 +151,7 @@ export default function App() {
 					buttons={<ClearCategoryToastButtons c={c} />}
 				/>
 			);
+			return;
 		}
 
 		navigate(`../${newUrl}`, { replace: true });
@@ -187,7 +184,6 @@ export default function App() {
 		setIncludeSote(choice);
 		generator.setIncludeDlc(choice);
 		localStorage.setItem("include-dlc", choice.toString());
-		setDialogOpen(false);
 		handleReroll();
 	};
 

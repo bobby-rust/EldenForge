@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import Footer from "./components/Footer";
+import BuildGenerator from "./classes/BuildGenerator";
 
 const Err = () => (
 	<div className="flex justify-center items-center h-screen">
@@ -14,16 +15,18 @@ const Err = () => (
 	</div>
 );
 
+const generator = new BuildGenerator();
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	// <React.StrictMode>
 	<BrowserRouter>
 		<ThemeProvider>
-			<Navbar />
+			<Navbar generator={generator} />
 			<Routes>
 				<Route path="/ai/:buildUrl" element={<AIApp />} />
 				<Route path="/ai" element={<AIApp />} />
-				<Route path="/:buildUrl" element={<App />} />
-				<Route path="/" element={<App />} />
+				<Route path="/:buildUrl" element={<App generator={generator} />} />
+				<Route path="/" element={<App generator={generator} />} />
 				<Route path="*" element={<Err />} />
 			</Routes>
 			<Footer />
