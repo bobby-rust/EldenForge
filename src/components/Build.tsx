@@ -71,7 +71,7 @@ export default function Build() {
 
 		const newBuildMap = generator.rerollItem(c, i);
 
-		if (typeof newBuildMap === "boolean") {
+		if (typeof newBuildMap === "undefined") {
 			toast.error("Could not reroll item");
 			return;
 		}
