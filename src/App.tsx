@@ -1,3 +1,7 @@
+/**
+ * TODO: Fix include-dlc bug
+ */
+
 import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Item } from "./classes/Item";
@@ -228,7 +232,7 @@ export default function App(props: { generator: BuildGenerator }) {
 
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
-			<div className={`lg:px-14 pt-8 ${build?.size === 0 && "overflow-y-hidden h-[83vh]"}`}>
+			<div className={`lg:px-14 pt-8 ${build?.size === 0 && "overflow-y-hidden h-[83vh]"} min-h-full`}>
 				<div
 					className={`flex ${
 						build?.size === 0 && " h-full items-center flex-col gap-6 animate-landing-slide-up"

@@ -8,6 +8,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import Footer from "./components/Footer";
 import BuildGenerator from "./classes/BuildGenerator";
+import ItemDashboard from "./components/ItemDashboard";
 
 const Err = () => (
 	<div className="flex justify-center items-center h-screen">
@@ -25,6 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 			<Routes>
 				<Route path="/ai/:buildUrl" element={<AIApp />} />
 				<Route path="/ai" element={<AIApp />} />
+				<Route path="/item-dashboard" element={<ItemDashboard />} />
 				<Route path="/:buildUrl" element={<App generator={generator} />} />
 				<Route path="/" element={<App generator={generator} />} />
 				<Route path="*" element={<Err />} />

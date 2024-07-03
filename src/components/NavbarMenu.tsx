@@ -63,68 +63,27 @@ export default function NavbarMenu({
 				width < 1032 ? "flex-col-reverse" : ""
 			}`}
 		>
-			<div className="h-16 flex justify-center items-center w-60 lg:w-auto">
-				<a href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
-					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=efb809&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
-				</a>
-			</div>
+			<li className="h-16 flex text-nowrap justify-center items-center">
+				<button
+					className="btn btn-ghost text-center w-60 lg:w-auto tracking-widest font-semibold"
+					onClick={() => navigate("/item-dashboard")}
+				>
+					Item Dashboard
+				</button>
+			</li>
+
 			<li className="h-16 flex justify-center items-center">
 				<button
-					className="btn btn-secondary text-center w-60 lg:w-28 tracking-widest font-semibold"
+					className="btn btn-ghost text-center w-60 lg:w-28 tracking-widest font-semibold"
 					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
 				>
 					{regexp.test(window.location.href) ? "Randomizer" : "AI Builds"}
 				</button>
 			</li>
-			<li className="h-16 flex justify-center items-center w-60 lg:w-28">
-				<select
-					className="select z-50 select-secondary select-bordered w-full"
-					data-choose-theme
-					data-theme
-					value={theme}
-					onChange={(e) => setTheme(e.target.value)}
-				>
-					<option disabled value="Select a theme">
-						Select a theme
-					</option>
-					<option value="light">Light</option>
-					<option value="dark">Dark</option>
-					<option value="cupcake">Cupcake</option>
-					<option value="bumblebee">Bumblebee</option>
-					<option value="emerald">Emerald</option>
-					<option value="corporate">Corporate</option>
-					<option value="synthwave">Synthwave</option>
-					<option value="retro">Retro</option>
-					<option value="cyberpunk">Cyberpunk</option>
-					<option value="valentine">Valentine</option>
-					<option value="halloween">Halloween</option>
-					<option value="garden">Garden</option>
-					<option value="forest">Forest</option>
-					<option value="aqua">Aqua</option>
-					<option value="lofi">Lofi</option>
-					<option value="pastel">Pastel</option>
-					<option value="fantasy">Fantasy</option>
-					<option value="wireframe">Wireframe</option>
-					<option value="black">Black</option>
-					<option value="luxury">Luxury</option>
-					<option value="dracula">Dracula</option>
-					<option value="cmyk">Cmyk</option>
-					<option value="autumn">Autumn</option>
-					<option value="business">Business</option>
-					<option value="acid">Acid</option>
-					<option value="lemonade">Lemonade</option>
-					<option value="night">Night</option>
-					<option value="coffee">Coffee</option>
-					<option value="winter">Winter</option>
-					<option value="dim">Dim</option>
-					<option value="nord">Nord</option>
-					<option value="sunset">Sunset</option>
-				</select>
-			</li>
 			<li className="h-16 justify-center items-center">
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<button className="btn btn-secondary w-60 lg:w-28 tracking-widest">
+						<button className="btn btn-ghost w-60 lg:w-28 tracking-widest">
 							<IoSettingsOutline /> Settings
 						</button>
 					</DropdownMenuTrigger>
@@ -189,6 +148,57 @@ export default function NavbarMenu({
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</li>
+			<li className="h-16 flex justify-center items-center w-60 lg:w-28">
+				<select
+					className="select z-50 select-secondary select-bordered w-full"
+					data-choose-theme
+					data-theme
+					value={theme}
+					onChange={(e) => setTheme(e.target.value)}
+				>
+					<option disabled value="Select a theme">
+						Select a theme
+					</option>
+					<option value="light">Light</option>
+					<option value="dark">Dark</option>
+					<option value="cupcake">Cupcake</option>
+					<option value="bumblebee">Bumblebee</option>
+					<option value="emerald">Emerald</option>
+					<option value="corporate">Corporate</option>
+					<option value="synthwave">Synthwave</option>
+					<option value="retro">Retro</option>
+					<option value="cyberpunk">Cyberpunk</option>
+					<option value="valentine">Valentine</option>
+					<option value="halloween">Halloween</option>
+					<option value="garden">Garden</option>
+					<option value="forest">Forest</option>
+					<option value="aqua">Aqua</option>
+					<option value="lofi">Lofi</option>
+					<option value="pastel">Pastel</option>
+					<option value="fantasy">Fantasy</option>
+					<option value="wireframe">Wireframe</option>
+					<option value="black">Black</option>
+					<option value="luxury">Luxury</option>
+					<option value="dracula">Dracula</option>
+					<option value="cmyk">Cmyk</option>
+					<option value="autumn">Autumn</option>
+					<option value="business">Business</option>
+					<option value="acid">Acid</option>
+					<option value="lemonade">Lemonade</option>
+					<option value="night">Night</option>
+					<option value="coffee">Coffee</option>
+					<option value="winter">Winter</option>
+					<option value="dim">Dim</option>
+					<option value="nord">Nord</option>
+					<option value="sunset">Sunset</option>
+				</select>
+			</li>
+
+			<div className="h-16 flex justify-center items-center w-60 lg:w-auto">
+				<a href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
+					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=efb809&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
+				</a>
+			</div>
 		</div>
 	);
 }
