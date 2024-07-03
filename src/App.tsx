@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Item } from "./classes/Item";
 import { ItemCategory } from "./types/enums";
 import "./App.css";
@@ -46,7 +46,8 @@ export default function App() {
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const [buildUrl, _] = useSearchParams();
 	const [copied, setCopied] = React.useState(false);
-	const [includeSote, setIncludeSote] = React.useState(true);
+	// if its undefined or "true", set it to true, else if its "false" set it to false.
+	const [includeSote, setIncludeSote] = React.useState(localStorage.getItem("include-dlc") === "false" ? false : true);
 	const [dialogOpen, setDialogOpen] = React.useState(false);
 	const [answeredToast, setAnsweredToast] = React.useState(initialAnsweredToast);
 
@@ -67,15 +68,10 @@ export default function App() {
 		);
 	};
 
-	const location = useLocation();
-	const { state } = location;
-
 	const navigate = useNavigate();
 
-	const [build, setBuild] = React.useState<Map<ItemCategory, Item[]> | null>(
-		state
-			? null
-			: generator.generateBuildFromUrl("?" + buildUrl.toString().replaceAll("%2C", ","))
+	const [build, setBuild] = React.useState<Map<ItemCategory, Item[]>>(
+		generator.generateBuildFromUrl("?" + buildUrl.toString().replaceAll("%2C", ","))
 	);
 
 	const handleReroll = () => {
@@ -228,13 +224,12 @@ export default function App() {
 			<div className={`lg:px-14 pt-8 ${build?.size === 0 && "overflow-y-hidden h-[83vh]"}`}>
 				<div
 					className={`flex ${
-						build?.size === 0 &&
-						" h-full items-center flex-col gap-6 animate-landing-slide-up"
+						build?.size === 0 && " h-full items-center flex-col gap-6 animate-landing-slide-up"
 					} justify-center mb-10 p-3`}
 				>
 					{build?.size === 0 && (
-						<div className="flex flex-col gap-6 md:gap-10">
-							<h1 className="md:text-2xl 2xl:text-5xl font-bold text-center tracking-wide">
+						<div className="flex flex-col gap-3 md:gap-10">
+							<h1 className="text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-center tracking-wide">
 								EldenForge
 							</h1>
 							<blockquote className="md:text-xl 2xl:text-3xl italic text-gray-600 text-center w-[50vw] md:tracking-tight leading-loose  md:mb-10">
@@ -243,40 +238,25 @@ export default function App() {
 						</div>
 					)}
 					<div className="flex gap-3 md:gap-6">
-						{window.location.pathname === "/" &&
-						window.location.search === "" &&
-						shouldDialogOpen() ? (
+						{window.location.pathname === "/" && window.location.search === "" && shouldDialogOpen() ? (
 							<Dialog>
 								<DialogTrigger>
-									<button
-										className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${
-											build?.size === 0 && " "
-										}`}
-									>
-										<span className="lg:text-xl">Randomizer</span>
+									<button className="btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle">
+										<span className="lg:text-2xl">Randomizer</span>
 									</button>
 								</DialogTrigger>
 								<DialogContent className="max-w-[90vw] sm:w-auto">
 									<DialogHeader>
-										<DialogTitle className="text-xl">
-											Would you like to include DLC content?
-										</DialogTitle>
+										<DialogTitle className="text-xl">Would you like to include DLC content?</DialogTitle>
 										<DialogDescription className="text-lg">
-											You'll be able to toggle this setting later on the build
-											page.
+											You'll be able to toggle this setting later on the build page.
 										</DialogDescription>
 									</DialogHeader>
 									<DialogFooter className="justify-center items-center gap-3 flex-col sm:flex-row">
-										<button
-											className="btn w-36 sm:w-24 btn-primary"
-											onClick={() => handleDialogChoice(true)}
-										>
+										<button className="btn w-36 sm:w-24 btn-primary" onClick={() => handleDialogChoice(true)}>
 											Yes
 										</button>
-										<button
-											className="btn w-36 sm:w-24 btn-secondary"
-											onClick={() => handleDialogChoice(false)}
-										>
+										<button className="btn w-36 sm:w-24 btn-secondary" onClick={() => handleDialogChoice(false)}>
 											No
 										</button>
 									</DialogFooter>
@@ -286,50 +266,36 @@ export default function App() {
 							window.location.search === "" &&
 							window.location.pathname === "/" && (
 								<button
-									className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${
-										build?.size === 0 && " "
-									}`}
-									onClick={handleReroll}
+									className={`btn lg:btn-wide btn-primary hover:animate-wiggle ${build?.size === 0 && "btn-lg"}`}
+									onClick={localStorage.getItem("include-dlc") === null ? undefined : handleReroll}
 								>
-									<span className="lg:text-xl">Randomizer</span>
+									<span className="lg:text-2xl">Randomizer</span>
 								</button>
 							)
 						)}
 						{build?.size === 0 && (
 							<button
-								className={`btn lg:btn-lg btn-secondary hover:animate-wiggle ${
-									build?.size === 0 && " "
-								}`}
+								className={`btn btn-secondary hover:animate-wiggle ${build?.size === 0 && "btn-lg"}`}
 								onClick={() => navigate("/ai")}
 							>
-								<h1>Ask Gideon</h1>
+								<h1 className="lg:text-2xl">Ask Gideon</h1>
 							</button>
 						)}
 					</div>
 					{!(window.location.search === "") && (
 						<div className="flex flex-col xl:flex-row w-full justify-evenly items-center gap-5 sm:p-10">
 							<div className="xl:w-1/3 flex justify-center gap-2 items-center mt-3 lg:mt-0">
-								<Switch
-									checked={includeSote}
-									onCheckedChange={handleSetIncludeSote}
-								/>
+								<Switch checked={includeSote} onCheckedChange={handleSetIncludeSote} />
 								<h1 className="text-sm lg:text-md xl:text-lg w-full xl:w-auto text-center">
-									{width < 334
-										? "Include Shadow of the Erdtree"
-										: "Include Shadow of the Erdree Items"}
+									{width < 334 ? "Include Shadow of the Erdtree" : "Include Shadow of the Erdree Items"}
 								</h1>
 							</div>
-							<button
-								className={`btn lg:btn-wide lg:btn-lg btn-primary hover:animate-wiggle ${
-									build?.size === 0 && " "
-								}`}
-								onClick={handleReroll}
-							>
+							<button className="btn btn-wide lg:btn-lg btn-primary hover:animate-wiggle" onClick={handleReroll}>
 								<h1 className="lg:text-xl">Randomize Build</h1>
 							</button>
 
 							<div className="flex justify-center items-center w-1/3 mr-0 xl:mr-6">
-								<button onClick={copyUrl} className="btn btn-wide">
+								<button onClick={copyUrl} className="btn btn-wide text-sm lg:text-md xl:text-lg">
 									{copied ? <LuCopyCheck /> : <IoCopyOutline />}
 									Copy Build URL
 								</button>

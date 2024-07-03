@@ -30,22 +30,6 @@ export default class AI {
 	 * @returns {AIBuild} the AI build
 	 */
 	private parseResponse(res: string): AIBuildType {
-		// return {
-		// 	vigor: 0,
-		// 	mind: 0,
-		// 	endurance: 0,
-		// 	strength: 0,
-		// 	dexterity: 0,
-		// 	intelligence: 0,
-		// 	faith: 0,
-		// 	arcane: 0,
-		// 	name: res.name,
-		// 	summary: res.summary,
-		// 	strengths: res.strengths,
-		// 	weaknesses: res.weaknesses,
-		// 	items: new Map<ItemCategory, Item[]>(),
-		// };
-
 		const responseArray = res.split("\n");
 		const buildArray: string[][] = [];
 
