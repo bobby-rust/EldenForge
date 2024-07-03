@@ -42,6 +42,8 @@ const initialAnsweredToast: AnsweredToast = {
 // TODO: Make this a reusable component to use with AI builds.
 export default function App(props: { generator: BuildGenerator }) {
 	const { generator } = props;
+	generator.setIncludeDlc(localStorage.getItem("include-dlc") === "false" ? false : true);
+
 	const [armors, setArmors] = React.useState<Item[]>([]);
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const [buildUrl, _] = useSearchParams();
