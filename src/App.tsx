@@ -1,7 +1,3 @@
-/**
- * TODO: Fix include-dlc bug
- */
-
 import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Item } from "./classes/Item";
