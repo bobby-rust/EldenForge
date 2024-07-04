@@ -72,11 +72,10 @@ export default function CardColumn(props: {
 	// Effects
 	/**
 	 * Each time the items change, set the number of items to the length of the items array, otherwise the state will be out of sync.
-	 * This effect may not be needed.
 	 */
-	// React.useEffect(() => {
-	// 	setSelectNumItems(props.items.length);
-	// }, [props.items]);
+	React.useEffect(() => {
+		setSelectNumItems(props.items.length);
+	}, [props.items]);
 
 	/**
 	 * Updates the width state based on the current window inner width.
@@ -141,7 +140,9 @@ export default function CardColumn(props: {
 					 * If it's not mobile and there are no items in the category, fill up the space where the select menu should go to keep the cards aligned
 					 * If it is mobile, there isn't more than one card column, so they do not have to be aligned horizontally
 					 */}
-					{width > 640 && props.items.length === 0 && <div className="h-12"></div>}
+					{width > 640 &&
+						window.location.pathname !== "/ai/" &&
+						(props.items.length === 0 || props.items[0].category === ItemCategory.Helm) && <div className="h-12"></div>}
 
 					{/* ----- Category title and cards ----- */}
 					<h1 className="text-center text-xl font-bold p-3">{readableItemCategory.get(props.items[0].category)}</h1>

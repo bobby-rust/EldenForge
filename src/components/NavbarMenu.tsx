@@ -33,8 +33,11 @@ export default function NavbarMenu({
 		e.preventDefault();
 		const newConfig: BuildGenerationConfig = { ...config };
 		for (const [c, _] of newConfig.buildInfo.categoryConfigs.entries()) {
-			newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled = toggleValue;
+			const currConfig = newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!;
+			currConfig.excludePreviouslyRolled = toggleValue;
+			!toggleValue && currConfig.previouslyRolled.clear();
 		}
+
 		setToggleValue(!toggleValue);
 		setConfig(newConfig);
 	};
