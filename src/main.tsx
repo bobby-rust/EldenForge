@@ -11,7 +11,12 @@ import BuildGenerator from "./classes/BuildGenerator";
 
 const Err = () => (
 	<div className="flex justify-center items-center h-screen">
-		<div className="text-6xl">404 Not Found - Put these foolish ambitions to rest.</div>
+		<div className="text-6xl">
+			404 Not Found<br></br>
+			<p className="text-4xl italic text-slate-700">
+				"Put these foolish ambitions to rest."<br></br>- Margit, The Fell Omen
+			</p>
+		</div>
 	</div>
 );
 
