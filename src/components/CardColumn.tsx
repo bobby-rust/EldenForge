@@ -47,13 +47,6 @@ export default function CardColumn(props: {
 		 * This updates the build state in the parent component, triggering a rerender of this component with the updated items.
 		 */
 		props.regenerateCategory?.(props.category);
-
-		// Set the number of items to the default value -- Is this necessary?
-		// const defaultNumItems = defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(props.category)!.buildNums;
-		// setSelectNumItems(defaultNumItems);
-
-		// Update the number of items in the build
-		// props.setNumItems?.(props.category, defaultNumItems);
 	};
 
 	/**
@@ -65,8 +58,14 @@ export default function CardColumn(props: {
 	 */
 	const handleChangeNumItems = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const numItems = parseInt(e.target.value);
+		const c = props.category;
 		setSelectNumItems(numItems);
-		props.setNumItems?.(props.items[0].category, numItems);
+		props.setNumItems?.(c, numItems);
+		/**
+		 * Consider adding a "selectedNone" state to determine if the user explicitly wanted 0 items generated, or the items are 0 just because they ran out.
+		 * In that case, the category should not be regenerated, so just don't clear the set of previously rolled items.
+		 * For now, the juice just ain't worth the squeeze.
+		 */
 	};
 
 	// Effects
