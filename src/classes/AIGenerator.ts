@@ -9,7 +9,7 @@ export default class AI {
 	 * Prompts the LLM and returns the response
 	 * @returns {Promise<string>} the AI response
 	 */
-	public async getAIBuild(buildType: string): Promise<AIBuildType> {
+	public async getAIBuild(buildType: string, signal: AbortSignal): Promise<AIBuildType> {
 		const r = await fetch("/api/ai", {
 			method: "POST",
 			headers: {
@@ -18,6 +18,7 @@ export default class AI {
 			body: JSON.stringify({
 				build_type: buildType,
 			}),
+			signal: signal,
 		});
 
 		if (r.status !== 200) {

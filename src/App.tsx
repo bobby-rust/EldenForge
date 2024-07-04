@@ -39,7 +39,6 @@ const initialAnsweredToast: AnsweredToast = {
 	weapons: false,
 };
 
-// TODO: Make this a reusable component to use with AI builds.
 export default function App(props: { generator: BuildGenerator }) {
 	const { generator } = props;
 	generator.setIncludeDlc(localStorage.getItem("include-dlc") === "false" ? false : true);

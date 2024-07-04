@@ -83,7 +83,13 @@ export default function AIApp() {
 
 	const handleRegenerateAIBuild = async () => {
 		setLoading(true);
-		const newUrl = (await generator.generateAIUrl()) ?? "";
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+		const newUrl = (await generator.generateAIUrl(signal)) ?? "";
+		const regex = /\/ai\/(.*)/;
+		if (!regex.test(window.location.pathname)) {
+			return;
+		}
 		if (newUrl === "") {
 			toast.error("The server is busy. Wait 60 seconds and try again.");
 			setCountdown(60);
@@ -144,7 +150,12 @@ export default function AIApp() {
 	const navigate = useNavigate();
 	React.useEffect(() => {
 		const queryAI = async () => {
-			const newUrl = await generator.generateAIUrl();
+			const abortController = new AbortController();
+			const signal = abortController.signal;
+			const newUrl = await generator.generateAIUrl(signal);
+			if (window.location.pathname !== "/ai") {
+				return;
+			}
 			navigate(`/ai/${newUrl}`);
 			!hintShowed && showHint();
 			setShowDescription(true);
