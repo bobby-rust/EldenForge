@@ -79,6 +79,35 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 
 	// Helper functions
 	/**
+	 * The clear category toast buttons for a specified item category.
+	 *
+	 * @param {ItemCategory} props.c - The item category
+	 * @return {JSX.Element} The clear category toast buttons.
+	 */
+	const ClearCategoryToastButtons = (props: { c: ItemCategory }): JSX.Element => {
+		const { c } = props;
+
+		return (
+			<div className="flex p-3 gap-2">
+				<button
+					className="btn"
+					onClick={() => {
+						handleClearPreviouslyRolled(c);
+						toast.dismiss();
+						handleRegenerateCategory(c);
+						toast.success(`Previously rolled ${readableItemCategory.get(c)} cleared!`);
+					}}
+				>
+					Yes
+				</button>
+				<button className="btn" onClick={() => handleSetAnsweredToast(c)}>
+					No
+				</button>
+			</div>
+		);
+	};
+
+	/**
 	 * Determines whether the dialog should be open based on the current pathname and the value of "include-dlc" in localStorage.
 	 *
 	 * @return {boolean} True if the current pathname is "/" and the value of "include-dlc" in localStorage is null, otherwise false.
@@ -109,6 +138,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 		);
 	};
 
+	// Event handlers
 	/**
 	 * Handles the reroll button click event. Generates a new build URL and updates the build state.
 	 *
@@ -181,35 +211,6 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	};
 
 	/**
-	 * The clear category toast buttons for a specified item category.
-	 *
-	 * @param {ItemCategory} props.c - The item category
-	 * @return {JSX.Element} The clear category toast buttons.
-	 */
-	const ClearCategoryToastButtons = (props: { c: ItemCategory }): JSX.Element => {
-		const { c } = props;
-
-		return (
-			<div className="flex p-3 gap-2">
-				<button
-					className="btn"
-					onClick={() => {
-						handleClearPreviouslyRolled(c);
-						toast.dismiss();
-						handleRegenerateCategory(c);
-						toast.success(`Previously rolled ${readableItemCategory.get(c)} cleared!`);
-					}}
-				>
-					Yes
-				</button>
-				<button className="btn" onClick={() => handleSetAnsweredToast(c)}>
-					No
-				</button>
-			</div>
-		);
-	};
-
-	/**
 	 * Handles the reroll of a specific item in the given category.
 	 *
 	 * @param {ItemCategory} c - The category of the item.
@@ -251,6 +252,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 
 	/**
 	 * Regenerates the items for a specified category and updates the build and URL.
+	 * Only called when the current build has 0 items in the category passed.
 	 *
 	 * @param {ItemCategory} c - The category of items to regenerate.
 	 * @return {void}
@@ -294,6 +296,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 		handleReroll();
 	};
 
+	// Effects
 	/**
 	 * Updates the armors state when the build changes
 	 */
