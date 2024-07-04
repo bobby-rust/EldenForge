@@ -6,7 +6,7 @@ import { TbDropletDown } from "react-icons/tb";
 
 export default function Card(props: {
 	item: Item;
-	reroll: ((c: ItemCategory, i: number | undefined) => void) | null;
+	reroll: ((c: ItemCategory, i: number) => void) | null;
 	isAIBuild: boolean;
 }) {
 	const [loading, setLoading] = React.useState(true);

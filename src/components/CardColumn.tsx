@@ -8,7 +8,7 @@ import { readableItemCategory } from "../types/constants";
 
 export default function CardColumn(props: {
 	items: Item[];
-	reroll: ((c: ItemCategory, i: number | undefined) => void) | null;
+	reroll: ((c: ItemCategory, i: number) => void) | null;
 	setNumItems: ((c: ItemCategory, numItems: number) => void) | null;
 	isAIBuild: boolean;
 	category: ItemCategory;
