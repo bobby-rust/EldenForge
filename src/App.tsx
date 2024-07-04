@@ -4,7 +4,7 @@
  * @author Bobby Rust
  * Date: Spring 2024 - Summer 2024
  *
- * This component includes landing page when url is "/", and build page when search params are "/?<some_build_category>&<some_other_build_category>..."
+ * This component includes the landing page when url is "/", and build page when search params are "/?<some_build_category>&<some_other_build_category>..."
  */
 
 import React from "react";
