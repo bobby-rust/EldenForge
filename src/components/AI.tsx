@@ -267,7 +267,7 @@ export default function AI(): JSX.Element {
 			setShowDescription(true);
 		};
 
-		// if (window.location.search === "") queryAI();
+		if (window.location.search === "") queryAI();
 	}, []);
 
 	return (
