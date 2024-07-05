@@ -1,6 +1,11 @@
 /**
- * TODO: Patch AI spam exploit
- * TODO: Fix bug causing AI page to be loaded after cancelling on the AI landing page
+ * AI build generator page.
+ *
+ * This page utilizes Google Gemini to generate an AI build.
+ * It uses the `BuildGenerator` class to generate a build based on the
+ * parameters entered by the user or randomly selected parameters if the user does not specify.
+ *
+ * @todo Patch AI spam exploit
  */
 
 import React from "react";
@@ -20,9 +25,20 @@ import { ToastMessage } from "./ToastMessage";
 import { Button } from "./ui/button";
 
 const generator = new BuildGenerator();
+
+const AI_COOLDOWN = 30; // The number of seconds a user has to wait between AI generations.
+
+/**
+ * A random quote is rendered when there is no current build while the AI request is made.
+ */
 const quote = quotes[Math.floor(Math.random() * quotes.length)];
 
-const CopiedMessage = () => {
+/**
+ * A function that renders a message when the link is copied.
+ *
+ * @return {JSX.Element} The message to be rendered.
+ */
+const CopiedMessage = (): JSX.Element => {
 	return (
 		<div className="flex justify-between w-full items-center">
 			<div className="flex flex-col justify-center">
@@ -36,43 +52,60 @@ const CopiedMessage = () => {
 	);
 };
 
-export default function AIApp() {
+/**
+ * Renders the AI component, which generates and displays an AI build.
+ *
+ * @return {JSX.Element} The rendered AIApp component.
+ */
+export default function AI(): JSX.Element {
+	// State initialization
 	const [buildUrl, _] = useSearchParams();
-	const [showDescription, setShowDescription] = React.useState(false);
-	const [loading, setLoading] = React.useState(false);
-	const [countdown, setCountdown] = React.useState(30);
-	const [disabled, setDisabled] = React.useState(true);
-	const [width, setWidth] = React.useState(window.innerWidth);
-	const [copied, setCopied] = React.useState(false);
-	const [hintShowed, setHintShowed] = React.useState(false);
+	const [showDescription, setShowDescription] = React.useState<boolean>(false); // TODO: animate this
+	const [loading, setLoading] = React.useState<boolean>(false);
+	const [countdown, setCountdown] = React.useState<number>(AI_COOLDOWN); // Prevents the AI from being spammed
+	const [disabled, setDisabled] = React.useState<boolean>(true); // The AI request button is disabled until the countdown reaches 0
+	const [width, setWidth] = React.useState<number>(window.innerWidth);
+	const [copied, setCopied] = React.useState<boolean>(false);
+	const [hintShowed, setHintShowed] = React.useState<boolean>(false);
+	const [build, setBuild] = React.useState<AIBuildType | null>(
+		generator.parseAIBuildFromUrl(decodeURIComponent(buildUrl.toString().replaceAll("+", " ")))
+	);
+	const [armors, setArmors] = React.useState<Item[]>([]);
+	const [buildType, setBuildType] = React.useState<string>("");
 
+	// Helper functions
+	const navigate = useNavigate();
+
+	/**
+	 * Copies the link to the current build to the clipboard.
+	 */
 	const copyUrl = () => {
 		navigator.clipboard.writeText(window.location.href);
 		setCopied(true);
 		toast(<CopiedMessage />);
 	};
 
-	React.useEffect(() => {
-		const timer = setTimeout(() => {
-			setCopied(false);
-		}, 4000);
+	/**
+	 * Acknowledges that the user has seen the hint message.
+	 */
+	const handleAcknowledgeHint = () => {
+		toast.dismiss();
+		localStorage.setItem("acknowledged-hint", "true");
+	};
 
-		return () => clearInterval(timer);
-	}, [copied]);
-
-	const [build, setBuild] = React.useState<AIBuildType | null>(
-		generator.parseAIBuildFromUrl(decodeURIComponent(buildUrl.toString().replaceAll("+", " ")))
-	);
-	const [armors, setArmors] = React.useState<Item[]>([]);
-	const [buildType, setBuildType] = React.useState("");
-
+	/**
+	 * Shows the hint message if the user has not seen it before.
+	 */
 	const showHint = () => {
+		if (localStorage.getItem("acknowledged-hint") === "true" || hintShowed) {
+			return;
+		}
 		toast(
 			<ToastMessage
 				title="Hint"
 				message="Try selecting a build type at the top for a better result."
 				buttons={
-					<Button className="" onClick={() => toast.dismiss()}>
+					<Button className="" onClick={handleAcknowledgeHint}>
 						Got it
 					</Button>
 				}
@@ -81,29 +114,67 @@ export default function AIApp() {
 		setHintShowed(true);
 	};
 
+	/**
+	 * Generates a new AI build.
+	 */
 	const handleRegenerateAIBuild = async () => {
 		setLoading(true);
-		const newUrl = (await generator.generateAIUrl()) ?? "";
+
+		// The abort controller cancels async requests that are not complete via a signal
+		// TODO: finish implementing cancellation
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		const newUrl = (await generator.generateAIUrl(signal)) ?? "";
+
+		// If the user leaves the AI page before the request completes, return so they are not navigated to the build
+		const regex = /\/ai\/(.*)/;
+		if (!regex.test(window.location.pathname)) {
+			return;
+		}
+
+		// The generateAIUrl function returns an empty string if there was an error. We assume it's because the server is busy.
 		if (newUrl === "") {
 			toast.error("The server is busy. Wait 60 seconds and try again.");
 			setCountdown(60);
 			setLoading(false);
 			return;
 		}
+
+		/**
+		 * Parse the build from the new URL and update the build state.
+		 */
 		const newBuild = generator.parseAIBuildFromUrl(newUrl);
 		newBuild.summary = decodeURIComponent(newBuild.summary);
 
 		setBuild(newBuild);
+
+		// Reset the countdown and disable the button, then update the url to reflect the new build
 		setLoading(false);
 		setDisabled(true);
 		setCountdown(30);
 		navigate("/ai/" + newUrl);
 	};
 
-	const handleChangeBuildType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+	/**
+	 * Handles the change event of the build type select element.
+	 * Updates the build type state with the selected value.
+	 *
+	 * @param {React.ChangeEvent<HTMLSelectElement>} e - The event object.
+	 * @return {void}
+	 */
+	const handleChangeBuildType = (e: React.ChangeEvent<HTMLSelectElement>): void => {
 		setBuildType(e.target.value);
 	};
 
+	// Effects
+
+	/**
+	 * Updates the countdown state each second and sets the disabled state to false when the countdown reaches 0.
+	 * Clears the timeout when the component unmounts.
+	 *
+	 * @return {void}
+	 */
 	React.useEffect(() => {
 		if (countdown > 0) {
 			const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
@@ -113,11 +184,16 @@ export default function AIApp() {
 		}
 	}, [countdown]);
 
+	/**
+	 * Updates the armors state with the items in the build that are part of the armor categories.
+	 *
+	 * @return {void}
+	 */
 	React.useEffect(() => {
 		if (build) {
 			const newArmors: Item[] = [];
 			[...build.items.keys()].forEach((c: ItemCategory) => {
-				if (ArmorCategories.has(c) && build.items.get(c)) {
+				if (ArmorCategories.has(c)) {
 					newArmors.push(...(build.items.get(c) ?? []));
 				}
 			});
@@ -125,14 +201,27 @@ export default function AIApp() {
 		}
 	}, [build]);
 
+	/**
+	 * Updates the build state whenever the buildUrl changes.
+	 *
+	 * @return {void}
+	 */
 	React.useEffect(() => {
 		setBuild(generator.parseAIBuildFromUrl(decodeURIComponent(buildUrl.toString().replaceAll("+", " "))));
 	}, [buildUrl]);
 
+	/**
+	 * Syncs the generator's buildType state with the component's buildType state changes.
+	 */
 	React.useEffect(() => {
 		generator.buildType = buildType;
 	}, [buildType]);
 
+	/**
+	 * Updates the width state whenever the window is resized and cleans up the event listener when the component unmounts.
+	 *
+	 * @return {void}
+	 */
 	React.useEffect(() => {
 		function handleResize() {
 			setWidth(window.innerWidth);
@@ -141,12 +230,40 @@ export default function AIApp() {
 		window.addEventListener("resize", handleResize);
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
-	const navigate = useNavigate();
+
+	/**
+	 * Clears the copied state after a delay of 4 seconds.
+	 *
+	 * @return {void}
+	 */
+	React.useEffect(() => {
+		const timer = setTimeout(() => {
+			setCopied(false);
+		}, 4000);
+
+		return () => clearInterval(timer);
+	}, [copied]);
+
+	/**
+	 * Queries the AI and navigates to the generated AI URL if the current pathname is "/ai".
+	 *
+	 * @return {Promise<void>} A Promise that resolves when the navigation is complete.
+	 */
 	React.useEffect(() => {
 		const queryAI = async () => {
-			const newUrl = await generator.generateAIUrl();
+			// See the handleRegenerateBuild comment for why this is here
+			const abortController = new AbortController();
+			const signal = abortController.signal;
+
+			const newUrl = await generator.generateAIUrl(signal);
+
+			// Cancel the navigation if the user leaves the page before the request completes
+			if (window.location.pathname !== "/ai") {
+				return;
+			}
+
 			navigate(`/ai/${newUrl}`);
-			!hintShowed && showHint();
+			showHint();
 			setShowDescription(true);
 		};
 
@@ -154,8 +271,9 @@ export default function AIApp() {
 	}, []);
 
 	return (
-		<div className="flex flex-col justify-center items-center xl:px-14 py-8 h-[83vh]">
-			{window.location.search === "" ? (
+		<div className="flex flex-col justify-center items-center xl:px-14 py-8">
+			{/* ----- Loading state ----- */}
+			{window.location.search === "" && (
 				<div className="overflow-y-hidden lg:px-14 pt-8">
 					<div className="flex flex-col items-center justify-center gap-10 animate-landing-slide-up">
 						<h1 className="md:text-2xl 2xl:text-5xl font-bold text-center">Asking Gideon for a build...</h1>
@@ -169,7 +287,10 @@ export default function AIApp() {
 						</button>
 					</div>
 				</div>
-			) : (
+			)}
+
+			{/* ----- Top menu buttons and AI build stats ----- */}
+			{!(window.location.search === "") && (
 				<div className="flex flex-col items-center 2xl:flex-row justify-evenly w-full mb-10">
 					<div className="flex justify-center items-center w-64 sm:w-80 2xl:w-1/3">
 						<select className="select select-bordered max-w-xs w-full" onChange={handleChangeBuildType}>
@@ -263,6 +384,8 @@ export default function AIApp() {
 					</div>
 				</div>
 			)}
+
+			{/* ----- The AI's build name and description ----- */}
 			{build && (
 				<div className={`max-w-[85vw] 2xl:max-w-[60vw] mb-20 ${showDescription ? "" : "hidden"}`}>
 					<div className="w-full bg-gray-100 text-center p-2 relative">
@@ -304,6 +427,8 @@ export default function AIApp() {
 					</div>
 				</div>
 			)}
+
+			{/* ----- item grid ----- */}
 			<div className="grid grid-cols-1 sm:grid-cols-2 2lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 2.5xl:grid-cols-6 3xl:grid-cols-7 4xl:grid-cols-8 gap-4 auto-cols-auto">
 				{build &&
 					[...build.items.keys()].map((c: ItemCategory, i: number) => (

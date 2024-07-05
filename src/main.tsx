@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AIApp from "./components/AIApp";
+import AIApp from "./components/AI";
 import Navbar from "./components/Navbar";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
@@ -12,7 +12,12 @@ import ItemDashboard from "./components/ItemDashboard";
 
 const Err = () => (
 	<div className="flex justify-center items-center h-screen">
-		<div className="text-6xl">404 Not Found - Put these foolish ambitions to rest.</div>
+		<div className="text-6xl">
+			404 Not Found<br></br>
+			<p className="text-4xl italic text-slate-700">
+				"Put these foolish ambitions to rest."<br></br>- Margit, The Fell Omen
+			</p>
+		</div>
 	</div>
 );
 

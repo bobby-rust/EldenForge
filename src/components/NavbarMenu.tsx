@@ -33,8 +33,11 @@ export default function NavbarMenu({
 		e.preventDefault();
 		const newConfig: BuildGenerationConfig = { ...config };
 		for (const [c, _] of newConfig.buildInfo.categoryConfigs.entries()) {
-			newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled = toggleValue;
+			const currConfig = newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!;
+			currConfig.excludePreviouslyRolled = toggleValue;
+			!toggleValue && currConfig.previouslyRolled.clear();
 		}
+
 		setToggleValue(!toggleValue);
 		setConfig(newConfig);
 	};
@@ -72,6 +75,11 @@ export default function NavbarMenu({
 				</button>
 			</li>
 
+			<div className="h-16 flex justify-center items-center w-60 lg:h-16 lg:w-52">
+				<a href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
+					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=efb809&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
+				</a>
+			</div>
 			<li className="h-16 flex justify-center items-center">
 				<button
 					className="btn btn-ghost text-center w-60 lg:w-28 tracking-widest font-semibold"
@@ -193,12 +201,6 @@ export default function NavbarMenu({
 					<option value="sunset">Sunset</option>
 				</select>
 			</li>
-
-			<div className="h-16 flex justify-center items-center w-60 lg:w-auto">
-				<a href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
-					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=efb809&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
-				</a>
-			</div>
 		</div>
 	);
 }

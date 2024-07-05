@@ -7,7 +7,7 @@ import { ItemCategory } from "../types/enums";
 export class Item {
 	private _category: ItemCategory;
 	private _name: string = "";
-	private _index: number | undefined;
+	private _index: number;
 	private _image: string = "";
 	private _wikiUrl: string = "";
 	private _weight: number | undefined = undefined;
@@ -24,12 +24,12 @@ export class Item {
 
 	constructor(category: ItemCategory, rawItemData: any, index: number) {
 		this._category = category;
+		this._index = index;
 		if (!rawItemData) {
 			console.log("Got no data");
 			return;
 		}
 		this.name = rawItemData["name"];
-		this.index = index;
 		this.image = rawItemData["image"];
 		this.weight = rawItemData["weight"];
 		this.attack = rawItemData["attack"];
@@ -98,7 +98,7 @@ export class Item {
 	/**
 	 * The index of the item in the raw data array.
 	 */
-	get index(): number | undefined {
+	get index(): number {
 		return this._index;
 	}
 

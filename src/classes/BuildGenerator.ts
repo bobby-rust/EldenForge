@@ -51,14 +51,14 @@ export default class BuildGenerator {
 		return this.generateRandom();
 	}
 
-	public async generateAIUrl(): Promise<string | null> {
+	public async generateAIUrl(signal: AbortSignal): Promise<string | null> {
 		if (typeof this._ai === "undefined") {
 			this.initAIGenerator();
 		}
 
 		let build;
 		try {
-			build = await this._ai?.getAIBuild(this._buildType);
+			build = await this._ai?.getAIBuild(this._buildType, signal);
 		} catch (e) {
 			// TODO: generate useful error messages and error page for user
 			console.error(e);
@@ -138,6 +138,7 @@ export default class BuildGenerator {
 
 	public setIncludeDlc(includeDlc: boolean) {
 		this._buildGenerationConfig.includeDlc = includeDlc;
+		console.log("include dlc is now: ", includeDlc);
 	}
 
 	private calculateCount(category: ItemCategory): number {

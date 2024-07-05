@@ -109,15 +109,15 @@ export const quotes = [
 	],
 	[
 		["Well, thou art of passing skill. Warrior blood must truly run in thy veins, Tarnished."],
-		["Margit, the Fell Omen"],
+		["Margit, The Fell Omen"],
 	],
 	[["Thou'rt unfit even to graft."], ["Godrick the Grafted"]],
 	[["Brave Tarnished, 'twas nobly fought."], ["Godfrey, First Elden Lord"]],
 	[
 		[
-			"Foul Tarnished, in search of the Elden Ring. Emboldened by the flame of ambition. Someone must extinguish thy flame. Let it be Margit the Fell",
+			"Foul Tarnished, in search of the Elden Ring. Emboldened by the flame of ambition. Someone must extinguish thy flame. Let it be Margit the Fell.",
 		],
-		["Margit, the Fell Omen"],
+		["Margit, The Fell Omen"],
 	],
 	[["Thy faith Leith under my moon."], ["Rennala, Queen of the Full Moon"]],
 	[
