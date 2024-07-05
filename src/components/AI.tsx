@@ -267,7 +267,7 @@ export default function AI(): JSX.Element {
 			setShowDescription(true);
 		};
 
-		if (window.location.search === "") queryAI();
+		// if (window.location.search === "") queryAI();
 	}, []);
 
 	return (
@@ -275,7 +275,7 @@ export default function AI(): JSX.Element {
 			{/* ----- Loading state ----- */}
 			{window.location.search === "" && (
 				<div className="overflow-y-hidden lg:px-14 pt-8">
-					<div className="flex flex-col items-center justify-center gap-10 h-[80vh] animate-landing-slide-up">
+					<div className="flex flex-col items-center justify-center gap-10 h-[72vh] animate-landing-slide-up">
 						<h1 className="md:text-2xl 2xl:text-5xl font-bold text-center">Asking Gideon for a build...</h1>
 						<div className="loading loading-spinner xl:h-12 xl:w-12"></div>
 						<blockquote className="md:text-xl 2xl:text-3xl italic text-gray-600 text-center w-[50vw] tracking-wide">
