@@ -98,15 +98,22 @@ export default function NavbarMenu({
 				width < 1032 ? "flex-col-reverse" : ""
 			}`}
 		>
+			{/* Render the Buy me a coffee button */}
+			<div className="h-16 flex justify-center items-center w-60 lg:h-16 lg:w-52">
+				<a href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
+					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=efb809&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
+				</a>
+			</div>
+
 			{/* Render the Item Dashboard button */}
-			<li className="h-16 flex text-nowrap justify-center items-center">
+			{/* <li className="h-16 flex text-nowrap justify-center items-center">
 				<button
 					className="btn btn-ghost text-center w-60 lg:w-auto tracking-widest font-semibold"
 					onClick={() => navigate("/item-dashboard")}
 				>
 					Item Dashboard
 				</button>
-			</li>
+			</li> */}
 
 			{/* Render the Randomizer/AI Builds button */}
 			<li className="h-16 flex justify-center items-center">
