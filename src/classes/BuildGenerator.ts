@@ -4,23 +4,10 @@ import { ItemCategory } from "../types/enums";
 import { Build } from "./Build";
 import { Item } from "./Item";
 import AIGenerator from "./AIGenerator";
-import {
-	NUM_SOTE_ASHES,
-	NUM_SOTE_CHESTS,
-	NUM_SOTE_GAUNTLETS,
-	NUM_SOTE_HELMS,
-	NUM_SOTE_INCANTS,
-	NUM_SOTE_LEGS,
-	NUM_SOTE_SEALS,
-	NUM_SOTE_SHIELDS,
-	NUM_SOTE_SORCS,
-	NUM_SOTE_SPIRITS,
-	NUM_SOTE_TALISMANS,
-	NUM_SOTE_WEAPONS,
-} from "@/types/constants";
+import { NUM_SOTE_ITEMS } from "@/types/constants";
 
 /**
- * The BuildGenerator needs to generate a valid build and return a base64 encoded
+ * The BuildGenerator needs to generate a valid build and return
  * URL parameter string of the form
  * ?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...
  *
@@ -38,22 +25,42 @@ export default class BuildGenerator {
 
 	private _buildType = "";
 
+	/**
+	 * Sets the build type.
+	 *
+	 * @param {string} buildType - The type of Elden Ring build to generate. Ex. "Magic Damage", "Fire Damage", etc.
+	 */
 	set buildType(buildType: string) {
 		this._buildType = buildType;
 	}
 
 	/**
+	 * Sets the AI generator.
+	 *
+	 * @param {AIGenerator} ai - The AI generator to use for generating builds.
+	 */
+	set ai(ai: AIGenerator) {
+		this._ai = ai;
+	}
+
+	/**
 	 * Generates a URL representing a build.
 	 * The build contains unique items if _excludePreviouslyRolled is false.
-	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
+	 * @returns {string} URL parameters representing a build. See class header for more information.
 	 */
 	public generateUrl(): string {
 		return this.generateRandom();
 	}
 
+	/**
+	 * Generates a URL representing an AI build. Uses Google Gemini.
+	 *
+	 * @param {AbortSignal} signal - The signal to abort the AI generation request.
+	 * @returns {Promise<string | null>} A promise that resolves to the generated URL or null if there was an error.
+	 */
 	public async generateAIUrl(signal: AbortSignal): Promise<string | null> {
 		if (typeof this._ai === "undefined") {
-			this.initAIGenerator();
+			this.ai = new AIGenerator();
 		}
 
 		let build;
@@ -68,41 +75,69 @@ export default class BuildGenerator {
 		return this.createAIUrlFromAIBuild(build);
 	}
 
+	/**
+	 * Sets the number of items for a given category in the build generation configuration.
+	 *
+	 * @param {ItemCategory} category - The category of items to set the number for.
+	 * @param {number} numItems - The number of items to set for the category.
+	 * @return {void}
+	 */
 	public setNumItems(category: ItemCategory, numItems: number): void {
 		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums = numItems;
 	}
 
+	/**
+	 * Generates items for a given category. Generates the default number of items
+	 * specified in the default build generation configuration.
+	 * This function should only be called when the build has no items for the category.
+	 * If there are items for the category, they will be reset.
+	 *
+	 * @param {ItemCategory} category - The category of items to generate.
+	 * @return {Map<ItemCategory, number[]> | undefined} - The entire new build, or undefined if all items in the category have been rolled.
+	 */
 	public generateItemsForCategory(category: ItemCategory) {
+		// If there are items for the category, they will be reset.
+		this._build._items.set(category, []);
+
 		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.clear();
 		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums =
 			defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
 
-		// This function should only be called when the build has no items for the category
-		if (this._build._items.get(category)?.length !== 0) {
-			return this._build._items;
-		}
-
-		for (let i = 0; i < defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums; i++) {
+		const numItemsToRoll = defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
+		for (let i = 0; i < numItemsToRoll; i++) {
 			const item = this.generateItem(category);
-			typeof item !== "undefined" && this._build.addItem(category, item);
+			if (typeof item === "undefined") break; // all items in the category have been rolled
+			this._build.addItem(category, item);
 		}
 
 		return this._build._items;
 	}
 
+	/**
+	 * Creates a URL string from an AI build object.
+	 *
+	 * @param {AIBuildType} build - The AI build object to create the URL from.
+	 * @return {string} The URL string created from the AI build object.
+	 */
 	private createAIUrlFromAIBuild(build: AIBuildType): string {
+		// Create a map of item categories to an array of item indices.
 		const buildMap = new Map<ItemCategory, number[]>();
+
+		// Iterate over each item category in the AI build.
 		build.items.forEach((value, key) => {
+			// For each item in the category, if it has a valid index, add it to the build map.
 			value.forEach((item) => {
-				if (item.index === -1) return;
 				if (typeof item.index === "undefined") return;
-				buildMap.set(key, [...(buildMap.get(key) ?? []), item.index]);
+				this.addItemToBuildMap(key, item.index, buildMap);
 			});
 		});
 
+		// Create a URL string from the build map.
 		let url = this.createUrlFromBuildMap(buildMap);
 
+		// Append the non-item categories from the AI build to the URL string.
 		for (const category of Object.keys(build)) {
+			// Skip the "items" category.
 			if (category === "items") continue;
 			url += `&${category}=${build[category]}`;
 		}
@@ -110,10 +145,20 @@ export default class BuildGenerator {
 		return url;
 	}
 
+	/**
+	 * Resets the items map in the build to an empty map.
+	 */
 	private resetItems() {
 		this._build._items = new Map<ItemCategory, number[]>();
 	}
 
+	/**
+	 * Rerolls an item in the specified category and replaces the item with index `oldItem` with the new item.
+	 *
+	 * @param {ItemCategory} category - The category of the item to reroll.
+	 * @param {number} oldItem - The index of the item to be replaced.
+	 * @return {Map<ItemCategory, number[]> | undefined} The updated items map after rerolling the item, or undefined if the new item is not generated successfully.
+	 */
 	public rerollItem(category: ItemCategory, oldItem: number): Map<ItemCategory, number[]> | undefined {
 		const newItem = this.generateItem(category);
 
@@ -132,62 +177,37 @@ export default class BuildGenerator {
 		if (encoded === "") return new Map<ItemCategory, Item[]>();
 		const url = encoded;
 		const buildMap = this.parseBuildMapFromUrl(url);
-		const build: Map<ItemCategory, Item[]> = this.parseBuildFromMap(buildMap);
+		const build: Map<ItemCategory, Item[]> = this.addItemsToBuild(buildMap);
 		return build;
 	}
 
+	/**
+	 * Sets the value of the `includeDlc` property in the `_buildGenerationConfig` object.
+	 *
+	 * @param {boolean} includeDlc - The new value for the `includeDlc` property.
+	 * @return {void} This function does not return a value.
+	 */
 	public setIncludeDlc(includeDlc: boolean) {
 		this._buildGenerationConfig.includeDlc = includeDlc;
-		console.log("include dlc is now: ", includeDlc);
 	}
 
+	/**
+	 * Calculates the count of items in a given category.
+	 * If `includeDlc` is true, it returns the count of all items in the category.
+	 * Otherwise, it returns the count of items in the category excluding DLC items.
+	 *
+	 * @param {ItemCategory} category - The category of the items to calculate count for.
+	 * @returns {number} - The count of items in the category.
+	 */
 	private calculateCount(category: ItemCategory): number {
+		// If `includeDlc` is true, return the count of all items in the category
 		if (this._buildGenerationConfig.includeDlc) {
 			return this._itemData[category]["count"];
 		}
 
-		let difference;
-		switch (category) {
-			case ItemCategory.Helm:
-				difference = NUM_SOTE_HELMS;
-				break;
-			case ItemCategory.Chest:
-				difference = NUM_SOTE_CHESTS;
-				break;
-			case ItemCategory.Gauntlets:
-				difference = NUM_SOTE_GAUNTLETS;
-				break;
-			case ItemCategory.Leg:
-				difference = NUM_SOTE_LEGS;
-				break;
-			case ItemCategory.Ashes:
-				difference = NUM_SOTE_ASHES;
-				break;
-			case ItemCategory.Incants:
-				difference = NUM_SOTE_INCANTS;
-				break;
-			case ItemCategory.Shields:
-				difference = NUM_SOTE_SHIELDS;
-				break;
-			case ItemCategory.Talismans:
-				difference = NUM_SOTE_TALISMANS;
-				break;
-			case ItemCategory.Seals:
-				difference = NUM_SOTE_SEALS;
-				break;
-			case ItemCategory.Sorcs:
-				difference = NUM_SOTE_SORCS;
-				break;
-			case ItemCategory.Spirits:
-				difference = NUM_SOTE_SPIRITS;
-				break;
-			case ItemCategory.Weapons:
-				difference = NUM_SOTE_WEAPONS;
-				break;
-			default:
-				return this._itemData[category]["count"];
-		}
+		const difference = NUM_SOTE_ITEMS[category as string] ?? 0;
 
+		// Return the count of items in the category excluding DLC items
 		return this._itemData[category]["count"] - difference;
 	}
 
@@ -207,13 +227,13 @@ export default class BuildGenerator {
 		// Get the set of previously rolled items for the category
 		const prevRolledItems = this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled;
 
-		// If all items in the category have been rolled, return -1
+		// If all items in the category have been rolled, return
 		if (prevRolledItems.size >= count) {
 			return;
 		}
 
 		// If `_excludePreviouslyRolled` is true and the generated index is of a previously rolled item,
-		// generate a new index until an unrolled item is found.
+		// or if the generated index is already in the build, generate a new index until a valid item is found.
 		while (
 			(this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled &&
 				prevRolledItems.has(randomIndex)) ||
@@ -222,18 +242,29 @@ export default class BuildGenerator {
 			randomIndex = Math.floor(Math.random() * count);
 		}
 
-		// Add the generated index to the set of previously rolled items if `excludePreviouslyRolled` is true
-		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled &&
-			this.addItemToPreviouslyRolled(category, randomIndex);
+		// Add the generated index to the set of previously rolled
+		this.addItemToPreviouslyRolled(category, randomIndex); // This function will not add the item if excludePreviouslyRolled is false, so we don't have to check here
 
 		// Return the generated index
 		return randomIndex;
 	}
 
+	/**
+	 * Retrieves the number of items to be generated for a given category from the build generation configuration.
+	 *
+	 * @param {ItemCategory} category - The category for which to retrieve the number of items.
+	 * @return {number} The number of items to be generated for the specified category.
+	 */
 	public getBuildNumsForCategory(category: ItemCategory) {
 		return this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
 	}
 
+	/**
+	 * Sets the number of items to be generated for a given category in the build generation configuration.
+	 *
+	 * @param {ItemCategory} category - The category of items to set the build numbers for.
+	 * @param {number} buildNums - The number of items to set for the category.
+	 */
 	public setBuildNumsForCategory(category: ItemCategory, buildNums: number) {
 		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums = buildNums;
 	}
@@ -250,21 +281,22 @@ export default class BuildGenerator {
 
 	/**
 	 * Sets the value of `excludePreviouslyRolled` in the `_buildGenerationConfig` object for the given `category`.
+	 * If `exclude` is false, it also clears the set of previously rolled items for the specified `category`.
 	 *
 	 * @param {ItemCategory} category - The category for which to set the value.
 	 * @param {boolean} exclude - The new value for `excludePreviouslyRolled`.
 	 */
 	public setExcludePreviouslyRolledForCategory(category: ItemCategory, exclude: boolean) {
 		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled = exclude;
-		!exclude ? this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.clear() : null;
+		!exclude && this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.clear();
 	}
 
 	/**
-	 * Converts a Map representing a build into a base64 encoded string
+	 * Converts a Map representing a build into a url parameter string
 	 *
-	 * @param rolled A Map cont_aining categories as keys and the indices of build items as values
-	 * @returns {string} A base64 encoded ASCII string of the form
-	 *                   `?&weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
+	 * @param rolled A Map containing categories as keys and the indices of build items as values
+	 * @returns {string} A url parameter string of the form
+	 *                   `?weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
 	 */
 	public createUrlFromBuildMap(rolled: Map<ItemCategory, number[]>): string {
 		let url = "";
@@ -281,7 +313,6 @@ export default class BuildGenerator {
 					return;
 				}
 
-				// this.addItemToPreviouslyRolled(category, num);
 				url += i === items.length - 1 ? num.toString() : num.toString() + ",";
 			});
 		}
@@ -291,10 +322,16 @@ export default class BuildGenerator {
 	}
 
 	/**
-	 * Generates a random build of items
-	 * @returns {string} base64 encoded url parameters representing a build. See class header for more information.
+	 * Generates a random build of items and returns a url parameter string representing the build.
+	 *
+	 * This function will generate a random build of items and return a url parameter string
+	 * of the form `?weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
+	 * representing the build. The build will contain the specified number of items for each category.
+	 *
+	 * @returns {string} url parameters representing a build. See class header for more information.
 	 */
 	private generateRandom(): string {
+		// Reset the build and the map of rolled items before generating a new build
 		this.resetItems();
 
 		/**
@@ -302,23 +339,36 @@ export default class BuildGenerator {
 		 */
 		const buildMap: Map<ItemCategory, number[]> = new Map<ItemCategory, number[]>();
 
+		// Loop over all categories and generate the specified number of items for each category
 		for (const category of Object.keys(this._itemData)) {
 			const numItemsToRoll = this.getBuildNumsForCategory(category as ItemCategory);
-			buildMap.set(category as ItemCategory, []);
+			buildMap.set(category as ItemCategory, []); // initialize the array of rolled items for the current category
 			for (let i = 0; i < numItemsToRoll; ++i) {
 				const itemIndex = this.generateItem(category as ItemCategory);
 				if (typeof itemIndex === "undefined") {
+					// If the item index is undefined, it means all items in the category have been rolled,
+					// so break out of the loop and move on to the next category
 					continue;
 				}
+
 				this.addItemToBuildMap(category as ItemCategory, itemIndex, buildMap);
 				this._build.addItem(category as ItemCategory, itemIndex);
 			}
 		}
 
+		// Convert the map of rolled items to a url parameter string and return it
 		return this.createUrlFromBuildMap(buildMap);
 	}
 
-	private addItemToBuildMap(category: ItemCategory, item: number, map: Map<ItemCategory, number[]>) {
+	/**
+	 * Adds an item to the build map for a given category.
+	 *
+	 * @param {ItemCategory} category - The category of the item.
+	 * @param {number} item - The index of the item.
+	 * @param {Map<ItemCategory, number[]>} map - The map of categories to rolled items.
+	 * @returns {void}
+	 */
+	private addItemToBuildMap(category: ItemCategory, item: number, map: Map<ItemCategory, number[]>): void {
 		/**
 		 * This is needed because Map and Set's get method can return undefined,
 		 * in which case a new Map or Set needs to be initialized in order for an item to be added
@@ -327,14 +377,22 @@ export default class BuildGenerator {
 	}
 
 	/**
-	 * Adds an item to the list of previously rolled items.
+	 * Adds an item to the list of previously rolled items iff `excludePreviouslyRolled` is true.
+	 *
 	 * @param category the category of item
 	 * @param item the index of the item
 	 */
 	private addItemToPreviouslyRolled(category: ItemCategory, item: number) {
-		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.add(item);
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled &&
+			this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.add(item);
 	}
 
+	/**
+	 * Adds items to the list of previously rolled items based on the provided map.
+	 *
+	 * @param {Map<ItemCategory, number[]>} items - The map containing items to add to the previously rolled items list.
+	 * @return {void}
+	 */
 	public addItemsToPreviouslyRolled(items: Map<ItemCategory, number[]>) {
 		items.forEach((items, category) => {
 			items.forEach((item) => {
@@ -344,31 +402,48 @@ export default class BuildGenerator {
 	}
 
 	/**
-	 * Parses a Build from a build map where the keys are the category
-	 * and the values are the list of indices of items for that category.
-	 * @param map the build map to parse.
-	 * @returns {Build} the Build object.
+	 * Adds a map of categories to indices to this._build.
+	 *
+	 * @param {Map<ItemCategory, number[]>} map - The build map to convert.
+	 * @returns {Map<ItemCategory, Item[]>} The map of categories to items.
 	 */
-	public parseBuildFromMap(map: Map<ItemCategory, number[]>): Map<ItemCategory, Item[]> {
+	public addItemsToBuild(map: Map<ItemCategory, number[]>): Map<ItemCategory, Item[]> {
+		// Reset the items in the build generator before adding items to the build
+		this.resetItems();
+
+		/**
+		 * For each category, check if there are items to add. If there are, add them to the build
+		 * and also add them to the list of previously rolled items if the option is enabled
+		 */
 		for (const [key, val] of map) {
+			// If the category has no items, add an empty list
 			if (val.length === 0) {
 				this._build._items.set(key, []);
 			}
+
+			// Add each item to the build and to the list of previously rolled items
 			val.forEach((val: number) => {
-				if (isNaN(val)) {
-					console.log("Invalid item index: ", val);
-					return;
-				}
+				// Add the item to the build
 				this._build.addItem(key, val);
+				// Add the item to the list of previously rolled items if the option is enabled
+				this.addItemToPreviouslyRolled(key, val);
 			});
 		}
 
 		return this._build.getItemsFromBuild();
 	}
 
+	/**
+	 * Parses the URL of an AI-generated build and returns an AI build object.
+	 *
+	 * @param {string} url - The URL of the AI-generated build.
+	 * @return {AIBuildType} The AI build object.
+	 */
 	public parseAIBuildFromUrl(url: string): AIBuildType {
-		const buildMap = this.parseBuildFromMap(this.parseBuildMapFromUrl(url));
+		// Add the items to the build from the build map
+		const buildMap = this.addItemsToBuild(this.parseBuildMapFromUrl(url));
 
+		// Initialize a new build object with default properties
 		const build: AIBuildType = {
 			vigor: 0,
 			mind: 0,
@@ -385,9 +460,33 @@ export default class BuildGenerator {
 			items: buildMap,
 		};
 
+		// Get the key-value pairs from the URL
+		const keyValues = this.getKeyValuesFromUrl(url);
+
+		// Iterate over the key-value pairs and set the values in the build object
+		for (const [key, val] of keyValues) {
+			// If the category is an item category, skip it
+			if (Object.values(ItemCategory).includes(key as ItemCategory)) continue;
+
+			// Otherwise, set the value in the build object
+			build[key] = val;
+		}
+
+		return build;
+	}
+
+	/**
+	 * Retrieves key-value pairs from a URL.
+	 *
+	 * @param {string} url - The URL to extract key-value pairs from.
+	 * @return {Map<string, string>} A map containing the extracted key-value pairs.
+	 */
+	private getKeyValuesFromUrl(url: string): Map<string, string> {
+		const keyValues = new Map<string, string>();
+		// Could use 2 pointer solution here, but no need to refactor right now
 		for (let i = 0; i < url.length; ++i) {
 			// If we are at an ampersand, slice out the entire category.
-			if (url[i] === "&") {
+			if (url[i] === "&" || i === 0) {
 				let catStart = i + 1;
 				let catStop = catStart;
 
@@ -406,73 +505,69 @@ export default class BuildGenerator {
 
 				// once we have the entire category, split by the "=" to find the name and values
 				const items = category.split("=");
-				const categoryName = items[0] as ItemCategory;
-
-				if (Object.values(ItemCategory).includes(categoryName)) continue;
-
-				build[items[0]] = items[1];
+				keyValues.set(items[0], items[1]);
 			}
 		}
 
-		return build;
+		return keyValues;
 	}
 
 	/**
-	 * Parses a string of the form `?weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
-	 * into a build map cont_aining categories as keys and the indices of build items as values
+	 * Converts an array of strings into an array of integers.
+	 *
+	 * @param {string[]} str - The array of strings to be converted.
+	 * @return {number[]} The array of integers resulting from the conversion.
 	 */
-	private parseBuildMapFromUrl(str: string): Map<ItemCategory, number[]> {
-		this.resetItems();
+	private atoi(str: string[]): number[] {
+		const intVals: number[] = [];
 
-		const buildMap = new Map<ItemCategory, number[]>();
+		str.forEach((x: string) => {
+			const num = parseInt(x);
+			if (isNaN(num)) return;
 
-		for (let i = 0; i < str.length; ++i) {
-			// If we are at an ampersand, slice out the entire category.
-			if (str[i] === "&" || i === 0) {
-				let catStart = i + 1;
-				let catStop = catStart;
+			intVals.push(num);
+		});
 
-				for (let j = catStart; j < str.length; ++j) {
-					if (str[j] === "&") {
-						catStop = j; // string.slice takes up to but NOT including as second parameter
-						break;
-					}
-					if (j === str.length - 1) {
-						catStop = str.length;
-						break;
-					}
-				}
-
-				const category = str.slice(catStart, catStop); // this is the entire category including key and values
-
-				// once we have the entire category, split by the "=" to find the name and values
-				const items = category.split("=");
-				const categoryName = items[0] as ItemCategory;
-
-				if (!Object.values(ItemCategory).includes(categoryName)) continue;
-
-				const values = items[1].split(",");
-				if (values[0] === "") {
-					buildMap.set(categoryName, []);
-					continue;
-				}
-				const intVals: number[] = [];
-				values.forEach((val) => {
-					const num = parseInt(val);
-					if (isNaN(num)) {
-						return;
-					}
-					intVals.push(num);
-				});
-
-				buildMap.set(categoryName, intVals);
-			}
-		}
-
-		return buildMap;
+		return intVals;
 	}
 
-	private initAIGenerator() {
-		this._ai = new AIGenerator();
+	/**
+	 * Parses a URL string in the form `?weapons=<comma_separated_indices>&armors=<comma_separated_indices>...`
+	 * into a build map containing categories as keys and the indices of build items as values.
+	 *
+	 * @param {string} url - The URL string to parse.
+	 * @return {Map<ItemCategory, number[]>} The build map parsed from the URL.
+	 */
+	private parseBuildMapFromUrl(url: string): Map<ItemCategory, number[]> {
+		// Reset the items in the build generator before parsing the URL.
+		this.resetItems();
+
+		// Create a new build map to store the parsed categories and indices.
+		const buildMap = new Map<ItemCategory, number[]>();
+
+		// Get the key-value pairs from the URL.
+		const keyValues = this.getKeyValuesFromUrl(url);
+
+		// Iterate over the key-value pairs and parse the values into indices.
+		for (const [key, value] of keyValues) {
+			// Skip the iteration if the key is not a valid item category.
+			if (!Object.values(ItemCategory).includes(key as ItemCategory)) continue;
+
+			// Split the value by commas and convert them into integers.
+			const values = value.split(",");
+			if (values[0] === "") {
+				// If the first value is an empty string, set the build map value to an empty array.
+				buildMap.set(key as ItemCategory, []);
+				continue;
+			}
+
+			const intVals = this.atoi(values);
+
+			// Set the build map value to the parsed indices.
+			buildMap.set(key as ItemCategory, intVals);
+		}
+
+		// Return the parsed build map.
+		return buildMap;
 	}
 }

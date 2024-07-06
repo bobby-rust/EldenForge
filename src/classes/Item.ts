@@ -22,6 +22,14 @@ export class Item {
 	private _dmgNegation?: any[] | undefined = undefined;
 	private _resistance?: any[] | undefined = undefined;
 
+	/**
+	 * Creates a new instance of the Item class.
+	 *
+	 * @param {ItemCategory} category - The category of the item.
+	 * @param {any} rawItemData - The raw data of the item.
+	 * @param {number} index - The index of the item.
+	 * @return {void}
+	 */
 	constructor(category: ItemCategory, rawItemData: any, index: number) {
 		this._category = category;
 		this._index = index;

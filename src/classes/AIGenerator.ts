@@ -47,7 +47,7 @@ export default class AI {
 
 		const buildMap = this.createBuildMap(buildArray);
 		const generator = new BuildGenerator();
-		return this.createAIBuild(generator.parseBuildFromMap(buildMap), responseArray);
+		return this.createAIBuild(generator.addItemsToBuild(buildMap), responseArray);
 	}
 
 	/**

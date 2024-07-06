@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import BuildGenerator from "../classes/BuildGenerator";
 import { ItemCategory } from "../types/enums";
+import data from "../data/new_new_data.json";
 
 describe("BuildGenerator", () => {
 	let buildGenerator: BuildGenerator;
@@ -84,7 +85,7 @@ describe("BuildGenerator", () => {
 		it("should generate a unique set of armor", () => {
 			let isUnique = true;
 
-			for (let i = 0; i < 167; ++i) {
+			for (let i = 0; i < data[ItemCategory.Helm]["count"]; ++i) {
 				// create a snapshot of the state of the previouslyRolled map before generating a new build
 				// not using structuredClone would cause prevRolled to be a reference, so when we generate the build
 				// it would reflect in prevRolled, so when we check if prevRolled has the index, it would be true
@@ -106,10 +107,10 @@ describe("BuildGenerator", () => {
 			const url = buildGenerator.generateUrl();
 			const build = buildGenerator.generateBuildFromUrl(url);
 
-			// After 167 rolls, there are no available helms
+			// After count rolls, there are no available helms
 			expect(build.get(ItemCategory.Helm)?.[0]).toBeUndefined();
 
-			// The first 167 rolls should contain valid armors
+			// The first count rolls should contain valid armors
 			expect(
 				buildGenerator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Helm)!.previouslyRolled.has(-1)
 			).toBe(false);
@@ -117,7 +118,7 @@ describe("BuildGenerator", () => {
 			expect(isUnique).toBe(true);
 			expect(
 				buildGenerator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Helm)!.previouslyRolled.size
-			).toBe(167);
+			).toBe(data[ItemCategory.Helm]["count"]);
 		});
 	});
 });

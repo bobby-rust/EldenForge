@@ -60,32 +60,24 @@ The strengths and weaknesses should be full, grammatically correct sentences. Th
 If you generate any incantations, be sure to generate the necessary Sacred Seal used to cast it.
 Make sure the items generated have the required stats to use them.`;
 
-export const NUM_SOTE_WEAPONS = 90;
-export const NUM_SOTE_ASHES = 25;
-export const NUM_SOTE_SORCS = 14;
-export const NUM_SOTE_INCANTS = 28;
-export const NUM_SOTE_TALISMANS = 39;
-export const NUM_SOTE_SPIRITS = 20;
-export const NUM_SOTE_SHIELDS = 8;
-export const NUM_SOTE_SEALS = 3;
-export const NUM_SOTE_HELMS = 43;
-export const NUM_SOTE_CHESTS = 43;
-export const NUM_SOTE_GAUNTLETS = 29;
-export const NUM_SOTE_LEGS = 30;
+interface NUM_SOTE_ITEMS {
+	[key: string]: number;
+}
 
-export const NUM_SOTE_ITEMS =
-	NUM_SOTE_WEAPONS +
-	NUM_SOTE_ASHES +
-	NUM_SOTE_SORCS +
-	NUM_SOTE_INCANTS +
-	NUM_SOTE_TALISMANS +
-	NUM_SOTE_SPIRITS +
-	NUM_SOTE_SHIELDS +
-	NUM_SOTE_SEALS +
-	NUM_SOTE_HELMS +
-	NUM_SOTE_CHESTS +
-	NUM_SOTE_GAUNTLETS +
-	NUM_SOTE_LEGS;
+export const NUM_SOTE_ITEMS: NUM_SOTE_ITEMS = {
+	weapons: 90,
+	ashes: 25,
+	sorcs: 14,
+	incants: 28,
+	talismans: 39,
+	spirits: 20,
+	shields: 8,
+	seals: 3,
+	helms: 43,
+	chests: 43,
+	gauntlets: 29,
+	legs: 30,
+};
 
 export default sysPrompt;
 
@@ -161,4 +153,39 @@ export const quotes = [
 		],
 		["Sir Gideon Ofnir, the All-Knowing"],
 	],
+];
+
+export const themes = [
+	"light",
+	"dark",
+	"cupcake",
+	"bumblebee",
+	"emerald",
+	"corporate",
+	"synthwave",
+	"retro",
+	"cyberpunk",
+	"valentine",
+	"halloween",
+	"garden",
+	"forest",
+	"aqua",
+	"lofi",
+	"pastel",
+	"fantasy",
+	"wireframe",
+	"black",
+	"luxury",
+	"dracula",
+	"cmyk",
+	"autumn",
+	"business",
+	"acid",
+	"lemonade",
+	"night",
+	"coffee",
+	"winter",
+	"dim",
+	"nord",
+	"sunset",
 ];

@@ -12,6 +12,7 @@ export class Build {
 
 	/**
 	 * Adds an item to the build.
+	 *
 	 * @param type the type of item.
 	 * @param item the index of the item to add.
 	 */
