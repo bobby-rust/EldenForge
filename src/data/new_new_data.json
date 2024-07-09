@@ -37469,7 +37469,7 @@
 		]
 	},
 	"tears": {
-		"count": 29,
+		"count": 37,
 		"items": [
 			{
 				"id": "f2978cd3-1331-471d-a06d-4b9982dd0a7e",
@@ -37702,6 +37702,78 @@
 				"duration": 3,
 				"description": "Causes concoction to explode",
 				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/ruptured_crystal_tear_elden_ring_wiki_guide_200px.png"
+			},
+			{
+				"id": "c05f08e0067c42968472d72fd5cab5ad",
+				"name": "Viridian Hidden Tear",
+				"type": "Stamina",
+				"duration": 15,
+				"description": "Eliminates all stamina consumption in mixed physick",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/viridian_hidden_tear_crystal_tear_elden_ring_shadow_of_the_erdtree_dlc_wiki_guide_200px.png",
+				"dlc": "Shadow of the Erdtree"
+			},
+			{
+				"id": "a13a77d4b23843ebbbd9fc8170b404f3",
+				"name": "Crimsonburst Dried Tear",
+				"type": "HP",
+				"duration": null,
+				"description": "Steadily restores HP of nearby allies for a time",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/crimsonburst_dried_tear_crystal_tear_elden_ring_shadow_of_the_erdtree_dlc_wiki_guide_200px.png",
+				"dlc": "Shadow of the Erdtree"
+			},
+			{
+				"id": "1aa01b8328254188a0d587d3d0822ab2",
+				"name": "Crimson-Sapping Cracked Tear",
+				"type": "HP",
+				"duration": 45,
+				"description": "Grants attacks HP-restoring effect",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/crimson-sapping_cracked_tear_crystal_tear_elden_ring_shadow_of_the_erdtree_dlc_wiki_guide_200px.png",
+				"dlc": "Shadow of the Erdtree"
+			},
+			{
+				"id": "03352dd876b2412b883746a41ca5791f",
+				"name": "Cerulean-Sapping Cracked Tear",
+				"type": "FP",
+				"duration": 45,
+				"description": "Grants attacks FP-restoring effect",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/cerulean-sapping_cracked_tear_crystal_tear_elden_ring_shadow_of_the_erdtree_dlc_wiki_guide_200px.png",
+				"dlc": "Shadow of the Erdtree"
+			},
+			{
+				"id": "43c6c72c11bf4381aa9b3282de1241ee",
+				"name": "Oil-Soaked Tear",
+				"type": "Defensive",
+				"duration": 60,
+				"description": "Coats nearby enemies with oil",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/oil-soaked_tear_crystal_tear_elden_ring_shadow_of_the_erdtree_dlc_wiki_guide_200px.png",
+				"dlc": "Shadow of the Erdtree"
+			},
+			{
+				"id": "c23f890ba94144eb963bbe302da6965d",
+				"name": "Bloodsucking Cracked Tear",
+				"type": "Offensive",
+				"duration": 180,
+				"description": "Enhances attacks at the cost of HP",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/bloodsucking_cracked_tear_crystal_tear_elden_ring_shadow_of_the_erdtree_dlc_wiki_guide_200px.png",
+				"dlc": "Shadow of the Erdtree"
+			},
+			{
+				"id": "6d62f4f35e37405080a85c0f5f7dc518",
+				"name": "Glovewort Crystal Tear",
+				"type": "Offensive / Elemental DMG",
+				"duration": 180,
+				"description": "Enhances attacks of spirits",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/glovewort_crystal_tear_crystal_tear_elden_ring_shadow_of_the_erdtree_dlc_wiki_guide_200px.png",
+				"dlc": "Shadow of the Erdtree"
+			},
+			{
+				"id": "655231761e404ddd88bc5fe84930829d",
+				"name": "Deflecting Hardtear",
+				"type": "Defensive",
+				"duration": 300,
+				"description": "Enhances spontaneous guard",
+				"image": "https://eldenring.wiki.fextralife.com/file/Elden-Ring/deflecting_hardtear_crystal_tear_elden_ring_shadow_of_the_erdtree_dlc_wiki_guide_200px.png",
+				"dlc": "Shadow of the Erdtree"
 			}
 		]
 	},
