@@ -8,7 +8,7 @@ import { Item } from "../classes/Item";
 import { ItemCategory } from "../types/enums";
 import Card from "./Card";
 import AddCategoryButton from "./AddCategoryButton";
-import { readableItemCategory } from "../types/constants";
+import { ArmorCategories, readableItemCategory } from "../types/constants";
 
 /**
  * Renders a column of cards for a specific item category.
@@ -28,6 +28,7 @@ export default function CardColumn(props: {
 	isAIBuild: boolean;
 	category: ItemCategory;
 	regenerateCategory: ((c: ItemCategory) => void) | null;
+	setArmorsRendered: ((c: boolean) => void) | null;
 }) {
 	// State initialization
 	const [width, setWidth] = React.useState(window.innerWidth);
@@ -82,6 +83,10 @@ export default function CardColumn(props: {
 	 * @return {void}
 	 */
 	React.useEffect(() => {
+		if ([...ArmorCategories].includes(props.category) && props.setArmorsRendered) {
+			props.setArmorsRendered(true);
+		}
+
 		function handleResize() {
 			setWidth(window.innerWidth);
 		}

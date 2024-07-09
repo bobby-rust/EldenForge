@@ -267,7 +267,7 @@ export default function AI(): JSX.Element {
 			setShowDescription(true);
 		};
 
-		// if (window.location.search === "") queryAI();
+		if (window.location.search === "") queryAI();
 	}, []);
 
 	return (
@@ -442,6 +442,7 @@ export default function AI(): JSX.Element {
 									isAIBuild={true}
 									category={c}
 									regenerateCategory={null}
+									setArmorsRendered={null}
 								/>
 							)}
 							{c === ItemCategory.Helm && (
@@ -453,6 +454,7 @@ export default function AI(): JSX.Element {
 									isAIBuild={true}
 									category={c}
 									regenerateCategory={null}
+									setArmorsRendered={null}
 								/>
 							)}
 						</React.Fragment>
