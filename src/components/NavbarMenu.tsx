@@ -100,7 +100,12 @@ export default function NavbarMenu({
 		>
 			{/* Render the Buy me a coffee button */}
 			<div className="h-16 flex justify-center items-center w-60 lg:h-16 lg:w-52">
-				<a href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
+				<a
+					className="h-full w-full flex justify-center items-center"
+					href="https://www.buymeacoffee.com/bobbyrust"
+					target="_blank"
+					rel="noreferrer"
+				>
 					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=efb809&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
 				</a>
 			</div>
@@ -126,10 +131,10 @@ export default function NavbarMenu({
 			</li>
 
 			{/* Render the Settings dropdown */}
-			<li className="h-16 justify-center items-center">
+			<li className="h-16 flex flex-nowrap justify-center items-center">
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<button className="btn btn-ghost w-60 lg:w-28 tracking-widest">
+						<button className="btn btn-ghost w-60 lg:w-28 tracking-widest flex flex-nowrap">
 							<IoSettingsOutline /> Settings
 						</button>
 					</DropdownMenuTrigger>
