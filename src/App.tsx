@@ -22,15 +22,7 @@ import { LuCopyCheck } from "react-icons/lu";
 import { IoCopyOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { quotes } from "./types/constants";
 import { ToastCategories } from "./types/types";
 import { getIncludeDlcStorageValue } from "./lib/utils";
@@ -70,9 +62,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	// State initialization
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const [buildUrl, _] = useSearchParams();
-	const [build, setBuild] = React.useState<Map<UIItemCategory, Item[]>>(
-		generator.generateBuildFromUrl("?" + buildUrl.toString().replaceAll("%2C", ","))
-	);
+	const [build, setBuild] = React.useState<Map<UIItemCategory, Item[]>>(generator.generateBuildFromUrl("?" + buildUrl.toString().replaceAll("%2C", ",")));
 	const [copied, setCopied] = React.useState(false);
 	const [includeDlc, setincludeDlc] = React.useState(getIncludeDlcStorageValue());
 	const [answeredToast, setAnsweredToast] = React.useState(initialToastCategories);
@@ -97,8 +87,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 						toast.dismiss();
 						handleRegenerateCategory(c);
 						toast.success(`Previously rolled ${readableName} cleared!`);
-					}}
-				>
+					}}>
 					Yes
 				</button>
 				<button className="btn" onClick={() => handleSetAnsweredToast(c)}>
@@ -343,17 +332,11 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
 			<div className={`lg:px-14 pt-8 ${build?.size === 0 && "overflow-y-hidden h-[83vh]"} min-h-full`}>
-				<div
-					className={`flex ${
-						build?.size === 0 && " h-full items-center flex-col gap-6 animate-landing-slide-up"
-					} justify-center mb-10 p-3`}
-				>
+				<div className={`flex ${build?.size === 0 && " h-full items-center flex-col gap-6 animate-landing-slide-up"} justify-center mb-10 p-3`}>
 					{/* ----- Landing ----- */}
 					{build?.size === 0 && (
 						<div className="flex flex-col gap-3 md:gap-10">
-							<h1 className="text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-center tracking-wide">
-								EldenForge
-							</h1>
+							<h1 className="text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-center tracking-wide">EldenForge</h1>
 							<blockquote className="md:text-xl 2xl:text-3xl italic text-gray-600 text-center w-[50vw] md:tracking-tight leading-loose  md:mb-10">
 								"{quote[0]}" <br></br>- {quote[1]}
 							</blockquote>
@@ -372,9 +355,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 								<DialogContent className="max-w-[90vw] sm:w-auto">
 									<DialogHeader>
 										<DialogTitle className="text-xl">Would you like to include DLC content?</DialogTitle>
-										<DialogDescription className="text-lg">
-											You'll be able to toggle this setting later on the build page.
-										</DialogDescription>
+										<DialogDescription className="text-lg">You'll be able to toggle this setting later on the build page.</DialogDescription>
 									</DialogHeader>
 									<DialogFooter className="justify-center items-center gap-3 flex-col sm:flex-row">
 										<button className="btn w-36 sm:w-24 btn-primary" onClick={() => handleDialogChoice(true)}>
@@ -393,16 +374,12 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 							{build?.size === 0 && !shouldDialogOpen() && (
 								<button
 									className={`btn lg:btn-wide btn-primary hover:animate-wiggle ${build?.size === 0 && "btn-lg"}`}
-									onClick={localStorage.getItem("include-dlc") === null ? undefined : handleReroll}
-								>
+									onClick={localStorage.getItem("include-dlc") === null ? undefined : handleReroll}>
 									<span className="lg:text-2xl">Randomizer</span>
 								</button>
 							)}
 							{build?.size === 0 && (
-								<button
-									className={`btn btn-secondary hover:animate-wiggle ${build?.size === 0 && "btn-lg"}`}
-									onClick={() => navigate("/ai")}
-								>
+								<button className={`btn btn-secondary hover:animate-wiggle ${build?.size === 0 && "btn-lg"}`} onClick={() => navigate("/ai")}>
 									<h1 className="lg:text-2xl">Ask Gideon</h1>
 								</button>
 							)}

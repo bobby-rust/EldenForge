@@ -66,7 +66,9 @@ export default function AI(): JSX.Element {
 	const [copied, setCopied] = React.useState<boolean>(false);
 	const [hintShowed, setHintShowed] = React.useState<boolean>(false);
 	const [build, setBuild] = React.useState<AIBuildType | null>(
-		generator.parseAIBuildFromUrl(decodeURIComponent("?" + buildUrl.toString().replaceAll("+", " ")))
+		window.location.pathname === "/ai" || window.location.pathname === "/ai/"
+			? null
+			: generator.parseAIBuildFromUrl(decodeURIComponent("?" + buildUrl.toString().replaceAll("+", " ")))
 	);
 	// const [armors, setArmors] = React.useState<Item[]>([]);
 	const [buildType, setBuildType] = React.useState<string>("");
@@ -142,10 +144,10 @@ export default function AI(): JSX.Element {
 		/**
 		 * Parse the build from the new URL and update the build state.
 		 */
-		const newBuild = generator.parseAIBuildFromUrl(newUrl);
+		const newBuild = generator.parseAIBuildFromUrl("?" + newUrl);
 		newBuild.summary = decodeURIComponent(newBuild.summary);
 
-		setBuild(newBuild);
+		// setBuild(newBuild);
 
 		// Reset the countdown and disable the button, then update the url to reflect the new build
 		setLoading(false);
@@ -188,7 +190,7 @@ export default function AI(): JSX.Element {
 	 * @return {void}
 	 */
 	React.useEffect(() => {
-		setBuild(generator.parseAIBuildFromUrl(decodeURIComponent(buildUrl.toString().replaceAll("+", " "))));
+		setBuild(generator.parseAIBuildFromUrl("?" + decodeURIComponent(buildUrl.toString().replaceAll("+", " "))));
 	}, [buildUrl]);
 
 	/**

@@ -224,7 +224,6 @@ export default class BuildGenerator {
 	 * @returns {Build} A build object containing the items of `encoded`
 	 */
 	public generateBuildFromUrl(encoded: string): Map<UIItemCategory, Item[]> {
-		console.log("Generating build from :", encoded);
 		if (encoded === "") return new Map<UIItemCategory, Item[]>();
 		const url = encoded;
 		const buildMap = this.parseBuildMapFromUrl(url);
@@ -321,20 +320,20 @@ export default class BuildGenerator {
 		return dlcItems;
 	}
 
-	/**
-	 * Generates a random index of an item from a given category.
-	 * If `_excludePreviouslyRolled` is true, it generates an index of an unrolled item.
-	 *
-	 * @param {ItemCategory} category - The category of the item to generate.
-	 * @returns {number | undefined} - The index of the generated item or undefined if all items in the category have been rolled.
-	 */
-	public generateItem(category: ItemCategory): number | undefined {
-		// Get the count of items in the category
+	private getRandomIndex(category: ItemCategory): { localItemIndex: number; dataItemIndex: number } | undefined {
 		const count = this.calculateCount(category);
 		if (count === 0) return;
 
 		// The random index is an index of the available items, it is __not__ the index of the item in the raw data
 		let localIndex = Math.floor(Math.random() * count);
+		while (
+			// This first condition should NOT be necessary to check, but it's here as an additional backup measure to prevent an infinite loop
+			!this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)?.excludePreviouslyRolled &&
+			this._build._items.get(category)?.includes(localIndex)
+		) {
+			localIndex = Math.floor(Math.random() * count);
+		}
+
 		let adjustedLocalIndex = localIndex;
 		let dataItemIndex = -1;
 		if (localIndex > this._baseGameItems[category].length - 1) {
@@ -344,11 +343,34 @@ export default class BuildGenerator {
 			dataItemIndex = this._baseGameItems[category][adjustedLocalIndex];
 		}
 
-		// Add the generated index to the set of previously rolled
-		this.removeItemFromAvailableItems(category, localIndex); // This function will not add the item if excludePreviouslyRolled is false, so we don't have to check here
+		return { localItemIndex: adjustedLocalIndex, dataItemIndex: dataItemIndex };
+	}
+
+	/**
+	 * Generates a random index of an item from a given category.
+	 * If `_excludePreviouslyRolled` is true, it generates an index of an unrolled item.
+	 *
+	 * @param {ItemCategory} category - The category of the item to generate.
+	 * @returns {number | undefined} - The index of the generated item or undefined if all items in the category have been rolled.
+	 */
+	public generateItem(category: ItemCategory): number | undefined {
+		let indices = this.getRandomIndex(category);
+		if (typeof indices === "undefined") return;
+
+		while (
+			// This first condition should not be necessary to check, but it's here as an additional backup measure to prevent an infinite loop
+			!this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)?.excludePreviouslyRolled &&
+			this._build._items.get(category)?.includes(indices.dataItemIndex)
+		) {
+			indices = this.getRandomIndex(category);
+			if (typeof indices === "undefined") return;
+		}
+
+		// This function will not add the item if excludePreviouslyRolled is false, so we don't have to check here
+		this.removeItemFromAvailableItems(category, indices?.localItemIndex);
 
 		// Return the generated index
-		return dataItemIndex;
+		return indices.dataItemIndex;
 	}
 
 	/**
@@ -555,10 +577,8 @@ export default class BuildGenerator {
 	public parseAIBuildFromUrl(url: string): AIBuildType {
 		// Add the items to the build from the build map
 		const buildMap = this.parseBuildMapFromUrl(url);
-		console.log("build map: ", buildMap);
 		this.addItemsToBuild(buildMap);
 		const build = this._build.getBuild();
-		console.log("Build: ", build);
 		// Initialize a new build object with default properties
 		const aiBuild: AIBuildType = {
 			vigor: 0,
@@ -585,6 +605,7 @@ export default class BuildGenerator {
 			if (Object.values(ItemCategory).includes(key as ItemCategory)) continue;
 
 			// Otherwise, set the value in the build object
+			if (!key || !val) continue;
 			aiBuild[key] = val;
 		}
 
@@ -683,7 +704,6 @@ export default class BuildGenerator {
 			buildMap.set(key as ItemCategory, intVals);
 		}
 
-		console.log("parsed build map ", buildMap, " from url: ", url);
 		// Return the parsed build map.
 		return buildMap;
 	}
