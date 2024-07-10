@@ -49,7 +49,8 @@ export default class AI {
 		const generator = new BuildGenerator();
 		generator.addItemsToBuild(buildMap);
 		const items = generator.getBuild();
-		return this.createAIBuild(items, responseArray);
+		const aiBuild = this.createAIBuild(items, responseArray);
+		return aiBuild;
 	}
 
 	/**
@@ -120,6 +121,9 @@ export default class AI {
 				if (name.toLowerCase() === "none") return;
 				if (!name) return;
 				const item = this.getItemFromName(key, name);
+				// if (key === ItemCategory.Weapons && item > data[key as keyof typeof data]["count"]) {
+
+				// }
 				buildMap.set(key as ItemCategory, [...(buildMap.get(key as ItemCategory) ?? []), item]);
 			});
 		});
@@ -139,10 +143,18 @@ export default class AI {
 			type = ItemCategory.Seals;
 		}
 
-		let items = data[type as keyof typeof data]["items"];
+		// let items = !(type === ItemCategory.Weapons)
+		// 	? data[type as keyof typeof data]["items"]
+		// 	: data[ItemCategory.Weapons]["items"].concat(data[ItemCategory.Staves]["items"]);
 
 		const distances: number[] = [];
-		for (let i = 0; i < data[type as keyof typeof data]["count"]; ++i) {
+		// const numItems = !(type === ItemCategory.Weapons)
+		// 	? data[type as keyof typeof data]["count"]
+		// 	: data[ItemCategory.Weapons]["count"] + data[ItemCategory.Staves]["count"];
+
+		let items = data[type as keyof typeof data]["items"];
+		let numItems = data[type as keyof typeof data]["count"];
+		for (let i = 0; i < numItems; ++i) {
 			const cmp =
 				type !== ItemCategory.Ashes
 					? this.isCloseMatch(name, items[i].name)
@@ -220,6 +232,8 @@ export default class AI {
 				return "shields";
 			case "talismans":
 				return "talismans";
+			case "staves":
+				return "staves";
 			case "sorceries":
 				return "sorcs";
 			case "incantations":

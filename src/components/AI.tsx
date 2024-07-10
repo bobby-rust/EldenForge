@@ -24,7 +24,7 @@ import { Button } from "./ui/button";
 
 const generator = new BuildGenerator();
 
-const AI_COOLDOWN = 30; // The number of seconds a user has to wait between AI generations.
+const AI_COOLDOWN = 0; // The number of seconds a user has to wait between AI generations.
 
 /**
  * A random quote is rendered when there is no current build while the AI request is made.
@@ -66,7 +66,7 @@ export default function AI(): JSX.Element {
 	const [copied, setCopied] = React.useState<boolean>(false);
 	const [hintShowed, setHintShowed] = React.useState<boolean>(false);
 	const [build, setBuild] = React.useState<AIBuildType | null>(
-		generator.parseAIBuildFromUrl(decodeURIComponent(buildUrl.toString().replaceAll("+", " ")))
+		generator.parseAIBuildFromUrl(decodeURIComponent("?" + buildUrl.toString().replaceAll("+", " ")))
 	);
 	// const [armors, setArmors] = React.useState<Item[]>([]);
 	const [buildType, setBuildType] = React.useState<string>("");
@@ -239,7 +239,7 @@ export default function AI(): JSX.Element {
 			const newUrl = await generator.generateAIUrl(signal);
 
 			// Cancel the navigation if the user leaves the page before the request completes
-			if (window.location.pathname !== "/ai") {
+			if (window.location.pathname !== "/ai/" && window.location.pathname !== "/ai") {
 				return;
 			}
 

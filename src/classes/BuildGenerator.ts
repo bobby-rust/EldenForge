@@ -224,6 +224,7 @@ export default class BuildGenerator {
 	 * @returns {Build} A build object containing the items of `encoded`
 	 */
 	public generateBuildFromUrl(encoded: string): Map<UIItemCategory, Item[]> {
+		console.log("Generating build from :", encoded);
 		if (encoded === "") return new Map<UIItemCategory, Item[]>();
 		const url = encoded;
 		const buildMap = this.parseBuildMapFromUrl(url);
@@ -553,11 +554,13 @@ export default class BuildGenerator {
 	 */
 	public parseAIBuildFromUrl(url: string): AIBuildType {
 		// Add the items to the build from the build map
-		this.addItemsToBuild(this.parseBuildMapFromUrl(url));
-		const buildMap = this._build.getBuild();
-
+		const buildMap = this.parseBuildMapFromUrl(url);
+		console.log("build map: ", buildMap);
+		this.addItemsToBuild(buildMap);
+		const build = this._build.getBuild();
+		console.log("Build: ", build);
 		// Initialize a new build object with default properties
-		const build: AIBuildType = {
+		const aiBuild: AIBuildType = {
 			vigor: 0,
 			mind: 0,
 			endurance: 0,
@@ -570,7 +573,7 @@ export default class BuildGenerator {
 			summary: "",
 			strengths: "",
 			weaknesses: "",
-			items: buildMap,
+			items: build,
 		};
 
 		// Get the key-value pairs from the URL
@@ -582,10 +585,10 @@ export default class BuildGenerator {
 			if (Object.values(ItemCategory).includes(key as ItemCategory)) continue;
 
 			// Otherwise, set the value in the build object
-			build[key] = val;
+			aiBuild[key] = val;
 		}
 
-		return build;
+		return aiBuild;
 	}
 
 	/**
@@ -680,6 +683,7 @@ export default class BuildGenerator {
 			buildMap.set(key as ItemCategory, intVals);
 		}
 
+		console.log("parsed build map ", buildMap, " from url: ", url);
 		// Return the parsed build map.
 		return buildMap;
 	}
