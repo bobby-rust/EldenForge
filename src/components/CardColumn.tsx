@@ -64,10 +64,10 @@ export default function CardColumn(props: {
 	 */
 	const handleChangeNumItems = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const numItems = parseInt(e.target.value);
-		const c = props.category;
-		if (c === UIItemCategory.Armors) return;
+		const c = props.items[0].category;
+		if (c === ItemCategory.Helm) return;
 		setSelectNumItems(numItems);
-		props.setNumItems?.(c as unknown as ItemCategory, numItems);
+		props.setNumItems?.(c, numItems);
 		/**
 		 * Consider adding a "selectedNone" state to determine if the user explicitly wanted 0 items generated, or the items are 0 just because they ran out.
 		 * In that case, the category should not be regenerated, so just don't clear the set of previously rolled items.
@@ -101,19 +101,13 @@ export default function CardColumn(props: {
 	return (
 		<div className="flex justify-center">
 			{/* ----- Add category button ----- */}
-			{props.items.length === 0 && (
-				<AddCategoryButton category={props.category} regenerateCategory={handleAddCategory} />
-			)}
+			{props.items.length === 0 && <AddCategoryButton category={props.category} regenerateCategory={handleAddCategory} />}
 
 			{/* ----- Number of items select menu. Only rendered if it's not an AI build, there are items, the category is not armors. ----- */}
 			{props.items.length > 0 && (
 				<div className="flex flex-col items-center">
 					{!props.isAIBuild && props.items[0].category !== ItemCategory.Helm && (
-						<select
-							value={selectNumItems}
-							onChange={handleChangeNumItems}
-							className="select text-lg select-bordered w-60 max-w-xs"
-						>
+						<select value={selectNumItems} onChange={handleChangeNumItems} className="select text-lg select-bordered w-60 max-w-xs">
 							<option className="text-lg" disabled selected>
 								Number of {props.category}
 							</option>
@@ -146,9 +140,7 @@ export default function CardColumn(props: {
 					 * If it's not mobile and there are no items in the category, fill up the space where the select menu should go to keep the cards aligned
 					 * If it is mobile, there isn't more than one card column, so they do not have to be aligned horizontally
 					 */}
-					{width > 640 &&
-						window.location.pathname !== "/ai/" &&
-						(props.items.length === 0 || props.items[0].category === ItemCategory.Helm) && <div className="h-12"></div>}
+					{width > 640 && window.location.pathname !== "/ai/" && (props.items.length === 0 || props.items[0].category === ItemCategory.Helm) && <div className="h-12"></div>}
 
 					{/* ----- Category title and cards ----- */}
 					<h1 className="text-center text-xl font-bold p-3">{props.category}</h1>

@@ -11,7 +11,7 @@ import React from "react";
 import "./App.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Item } from "./classes/Item";
-import { ItemCategory, UIItemCategory } from "./types/enums";
+import { ItemCategory, UICategoryToItemCategory, UIItemCategory } from "./types/enums";
 import CardColumn from "./components/CardColumn";
 import { ErrorBoundary } from "react-error-boundary";
 import { ArmorCategories, readableItemCategory } from "./types/constants";
@@ -143,7 +143,9 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 		const newBuild = generator.generateBuildFromUrl(newUrl);
 		setBuild(newBuild);
 		newBuild.forEach((i, c) => {
-			if (!showedHint && i.length === 0 && c !== UIItemCategory.Classes) {
+			const itemCategory = UICategoryToItemCategory.get(c);
+			if (typeof itemCategory === "undefined") return;
+			if (!showedHint && i.length === 0 && c !== UIItemCategory.Classes && generator._buildGenerationConfig.buildInfo.categoryConfigs.get(itemCategory)!.buildNums > 0) {
 				toast(
 					ToastMessage({
 						title: "Hint",
@@ -239,6 +241,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	 * @param {number} numItems - The number of items to set for the category.
 	 */
 	const handleChangeNumItems = (c: ItemCategory, numItems: number) => {
+		console.log("Changeing num items", c, numItems);
 		generator.setNumItems(c, numItems);
 	};
 
