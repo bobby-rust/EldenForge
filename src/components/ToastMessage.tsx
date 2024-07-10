@@ -21,8 +21,10 @@ export const ToastMessage = (props: { title: string; message: string; buttons: R
 				{/* The message of the toast. */}
 				<p>{message}</p>
 			</div>
-			{/* The buttons to be displayed. */}
-			{buttons}
+			<div className="p-1">
+				{/* The buttons to be displayed. */}
+				{buttons}
+			</div>
 		</div>
 	);
 };

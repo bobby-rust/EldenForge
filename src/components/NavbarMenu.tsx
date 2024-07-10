@@ -78,6 +78,10 @@ export default function NavbarMenu({
 
 		newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled =
 			!newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled;
+		generator.setExcludePreviouslyRolledForCategory(
+			c,
+			newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled
+		);
 		setConfig(newConfig);
 	}
 

@@ -11,7 +11,7 @@ import React from "react";
 import "./App.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Item } from "./classes/Item";
-import { ItemCategories, ItemCategory, UIItemCategory } from "./types/enums";
+import { ItemCategory, UIItemCategory } from "./types/enums";
 import CardColumn from "./components/CardColumn";
 import { ErrorBoundary } from "react-error-boundary";
 import { ArmorCategories, readableItemCategory } from "./types/constants";
@@ -76,7 +76,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	const [copied, setCopied] = React.useState(false);
 	const [includeDlc, setincludeDlc] = React.useState(getIncludeDlcStorageValue());
 	const [answeredToast, setAnsweredToast] = React.useState(initialToastCategories);
-	const [showedToast, setShowedToast] = React.useState(initialToastCategories);
+	const [showedHint, setShowedHint] = React.useState(false);
 
 	// Helper functions
 	/**
@@ -84,7 +84,8 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	 *
 	 * @param {ItemCategory} props.c - The item category
 	 * @return {JSX.Element} The clear category toast buttons.
-	 */ const ClearCategoryToastButtons = (props: { c: ItemCategory; readableName: string }): JSX.Element => {
+	 */
+	const ClearCategoryToastButtons = (props: { c: ItemCategory; readableName: string }): JSX.Element => {
 		const { c, readableName } = props;
 
 		return (
@@ -151,71 +152,24 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 
 		// Get the new build from the URL
 		const newBuild = generator.generateBuildFromUrl(newUrl);
-
-		const armorPieces = new Map<string, boolean>();
-
-		for (const c in ArmorCategories) {
-			armorPieces.set(c as string, false);
-		}
-
-		for (const armor in newBuild.get(UIItemCategory.Armors)) {
-			armorPieces.set(armor as string, true);
-		}
-
-		for (const c in ItemCategories) {
-			if (c in ArmorCategories) continue;
-
-			const categoryName = c as ItemCategory;
-			const readableName = readableItemCategory.get(categoryName);
-			const categoryItems = newBuild.get(categoryName as unknown as UIItemCategory) ?? [];
-			const buildInfo = generator._buildGenerationConfig.buildInfo.categoryConfigs.get(categoryName);
-
-			/**
-			 * Only render the toast if:
-			 * - The category is not Classes.
-			 * - The category has no items left to roll.
-			 * - The user has not answered "No" when asked if they would like to reset the previously rolled items for the category.
-			 * - The user has not excluded previously rolled items.
-			 */
-			if (
-				c !== ItemCategory.Classes &&
-				categoryItems.length === 0 &&
-				typeof buildInfo !== "undefined" &&
-				buildInfo.buildNums > 0 &&
-				!answeredToast[c] &&
-				!showedToast[c] &&
-				typeof readableName !== "undefined" &&
-				buildInfo.excludePreviouslyRolled
-			) {
-				toast(
-					<ToastMessage
-						title={`No ${readableName} left to roll`}
-						message={`Would you like to reset ${readableName}?`}
-						buttons={<ClearCategoryToastButtons c={c[0] as ItemCategory} readableName={readableName} />}
-					/>
-				);
-				const newShowedToast = showedToast;
-				newShowedToast[categoryName] = true;
-				setShowedToast(newShowedToast);
-			}
-		}
-
-		for (const [k, v] of armorPieces) {
-			if (!v) {
-				toast(
-					<ToastMessage
-						title={`No ${k} left to roll`}
-						message={`Would you like to reset ${k}?`}
-						buttons={<ClearCategoryToastButtons c={k as ItemCategory} readableName={k} />}
-					/>
-				);
-				const newShowedToast = showedToast;
-				newShowedToast[k] = true;
-				setShowedToast(newShowedToast);
-			}
-		}
-
 		setBuild(newBuild);
+		newBuild.forEach((i, c) => {
+			if (!showedHint && i.length === 0 && c !== UIItemCategory.Classes) {
+				toast(
+					ToastMessage({
+						title: "Hint",
+						message: `No ${c} left. You can choose to include previously rolled items in the settings menu.`,
+						buttons: (
+							<Button className="" onClick={() => toast.dismiss()}>
+								Okay
+							</Button>
+						),
+					}),
+					{ duration: 8000 }
+				);
+				setShowedHint(true);
+			}
+		});
 	};
 
 	/**

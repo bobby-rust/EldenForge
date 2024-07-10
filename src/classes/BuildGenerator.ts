@@ -389,7 +389,7 @@ export default class BuildGenerator {
 	 */
 	public setExcludePreviouslyRolledForCategory(category: ItemCategory, exclude: boolean) {
 		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled = exclude;
-		!exclude && this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.clear();
+		!exclude && this.resetAvailableItemsForCategory(category);
 	}
 
 	/**
@@ -484,6 +484,8 @@ export default class BuildGenerator {
 	 * @param item the index of the item
 	 */
 	private removeItemFromAvailableItems(category: ItemCategory, localIndex: number) {
+		if (!this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled) return;
+
 		let adjustedLocalIndex = localIndex;
 		if (localIndex > this._baseGameItems[category].length - 1) {
 			adjustedLocalIndex = localIndex - this._baseGameItems[category].length;
