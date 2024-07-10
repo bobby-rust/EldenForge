@@ -1,5 +1,5 @@
-import data from "../data/new_new_data.json";
-import { ItemCategory } from "../types/enums";
+import data from "../data/data.json";
+import { ItemCategory, UIItemCategory } from "../types/enums";
 import { Item } from "./Item";
 import { AIBuildType } from "../types/types";
 import BuildGenerator from "./BuildGenerator";
@@ -47,7 +47,9 @@ export default class AI {
 
 		const buildMap = this.createBuildMap(buildArray);
 		const generator = new BuildGenerator();
-		return this.createAIBuild(generator.addItemsToBuild(buildMap), responseArray);
+		generator.addItemsToBuild(buildMap);
+		const items = generator.getBuild();
+		return this.createAIBuild(items, responseArray);
 	}
 
 	/**
@@ -57,7 +59,7 @@ export default class AI {
 	 * @param {string[]} aiResponseArray - An array of strings representing the AI response.
 	 * @return {AIBuild} The created AIBuild object.
 	 */
-	private createAIBuild(buildMap: Map<ItemCategory, Item[]>, aiResponseArray: string[]): AIBuildType {
+	private createAIBuild(buildMap: Map<UIItemCategory, Item[]>, aiResponseArray: string[]): AIBuildType {
 		const build: AIBuildType = {
 			name: "",
 			summary: "",

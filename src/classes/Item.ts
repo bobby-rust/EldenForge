@@ -45,7 +45,7 @@ export class Item {
 		this.requiredAttributes = rawItemData["requiredAttributes"];
 		this.affinity = rawItemData["affinity"];
 
-		if (category === ItemCategory.Weapons) {
+		if (category === ItemCategory.Weapons || category === ItemCategory.Staves) {
 			this.weaponCategory = rawItemData["category"];
 		}
 

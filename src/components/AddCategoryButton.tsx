@@ -1,6 +1,5 @@
 import { FaPlus } from "react-icons/fa";
-import { readableItemCategory } from "../types/constants";
-import { ItemCategory } from "@/types/enums";
+import { UIItemCategory } from "@/types/enums";
 
 /**
  * Renders an "Add Category" button with a plus icon and a label displaying the category name.
@@ -11,8 +10,8 @@ import { ItemCategory } from "@/types/enums";
  * @return {JSX.Element} The rendered Add Category button.
  */
 export default function AddCategoryButton(props: {
-	category: ItemCategory;
-	regenerateCategory: (c: ItemCategory) => void;
+	category: UIItemCategory;
+	regenerateCategory: (c: UIItemCategory) => void;
 }): JSX.Element {
 	return (
 		<div className="flex flex-col">
@@ -25,7 +24,7 @@ export default function AddCategoryButton(props: {
 					<div>
 						<FaPlus size={75} />
 					</div>
-					<h1 className="text-2xl">{readableItemCategory.get(props.category)}</h1>
+					<h1 className="text-2xl">{props.category}</h1>
 				</button>
 			</div>
 		</div>

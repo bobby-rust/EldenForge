@@ -1,5 +1,5 @@
 // import React from "react";
-// import data from "../data/new_new_data.json";
+// import data from "../data/data.json";
 // import Card from "./Card";
 
 // const items = [

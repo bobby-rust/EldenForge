@@ -5,10 +5,9 @@
 
 import React from "react";
 import { Item } from "../classes/Item";
-import { ItemCategory } from "../types/enums";
+import { ItemCategory, UIItemCategory, UICategoryToItemCategory } from "../types/enums";
 import Card from "./Card";
 import AddCategoryButton from "./AddCategoryButton";
-import { ArmorCategories, readableItemCategory } from "../types/constants";
 
 /**
  * Renders a column of cards for a specific item category.
@@ -26,9 +25,9 @@ export default function CardColumn(props: {
 	reroll: ((c: ItemCategory, i: number) => void) | null;
 	setNumItems: ((c: ItemCategory, numItems: number) => void) | null;
 	isAIBuild: boolean;
-	category: ItemCategory;
+	category: UIItemCategory;
 	regenerateCategory: ((c: ItemCategory) => void) | null;
-	setArmorsRendered: ((c: boolean) => void) | null;
+	regenerateArmors: ((c: UIItemCategory) => void) | null;
 }) {
 	// State initialization
 	const [width, setWidth] = React.useState(window.innerWidth);
@@ -47,7 +46,13 @@ export default function CardColumn(props: {
 		 * Regenerate the category.
 		 * This updates the build state in the parent component, triggering a rerender of this component with the updated items.
 		 */
-		props.regenerateCategory?.(props.category);
+		if (props.category === UIItemCategory.Armors) {
+			props.regenerateArmors?.(props.category);
+			return;
+		}
+		const c = UICategoryToItemCategory.get(props.category);
+		if (typeof c === "undefined") return;
+		props.regenerateCategory?.(c);
 	};
 
 	/**
@@ -60,8 +65,9 @@ export default function CardColumn(props: {
 	const handleChangeNumItems = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const numItems = parseInt(e.target.value);
 		const c = props.category;
+		if (c === UIItemCategory.Armors) return;
 		setSelectNumItems(numItems);
-		props.setNumItems?.(c, numItems);
+		props.setNumItems?.(c as unknown as ItemCategory, numItems);
 		/**
 		 * Consider adding a "selectedNone" state to determine if the user explicitly wanted 0 items generated, or the items are 0 just because they ran out.
 		 * In that case, the category should not be regenerated, so just don't clear the set of previously rolled items.
@@ -83,10 +89,6 @@ export default function CardColumn(props: {
 	 * @return {void}
 	 */
 	React.useEffect(() => {
-		if ([...ArmorCategories].includes(props.category) && props.setArmorsRendered) {
-			props.setArmorsRendered(true);
-		}
-
 		function handleResize() {
 			setWidth(window.innerWidth);
 		}
@@ -95,7 +97,7 @@ export default function CardColumn(props: {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
-	if (props.category === ItemCategory.Classes) return null; // Classes are not rendered in the card column
+	if (props.category === UIItemCategory.Classes) return null; // Classes are not rendered in the card column
 	return (
 		<div className="flex justify-center">
 			{/* ----- Add category button ----- */}
@@ -113,7 +115,7 @@ export default function CardColumn(props: {
 							className="select text-lg select-bordered w-60 max-w-xs"
 						>
 							<option className="text-lg" disabled selected>
-								Number of {readableItemCategory.get(props.items[0].category)}
+								Number of {props.category}
 							</option>
 							<option className="text-xl" value={0}>
 								None
@@ -126,16 +128,16 @@ export default function CardColumn(props: {
 									? "Sorcery"
 									: props.items[0].category === ItemCategory.Spirits
 									? "Spirit Ash"
-									: readableItemCategory.get(props.items[0].category)?.slice(0, -1)}
+									: props.category.slice(0, -1)}
 							</option>
 							<option className="text-xl" value={2}>
-								2 {readableItemCategory.get(props.items[0].category)}
+								2 {props.category}
 							</option>
 							<option className="text-xl" value={3}>
-								3 {readableItemCategory.get(props.items[0].category)}{" "}
+								3 {props.category}
 							</option>
 							<option className="text-xl" value={4}>
-								4 {readableItemCategory.get(props.items[0].category)}
+								4 {props.category}
 							</option>
 						</select>
 					)}
@@ -149,7 +151,7 @@ export default function CardColumn(props: {
 						(props.items.length === 0 || props.items[0].category === ItemCategory.Helm) && <div className="h-12"></div>}
 
 					{/* ----- Category title and cards ----- */}
-					<h1 className="text-center text-xl font-bold p-3">{readableItemCategory.get(props.items[0].category)}</h1>
+					<h1 className="text-center text-xl font-bold p-3">{props.category}</h1>
 					{props.items.map((item: Item, i: number) => (
 						<div key={i}>
 							<Card key={item.name} item={item} reroll={props.reroll} isAIBuild={props.isAIBuild} />

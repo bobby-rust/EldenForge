@@ -13,9 +13,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import BuildGenerator from "../classes/BuildGenerator";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { quotes } from "../types/constants";
-import { ItemCategory } from "../types/enums";
-import { Item } from "../classes/Item";
-import { ArmorCategories } from "../types/constants";
+import { UIItemCategory } from "../types/enums";
 import { AIBuildType } from "../types/types";
 import CardColumn from "./CardColumn";
 import { toast } from "sonner";
@@ -70,7 +68,7 @@ export default function AI(): JSX.Element {
 	const [build, setBuild] = React.useState<AIBuildType | null>(
 		generator.parseAIBuildFromUrl(decodeURIComponent(buildUrl.toString().replaceAll("+", " ")))
 	);
-	const [armors, setArmors] = React.useState<Item[]>([]);
+	// const [armors, setArmors] = React.useState<Item[]>([]);
 	const [buildType, setBuildType] = React.useState<string>("");
 
 	// Helper functions
@@ -183,23 +181,6 @@ export default function AI(): JSX.Element {
 			setDisabled(false);
 		}
 	}, [countdown]);
-
-	/**
-	 * Updates the armors state with the items in the build that are part of the armor categories.
-	 *
-	 * @return {void}
-	 */
-	React.useEffect(() => {
-		if (build) {
-			const newArmors: Item[] = [];
-			[...build.items.keys()].forEach((c: ItemCategory) => {
-				if (ArmorCategories.has(c)) {
-					newArmors.push(...(build.items.get(c) ?? []));
-				}
-			});
-			setArmors(newArmors);
-		}
-	}, [build]);
 
 	/**
 	 * Updates the build state whenever the buildUrl changes.
@@ -431,9 +412,9 @@ export default function AI(): JSX.Element {
 			{/* ----- item grid ----- */}
 			<div className="grid grid-cols-1 sm:grid-cols-2 2lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 2.5xl:grid-cols-6 3xl:grid-cols-7 4xl:grid-cols-8 gap-4 auto-cols-auto">
 				{build &&
-					[...build.items.keys()].map((c: ItemCategory, i: number) => (
+					[...build.items.keys()].map((c: UIItemCategory, i: number) => (
 						<React.Fragment key={i}>
-							{!ArmorCategories.has(c) && (
+							{c !== UIItemCategory.Classes && (
 								<CardColumn
 									key={i}
 									items={build.items.get(c) ?? []}
@@ -442,19 +423,7 @@ export default function AI(): JSX.Element {
 									isAIBuild={true}
 									category={c}
 									regenerateCategory={null}
-									setArmorsRendered={null}
-								/>
-							)}
-							{c === ItemCategory.Helm && (
-								<CardColumn
-									key={i}
-									items={armors}
-									reroll={null}
-									setNumItems={null}
-									isAIBuild={true}
-									category={c}
-									regenerateCategory={null}
-									setArmorsRendered={null}
+									regenerateArmors={null}
 								/>
 							)}
 						</React.Fragment>

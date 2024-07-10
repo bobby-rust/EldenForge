@@ -11,7 +11,7 @@ import React from "react";
 import "./App.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Item } from "./classes/Item";
-import { ItemCategory } from "./types/enums";
+import { ItemCategories, ItemCategory, UIItemCategory } from "./types/enums";
 import CardColumn from "./components/CardColumn";
 import { ErrorBoundary } from "react-error-boundary";
 import { ArmorCategories, readableItemCategory } from "./types/constants";
@@ -32,7 +32,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { quotes } from "./types/constants";
-import { AnsweredToast } from "./types/types";
+import { ToastCategories } from "./types/types";
 import { getIncludeDlcStorageValue } from "./lib/utils";
 
 // A random quote is rendered on the landing page.
@@ -43,7 +43,7 @@ const quote = quotes[Math.floor(Math.random() * quotes.length)];
  * This is used to determine if the user has already answered the "No <category> left to roll" toast for each category.
  * The toast is only rendered if the user has not answered "No" when asked if they would like to reset the previously rolled items for the category.
  */
-const initialAnsweredToast: AnsweredToast = {
+const initialToastCategories: ToastCategories = {
 	ashes: false,
 	incants: false,
 	seals: false,
@@ -52,6 +52,7 @@ const initialAnsweredToast: AnsweredToast = {
 	spirits: false,
 	talismans: false,
 	tears: false,
+	staves: false,
 	weapons: false,
 };
 
@@ -67,15 +68,15 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	const navigate = useNavigate();
 
 	// State initialization
-	const [armors, setArmors] = React.useState<Item[]>([]); // A separate armors state is needed because it is passed separately to child components
 	const [width, setWidth] = React.useState(window.innerWidth);
 	const [buildUrl, _] = useSearchParams();
-	const [build, setBuild] = React.useState<Map<ItemCategory, Item[]>>(
+	const [build, setBuild] = React.useState<Map<UIItemCategory, Item[]>>(
 		generator.generateBuildFromUrl("?" + buildUrl.toString().replaceAll("%2C", ","))
 	);
 	const [copied, setCopied] = React.useState(false);
 	const [includeDlc, setincludeDlc] = React.useState(getIncludeDlcStorageValue());
-	const [answeredToast, setAnsweredToast] = React.useState(initialAnsweredToast);
+	const [answeredToast, setAnsweredToast] = React.useState(initialToastCategories);
+	const [showedToast, setShowedToast] = React.useState(initialToastCategories);
 
 	// Helper functions
 	/**
@@ -83,19 +84,18 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	 *
 	 * @param {ItemCategory} props.c - The item category
 	 * @return {JSX.Element} The clear category toast buttons.
-	 */
-	const ClearCategoryToastButtons = (props: { c: ItemCategory }): JSX.Element => {
-		const { c } = props;
+	 */ const ClearCategoryToastButtons = (props: { c: ItemCategory; readableName: string }): JSX.Element => {
+		const { c, readableName } = props;
 
 		return (
 			<div className="flex p-3 gap-2">
 				<button
 					className="btn"
 					onClick={() => {
-						handleClearPreviouslyRolled(c);
+						handleResetAvailableItems(c);
 						toast.dismiss();
 						handleRegenerateCategory(c);
-						toast.success(`Previously rolled ${readableItemCategory.get(c)} cleared!`);
+						toast.success(`Previously rolled ${readableName} cleared!`);
 					}}
 				>
 					Yes
@@ -152,12 +152,23 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 		// Get the new build from the URL
 		const newBuild = generator.generateBuildFromUrl(newUrl);
 
-		// Check if there are any items left to roll
-		for (const c of newBuild) {
-			const buildInfo = generator._buildGenerationConfig.buildInfo.categoryConfigs.get(c[0])!;
+		const armorPieces = new Map<string, boolean>();
 
-			const categoryName = c[0];
-			const categoryItems = c[1];
+		for (const c in ArmorCategories) {
+			armorPieces.set(c as string, false);
+		}
+
+		for (const armor in newBuild.get(UIItemCategory.Armors)) {
+			armorPieces.set(armor as string, true);
+		}
+
+		for (const c in ItemCategories) {
+			if (c in ArmorCategories) continue;
+
+			const categoryName = c as ItemCategory;
+			const readableName = readableItemCategory.get(categoryName);
+			const categoryItems = newBuild.get(categoryName as unknown as UIItemCategory) ?? [];
+			const buildInfo = generator._buildGenerationConfig.buildInfo.categoryConfigs.get(categoryName);
 
 			/**
 			 * Only render the toast if:
@@ -167,19 +178,40 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 			 * - The user has not excluded previously rolled items.
 			 */
 			if (
-				categoryName !== ItemCategory.Classes &&
+				c !== ItemCategory.Classes &&
 				categoryItems.length === 0 &&
+				typeof buildInfo !== "undefined" &&
 				buildInfo.buildNums > 0 &&
-				!answeredToast[c[0]] &&
+				!answeredToast[c] &&
+				!showedToast[c] &&
+				typeof readableName !== "undefined" &&
 				buildInfo.excludePreviouslyRolled
 			) {
 				toast(
 					<ToastMessage
-						title={`No ${readableItemCategory.get(c[0])} left to roll`}
-						message={`Would you like to reset ${readableItemCategory.get(c[0])}?`}
-						buttons={<ClearCategoryToastButtons c={c[0]} />}
+						title={`No ${readableName} left to roll`}
+						message={`Would you like to reset ${readableName}?`}
+						buttons={<ClearCategoryToastButtons c={c[0] as ItemCategory} readableName={readableName} />}
 					/>
 				);
+				const newShowedToast = showedToast;
+				newShowedToast[categoryName] = true;
+				setShowedToast(newShowedToast);
+			}
+		}
+
+		for (const [k, v] of armorPieces) {
+			if (!v) {
+				toast(
+					<ToastMessage
+						title={`No ${k} left to roll`}
+						message={`Would you like to reset ${k}?`}
+						buttons={<ClearCategoryToastButtons c={k as ItemCategory} readableName={k} />}
+					/>
+				);
+				const newShowedToast = showedToast;
+				newShowedToast[k] = true;
+				setShowedToast(newShowedToast);
 			}
 		}
 
@@ -192,8 +224,8 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	 * @param {ItemCategory} c - The category for which to clear the set of previously rolled items.
 	 * @return {void}
 	 */
-	const handleClearPreviouslyRolled = (c: ItemCategory): void => {
-		generator._buildGenerationConfig.buildInfo.categoryConfigs.get(c)!.previouslyRolled.clear();
+	const handleResetAvailableItems = (c: ItemCategory): void => {
+		generator.resetAvailableItemsForCategory(c);
 	};
 
 	/**
@@ -219,14 +251,31 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	 */
 	const handleRerollItem = (c: ItemCategory, i: number): void => {
 		const newBuildMap = generator.rerollItem(c, i);
+		let readableName = readableItemCategory.get(c);
+		if (typeof readableName === "undefined") {
+			switch (c) {
+				case ItemCategory.Chest:
+					readableName = "Chests";
+					break;
+				case ItemCategory.Gauntlets:
+					readableName = "Gauntlets";
+					break;
+				case ItemCategory.Leg:
+					readableName = "Legs";
+					break;
+			}
+		}
 
+		if (typeof readableName === "undefined") {
+			return;
+		}
 		// rerollItem returns undefined if there are no items left to roll for the category
 		if (typeof newBuildMap === "undefined") {
 			toast.error(
 				<ToastMessage
-					title={`No ${readableItemCategory.get(c)} left to roll`}
-					message={`Would you like to reset ${readableItemCategory.get(c)}?`}
-					buttons={<ClearCategoryToastButtons c={c} />}
+					title={`No ${readableName} left to roll`}
+					message={`Would you like to reset ${readableName}?`}
+					buttons={<ClearCategoryToastButtons c={c} readableName={readableName} />}
 				/>
 			);
 
@@ -250,6 +299,21 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 		generator.setNumItems(c, numItems);
 	};
 
+	const regenerateArmors = () => {
+		let newUrl;
+		for (const c in ArmorCategories) {
+			const newBuildMap = generator.generateItemsForCategory(c as ItemCategory);
+			if (typeof newBuildMap === "undefined") continue;
+			newUrl = generator.createUrlFromBuildMap(newBuildMap);
+		}
+
+		if (typeof newUrl === "undefined") return;
+		const newBuild = generator.generateBuildFromUrl(newUrl);
+
+		navigate(`../${newUrl}`);
+		setBuild(newBuild);
+	};
+
 	/**
 	 * Regenerates the items for a specified category and updates the build and URL.
 	 * Only called when the current build has 0 items in the category passed.
@@ -259,8 +323,14 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 	 */
 	const handleRegenerateCategory = (c: ItemCategory): void => {
 		const newBuildMap = generator.generateItemsForCategory(c);
+
+		if (typeof newBuildMap === "undefined") return;
 		const newUrl = generator.createUrlFromBuildMap(newBuildMap);
+
+		if (typeof newUrl === "undefined") return;
+
 		const newBuild = generator.generateBuildFromUrl(newUrl);
+		if (typeof newBuild === "undefined") return;
 
 		// Reset the answered toast for the category (should this be done?)
 		const newAnsweredToast = answeredToast;
@@ -298,21 +368,6 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 
 	// Effects
 	/**
-	 * Updates the armors state when the build changes
-	 */
-	React.useEffect(() => {
-		if (build) {
-			const newArmors: Item[] = [];
-			[...build.keys()].forEach((c: ItemCategory) => {
-				if (ArmorCategories.has(c) && build.get(c)) {
-					newArmors.push(...(build.get(c) ?? []));
-				}
-			});
-			setArmors(newArmors);
-		}
-	}, [build]);
-
-	/**
 	 * Handles window resize events and updates the width state
 	 */
 	React.useEffect(() => {
@@ -327,12 +382,9 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 		};
 	}, []);
 
-	/**
-	 * Syncs the includeDlc state in the generator with the localStorage value
-	 */
 	React.useEffect(() => {
-		generator.setIncludeDlc(localStorage.getItem("include-dlc") === "false" ? false : true);
-	}, []);
+		generator.setIncludeDlc(includeDlc);
+	}, [includeDlc]);
 
 	return (
 		<ErrorBoundary fallback={<h1>Something went wrong</h1>}>
@@ -430,9 +482,9 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 				<div className="flex justify-center align-center max-w-full">
 					<div className="grid grid-cols-1 sm:grid-cols-2 2lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 2.5xl:grid-cols-6 3xl:grid-cols-7 4xl:grid-cols-8 gap-4 auto-cols-auto">
 						{build &&
-							[...build.keys()].map((c: ItemCategory, i: number) => (
+							[...build.keys()].map((c: UIItemCategory, i: number) => (
 								<React.Fragment key={i}>
-									{!ArmorCategories.has(c) && c !== ItemCategory.Classes && (
+									{c !== UIItemCategory.Classes && (
 										<CardColumn
 											items={build.get(c) ?? []}
 											reroll={handleRerollItem}
@@ -440,16 +492,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 											isAIBuild={false}
 											category={c}
 											regenerateCategory={handleRegenerateCategory}
-										/>
-									)}
-									{c === ItemCategory.Helm && (
-										<CardColumn
-											items={armors}
-											reroll={handleRerollItem}
-											setNumItems={handleChangeNumItems}
-											isAIBuild={false}
-											category={c}
-											regenerateCategory={handleRegenerateCategory}
+											regenerateArmors={regenerateArmors}
 										/>
 									)}
 								</React.Fragment>

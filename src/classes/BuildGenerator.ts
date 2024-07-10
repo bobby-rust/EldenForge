@@ -1,6 +1,6 @@
-import { AIBuildType, BuildGenerationConfig, ItemData, defaultBuildGenerationConfig } from "../types/types";
-import data from "../data/new_new_data.json";
-import { ItemCategory } from "../types/enums";
+import { AIBuildType, BuildGenerationConfig, ItemData, Items, defaultBuildGenerationConfig } from "../types/types";
+import data from "../data/data.json";
+import { ItemCategory, UIItemCategory } from "../types/enums";
 import { Build } from "./Build";
 import { Item } from "./Item";
 import AIGenerator from "./AIGenerator";
@@ -22,8 +22,12 @@ export default class BuildGenerator {
 	_buildGenerationConfig: BuildGenerationConfig = structuredClone(defaultBuildGenerationConfig);
 	_build: Build = new Build();
 	_ai: AIGenerator | undefined;
+	_baseGameItems: Items = this.initBaseGameItems();
+	_dlcItems: Items = this.initDlcItems();
 
 	private _buildType = "";
+
+	constructor() {}
 
 	/**
 	 * Sets the build type.
@@ -67,7 +71,7 @@ export default class BuildGenerator {
 		try {
 			build = await this._ai?.getAIBuild(this._buildType, signal);
 		} catch (e) {
-			// TODO: generate useful error messages and error page for user
+			// TODO: generate useful error messages and error page for user, this error is likely to be an exhausted quota error from gemini
 			console.error(e);
 		}
 		if (!build) return null;
@@ -86,6 +90,37 @@ export default class BuildGenerator {
 		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums = numItems;
 	}
 
+	private generateArmors() {
+		let newBuild;
+		for (const c in [ItemCategory.Helm, ItemCategory.Chest, ItemCategory.Gauntlets, ItemCategory.Leg]) {
+			newBuild = this.generateItemsForItemCategory(c as ItemCategory);
+		}
+
+		return newBuild;
+	}
+
+	private generateItemsForItemCategory(category: ItemCategory) {
+		// If there are items for the category, they will be reset.
+		this._build._items.set(category, []);
+
+		// Reset the number of items to generate and the available items
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums =
+			defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
+		this._baseGameItems = { ...this._baseGameItems, [category]: this.initBaseGameItems()[category] }; // reset base game items for the category
+		this._dlcItems = { ...this._dlcItems, [category]: this.initDlcItems()[category] };
+
+		const numItemsToRoll = defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
+		for (let i = 0; i < numItemsToRoll; i++) {
+			const item = this.generateItem(category);
+			if (typeof item === "undefined") {
+				break; // all items in the category have been rolled
+			}
+			this._build.addItem(category, item);
+		}
+
+		return this._build._items;
+	}
+
 	/**
 	 * Generates items for a given category. Generates the default number of items
 	 * specified in the default build generation configuration.
@@ -93,24 +128,36 @@ export default class BuildGenerator {
 	 * If there are items for the category, they will be reset.
 	 *
 	 * @param {ItemCategory} category - The category of items to generate.
-	 * @return {Map<ItemCategory, number[]> | undefined} - The entire new build, or undefined if all items in the category have been rolled.
+	 * @return {Map<ItemCategory, number[]>} - The entire new build map
 	 */
-	public generateItemsForCategory(category: ItemCategory) {
-		// If there are items for the category, they will be reset.
-		this._build._items.set(category, []);
-
-		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.clear();
-		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums =
-			defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
-
-		const numItemsToRoll = defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
-		for (let i = 0; i < numItemsToRoll; i++) {
-			const item = this.generateItem(category);
-			if (typeof item === "undefined") break; // all items in the category have been rolled
-			this._build.addItem(category, item);
+	public generateItemsForCategory(category: ItemCategory | UIItemCategory) {
+		if (category === UIItemCategory.Armors) {
+			return this.generateArmors();
 		}
 
-		return this._build._items;
+		const itemCategory = category as ItemCategory;
+		return this.generateItemsForItemCategory(itemCategory);
+	}
+
+	/**
+	 * Resets the available items for a given category.
+	 *
+	 * @param {ItemCategory} c - The category for which to reset the available items.
+	 */
+	public resetAvailableItemsForCategory(c: ItemCategory) {
+		// Empty the list of available items if not already empty
+		this._baseGameItems[c] = [];
+		this._dlcItems[c] = [];
+
+		// Populate the lists of available items
+		const numBaseGameItems = data[c]["count"] - NUM_SOTE_ITEMS[c];
+		for (let i = 0; i < numBaseGameItems; i++) {
+			this._baseGameItems[c].push(i);
+		}
+
+		for (let j = numBaseGameItems; j < data[c]["count"]; j++) {
+			this._dlcItems[c].push(j);
+		}
 	}
 
 	/**
@@ -124,11 +171,14 @@ export default class BuildGenerator {
 		const buildMap = new Map<ItemCategory, number[]>();
 
 		// Iterate over each item category in the AI build.
-		build.items.forEach((value, key) => {
+		build.items.forEach((value, _) => {
 			// For each item in the category, if it has a valid index, add it to the build map.
 			value.forEach((item) => {
+				let itemCategory = item.category;
+
 				if (typeof item.index === "undefined") return;
-				this.addItemToBuildMap(key, item.index, buildMap);
+
+				this.addItemToBuildMap(itemCategory, item.index, buildMap);
 			});
 		});
 
@@ -173,11 +223,15 @@ export default class BuildGenerator {
 	 * @param encoded The base64 encoded url.
 	 * @returns {Build} A build object containing the items of `encoded`
 	 */
-	public generateBuildFromUrl(encoded: string): Map<ItemCategory, Item[]> {
-		if (encoded === "") return new Map<ItemCategory, Item[]>();
+	public generateBuildFromUrl(encoded: string): Map<UIItemCategory, Item[]> {
+		if (encoded === "") return new Map<UIItemCategory, Item[]>();
 		const url = encoded;
 		const buildMap = this.parseBuildMapFromUrl(url);
-		const build: Map<ItemCategory, Item[]> = this.addItemsToBuild(buildMap);
+
+		this.addItemsToBuild(buildMap);
+
+		const build: Map<UIItemCategory, Item[]> = this.getBuild();
+
 		return build;
 	}
 
@@ -200,15 +254,70 @@ export default class BuildGenerator {
 	 * @returns {number} - The count of items in the category.
 	 */
 	private calculateCount(category: ItemCategory): number {
+		if (category === "classes") return 0;
 		// If `includeDlc` is true, return the count of all items in the category
-		if (this._buildGenerationConfig.includeDlc) {
-			return this._itemData[category]["count"];
+
+		return this._buildGenerationConfig.includeDlc
+			? this._baseGameItems[category].length + this._dlcItems[category].length
+			: this._baseGameItems[category].length;
+	}
+
+	private initBaseGameItems(): Items {
+		const baseGameItems: Items = {
+			[ItemCategory.Helm]: [],
+			[ItemCategory.Chest]: [],
+			[ItemCategory.Gauntlets]: [],
+			[ItemCategory.Leg]: [],
+			[ItemCategory.Weapons]: [],
+			[ItemCategory.Staves]: [],
+			[ItemCategory.Sorcs]: [],
+			[ItemCategory.Talismans]: [],
+			[ItemCategory.Spirits]: [],
+			[ItemCategory.Shields]: [],
+			[ItemCategory.Seals]: [],
+			[ItemCategory.Tears]: [],
+			[ItemCategory.Ashes]: [],
+			[ItemCategory.Incants]: [],
+		};
+
+		for (const [key, val] of Object.entries(baseGameItems)) {
+			for (let i = 0; i < data[key as ItemCategory]["count"] - NUM_SOTE_ITEMS[key]; ++i) {
+				val.push(i);
+			}
 		}
 
-		const difference = NUM_SOTE_ITEMS[category as string] ?? 0;
+		return baseGameItems;
+	}
 
-		// Return the count of items in the category excluding DLC items
-		return this._itemData[category]["count"] - difference;
+	private initDlcItems(): Items {
+		const dlcItems: Items = {
+			[ItemCategory.Helm]: [],
+			[ItemCategory.Chest]: [],
+			[ItemCategory.Gauntlets]: [],
+			[ItemCategory.Leg]: [],
+			[ItemCategory.Weapons]: [],
+			[ItemCategory.Staves]: [],
+			[ItemCategory.Sorcs]: [],
+			[ItemCategory.Talismans]: [],
+			[ItemCategory.Spirits]: [],
+			[ItemCategory.Shields]: [],
+			[ItemCategory.Seals]: [],
+			[ItemCategory.Tears]: [],
+			[ItemCategory.Ashes]: [],
+			[ItemCategory.Incants]: [],
+		};
+
+		for (const [key, val] of Object.entries(dlcItems)) {
+			for (
+				let i = data[key as ItemCategory]["count"] - NUM_SOTE_ITEMS[key];
+				i < data[key as ItemCategory]["count"];
+				++i
+			) {
+				val.push(i);
+			}
+		}
+
+		return dlcItems;
 	}
 
 	/**
@@ -221,32 +330,24 @@ export default class BuildGenerator {
 	public generateItem(category: ItemCategory): number | undefined {
 		// Get the count of items in the category
 		const count = this.calculateCount(category);
-		// Generate a random index between 0 and count - 1
-		let randomIndex = Math.floor(Math.random() * count);
+		if (count === 0) return;
 
-		// Get the set of previously rolled items for the category
-		const prevRolledItems = this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled;
-
-		// If all items in the category have been rolled, return
-		if (prevRolledItems.size >= count) {
-			return;
-		}
-
-		// If `_excludePreviouslyRolled` is true and the generated index is of a previously rolled item,
-		// or if the generated index is already in the build, generate a new index until a valid item is found.
-		while (
-			(this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled &&
-				prevRolledItems.has(randomIndex)) ||
-			this._build._items.get(category)?.includes(randomIndex)
-		) {
-			randomIndex = Math.floor(Math.random() * count);
+		// The random index is an index of the available items, it is __not__ the index of the item in the raw data
+		let localIndex = Math.floor(Math.random() * count);
+		let adjustedLocalIndex = localIndex;
+		let dataItemIndex = -1;
+		if (localIndex > this._baseGameItems[category].length - 1) {
+			adjustedLocalIndex = localIndex - this._baseGameItems[category].length;
+			dataItemIndex = this._dlcItems[category][adjustedLocalIndex];
+		} else {
+			dataItemIndex = this._baseGameItems[category][adjustedLocalIndex];
 		}
 
 		// Add the generated index to the set of previously rolled
-		this.addItemToPreviouslyRolled(category, randomIndex); // This function will not add the item if excludePreviouslyRolled is false, so we don't have to check here
+		this.removeItemFromAvailableItems(category, localIndex); // This function will not add the item if excludePreviouslyRolled is false, so we don't have to check here
 
 		// Return the generated index
-		return randomIndex;
+		return dataItemIndex;
 	}
 
 	/**
@@ -337,7 +438,7 @@ export default class BuildGenerator {
 		/**
 		 * Maps the category to the indices of the items rolled for that category for the current build
 		 */
-		const buildMap: Map<ItemCategory, number[]> = new Map<ItemCategory, number[]>();
+		const buildMap = new Map<ItemCategory, number[]>();
 
 		// Loop over all categories and generate the specified number of items for each category
 		for (const category of Object.keys(this._itemData)) {
@@ -382,9 +483,14 @@ export default class BuildGenerator {
 	 * @param category the category of item
 	 * @param item the index of the item
 	 */
-	private addItemToPreviouslyRolled(category: ItemCategory, item: number) {
-		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled &&
-			this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.previouslyRolled.add(item);
+	private removeItemFromAvailableItems(category: ItemCategory, localIndex: number) {
+		let adjustedLocalIndex = localIndex;
+		if (localIndex > this._baseGameItems[category].length - 1) {
+			adjustedLocalIndex = localIndex - this._baseGameItems[category].length;
+			this._dlcItems[category].splice(adjustedLocalIndex, 1);
+		} else {
+			this._baseGameItems[category].splice(adjustedLocalIndex, 1);
+		}
 	}
 
 	/**
@@ -396,7 +502,7 @@ export default class BuildGenerator {
 	public addItemsToPreviouslyRolled(items: Map<ItemCategory, number[]>) {
 		items.forEach((items, category) => {
 			items.forEach((item) => {
-				this.addItemToPreviouslyRolled(category, item);
+				this.removeItemFromAvailableItems(category, item);
 			});
 		});
 	}
@@ -407,7 +513,7 @@ export default class BuildGenerator {
 	 * @param {Map<ItemCategory, number[]>} map - The build map to convert.
 	 * @returns {Map<ItemCategory, Item[]>} The map of categories to items.
 	 */
-	public addItemsToBuild(map: Map<ItemCategory, number[]>): Map<ItemCategory, Item[]> {
+	public addItemsToBuild(map: Map<ItemCategory, number[]>): void {
 		// Reset the items in the build generator before adding items to the build
 		this.resetItems();
 
@@ -425,12 +531,16 @@ export default class BuildGenerator {
 			val.forEach((val: number) => {
 				// Add the item to the build
 				this._build.addItem(key, val);
-				// Add the item to the list of previously rolled items if the option is enabled
-				this.addItemToPreviouslyRolled(key, val);
 			});
 		}
+	}
 
-		return this._build.getItemsFromBuild();
+	public getBuild(): Map<UIItemCategory, Item[]> {
+		return this._build.getBuild();
+	}
+
+	public getBuildMap(): Map<ItemCategory, number[]> {
+		return this._build._items;
 	}
 
 	/**
@@ -441,7 +551,8 @@ export default class BuildGenerator {
 	 */
 	public parseAIBuildFromUrl(url: string): AIBuildType {
 		// Add the items to the build from the build map
-		const buildMap = this.addItemsToBuild(this.parseBuildMapFromUrl(url));
+		this.addItemsToBuild(this.parseBuildMapFromUrl(url));
+		const buildMap = this._build.getBuild();
 
 		// Initialize a new build object with default properties
 		const build: AIBuildType = {

@@ -35,7 +35,7 @@ describe("Build", () => {
 			build.addItem(ItemCategory.Weapons, 2);
 			build.addItem(ItemCategory.Weapons, 3);
 
-			const items: Map<ItemCategory, Item[]> = build.getItemsFromBuild();
+			const items: Map<ItemCategory, Item[]> = build.getItems();
 			expect(items.get(ItemCategory.Weapons)?.length).toBe(4);
 			expect(items.get(ItemCategory.Weapons)?.[0].index).toBe(0);
 			expect(items.get(ItemCategory.Weapons)?.[0].name).toBe("Hand Axe");

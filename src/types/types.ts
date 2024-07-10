@@ -1,5 +1,5 @@
 import { Item } from "../classes/Item";
-import { ItemCategory } from "./enums";
+import { ItemCategory, UIItemCategory } from "./enums";
 
 /**
  * An item category has `count` items and a list of that category's items
@@ -31,6 +31,7 @@ type ItemData = {
 	tears: Category;
 	incants: Category;
 	seals: Category;
+	staves: Category;
 	[key: string]: Category;
 };
 
@@ -92,8 +93,8 @@ type AIBuildType = Stat & {
 	summary: string;
 	strengths: string;
 	weaknesses: string;
-	items: Map<ItemCategory, Item[]>;
-	[key: string]: string | number | Map<ItemCategory, Item[]>;
+	items: Map<UIItemCategory, Item[]>;
+	[key: string]: string | number | Map<UIItemCategory, Item[]>;
 };
 
 type AIOutput = {
@@ -127,26 +128,37 @@ type AIOutput = {
 	weaknesses: string;
 };
 
-type AnsweredToast = {
+type ToastCategories = {
 	ashes: boolean;
 	incants: boolean;
 	seals: boolean;
 	shields: boolean;
 	sorcs: boolean;
 	spirits: boolean;
+	staves: boolean;
 	talismans: boolean;
 	tears: boolean;
 	weapons: boolean;
 	[key: string]: boolean;
 };
 
-export type {
-	AIOutput,
-	BuildGenerationConfig,
-	ItemData,
-	BuildInfo,
-	AIBuildType,
-	Stat,
-	AnsweredToast,
-};
+interface Items {
+	helms: number[];
+	chests: number[];
+	gauntlets: number[];
+	legs: number[];
+	talismans: number[];
+	sorcs: number[];
+	weapons: number[];
+	ashes: number[];
+	incants: number[];
+	seals: number[];
+	tears: number[];
+	shields: number[];
+	spirits: number[];
+	staves: number[];
+	[key: string]: number[];
+}
+
+export type { AIOutput, BuildGenerationConfig, ItemData, BuildInfo, AIBuildType, Stat, ToastCategories, Items };
 export { defaultBuildGenerationConfig };

@@ -1,11 +1,13 @@
-import { ItemCategory } from "../types/enums";
+import { ItemCategory, UIItemCategory, UIItemCategories } from "../types/enums";
 import { Item } from "./Item";
-import data from "../data/new_new_data.json";
+import data from "../data/data.json";
+import { ArmorCategories } from "@/types/constants";
 
 /**
  * Represents a generated build.
  */
 export class Build {
+	_uiItems = new Map<UIItemCategory, number[]>();
 	_items = new Map<ItemCategory, number[]>();
 
 	constructor() {}
@@ -18,6 +20,27 @@ export class Build {
 	 */
 	public addItem(category: ItemCategory, item: number) {
 		this._items.set(category, [...(this._items.get(category) ?? []), item]);
+		if (ArmorCategories.has(category)) {
+			this._uiItems.set(UIItemCategory.Armors, [...(this._uiItems.get(UIItemCategory.Armors) ?? []), item]);
+			this.sortArmor();
+		} else {
+			this._uiItems.set(category as unknown as UIItemCategory, [
+				...(this._uiItems.get(category as unknown as UIItemCategory) ?? []),
+				item,
+			]);
+		}
+	}
+
+	private sortArmor() {
+		this._uiItems.set(UIItemCategory.Armors, []);
+		for (const c in ArmorCategories) {
+			if (this._items.get(c as ItemCategory)?.length !== 0) {
+				this._uiItems.set(UIItemCategory.Armors, [
+					...(this._uiItems.get(UIItemCategory.Armors) ?? []),
+					this._items.get(c as ItemCategory)![0],
+				]);
+			}
+		}
 	}
 
 	/**
@@ -37,14 +60,32 @@ export class Build {
 
 		oldItems[oldItems.indexOf(oldItem)] = newItem;
 		this._items.set(category, oldItems);
+		if (ArmorCategories.has(category)) {
+			this._uiItems.set(UIItemCategory.Armors, [...(this._uiItems.get(UIItemCategory.Armors) ?? []), ...oldItems]);
+			this.sortArmor();
+		} else {
+			this._uiItems.set(category as unknown as UIItemCategory, oldItems);
+		}
 	}
 
 	/**
 	 * Returns a Map of ItemCategory to an array of Item objects representing the items in the build.
 	 *
-	 * @return {Map<ItemCategory, Item[]>} A Map with ItemCategory as the key and an array of Item objects as the value.
+	 * @return {Map<UIItemCategory, Item[]>} A Map with ItemCategory as the key and an array of Item objects as the value.
 	 */
-	public getItemsFromBuild(): Map<ItemCategory, Item[]> {
+	public getBuild(): Map<UIItemCategory, Item[]> {
+		const categoryMap = new Map();
+		categoryMap.set(ItemCategory.Weapons, UIItemCategory.Weapons);
+		categoryMap.set(ItemCategory.Ashes, UIItemCategory.Ashes);
+		categoryMap.set(ItemCategory.Seals, UIItemCategory.Seals);
+		categoryMap.set(ItemCategory.Incants, UIItemCategory.Incants);
+		categoryMap.set(ItemCategory.Staves, UIItemCategory.Staves);
+		categoryMap.set(ItemCategory.Sorcs, UIItemCategory.Sorcs);
+		categoryMap.set(ItemCategory.Shields, UIItemCategory.Shields);
+		categoryMap.set(ItemCategory.Tears, UIItemCategory.Tears);
+		categoryMap.set(ItemCategory.Spirits, UIItemCategory.Spirits);
+		categoryMap.set(ItemCategory.Classes, UIItemCategory.Classes);
+		categoryMap.set(ItemCategory.Talismans, UIItemCategory.Talismans);
 		const items = new Map<ItemCategory, Item[]>();
 
 		this._items.forEach((value, key) => {
@@ -57,6 +98,43 @@ export class Build {
 			});
 		});
 
-		return items;
+		const uiItems = new Map<UIItemCategory, Item[]>();
+
+		const armors: Item[] = [];
+		for (const [key, value] of items) {
+			if (!ArmorCategories.has(key)) {
+				uiItems.set(categoryMap.get(key), value);
+			} else {
+				armors.push(...value);
+			}
+		}
+
+		armors.length > 0 && uiItems.set(UIItemCategory.Armors, armors);
+		const build = new Map<UIItemCategory, Item[]>();
+
+		for (const c of UIItemCategories) {
+			const categoryItems = uiItems.get(c as unknown as UIItemCategory);
+			if (typeof categoryItems === "undefined") continue;
+
+			build.set(c as unknown as UIItemCategory, categoryItems);
+		}
+
+		return build;
+	}
+
+	public getItems() {
+		const buildMap = new Map<ItemCategory, Item[]>();
+
+		this._items.forEach((value, key) => {
+			buildMap.set(key, []);
+			value.forEach((index) => {
+				if (!Object.values(ItemCategory).includes(key)) return;
+
+				const item = new Item(key, data[key as keyof typeof data].items[index], index);
+				buildMap.set(key, [...(buildMap.get(key) ?? []), item]);
+			});
+		});
+
+		return buildMap;
 	}
 }

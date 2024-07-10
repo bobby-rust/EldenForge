@@ -12,6 +12,7 @@ export const readableItemCategory = new Map<ItemCategory, string>([
 	[ItemCategory.Helm, "Armors"],
 	[ItemCategory.Ashes, "Ashes Of War"],
 	[ItemCategory.Incants, "Incantations"],
+	[ItemCategory.Staves, "Staves"],
 	[ItemCategory.Sorcs, "Sorceries"],
 	[ItemCategory.Talismans, "Talismans"],
 	[ItemCategory.Spirits, "Spirit Ashes"],
@@ -73,10 +74,12 @@ export const NUM_SOTE_ITEMS: NUM_SOTE_ITEMS = {
 	spirits: 20,
 	shields: 8,
 	seals: 3,
+	tears: 8,
 	helms: 43,
 	chests: 43,
 	gauntlets: 29,
 	legs: 30,
+	staves: 2,
 };
 
 export default sysPrompt;
