@@ -128,11 +128,13 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 		);
 	};
 
-	const navigateToAi = () => {
+	const navigateTo = (path: string) => {
 		generator._buildGenerationConfig = structuredClone(defaultBuildGenerationConfig);
 		generator._baseGameItems = generator.initBaseGameItems();
 		generator._dlcItems = generator.initDlcItems();
-		navigate("/ai");
+
+		toast.dismiss();
+		navigate(path);
 	};
 
 	// Event handlers
@@ -389,7 +391,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 								</button>
 							)}
 							{build?.size === 0 && (
-								<button className={`btn btn-secondary hover:animate-wiggle ${build?.size === 0 && "btn-lg"}`} onClick={() => navigateToAi()}>
+								<button className={`btn btn-secondary hover:animate-wiggle ${build?.size === 0 && "btn-lg"}`} onClick={() => navigateTo("/ai")}>
 									<h1 className="lg:text-2xl">Ask Gideon</h1>
 								</button>
 							)}

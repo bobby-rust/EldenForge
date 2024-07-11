@@ -14,7 +14,7 @@ import BuildGenerator from "../classes/BuildGenerator";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { quotes } from "../types/constants";
 import { UIItemCategory } from "../types/enums";
-import { AIBuildType } from "../types/types";
+import { AIBuildType, defaultBuildGenerationConfig } from "../types/types";
 import CardColumn from "./CardColumn";
 import { toast } from "sonner";
 import { IoCopyOutline } from "react-icons/io5";
@@ -167,6 +167,15 @@ export default function AI(): JSX.Element {
 		setBuildType(e.target.value);
 	};
 
+	const navigateTo = (path: string) => {
+		generator._buildGenerationConfig = structuredClone(defaultBuildGenerationConfig);
+		generator._baseGameItems = generator.initBaseGameItems();
+		generator._dlcItems = generator.initDlcItems();
+
+		toast.dismiss();
+		navigate(path);
+	};
+
 	// Effects
 
 	/**
@@ -264,7 +273,7 @@ export default function AI(): JSX.Element {
 						<blockquote className="md:text-xl 2xl:text-3xl italic text-gray-600 text-center w-[50vw] tracking-wide">
 							"{quote[0]}"<br />- {quote[1]}{" "}
 						</blockquote>
-						<button className="btn lg:btn-lg btn-ghost" onClick={() => navigate("/")}>
+						<button className="btn lg:btn-lg btn-ghost" onClick={() => navigateTo("/")}>
 							<IoArrowBackSharp />
 							Random Builds
 						</button>
@@ -298,15 +307,8 @@ export default function AI(): JSX.Element {
 							disabled={disabled}
 							onClick={handleRegenerateAIBuild}
 							aria-disabled={disabled}
-							tabIndex={disabled ? -1 : 0}
-						>
-							<span className="text-sm xl:text-lg">
-								{disabled
-									? `Wait ${countdown}s...`
-									: width < 400
-									? "Ask Gideon"
-									: "Ask Sir Gideon Ofnir, The All-Knowing"}
-							</span>
+							tabIndex={disabled ? -1 : 0}>
+							<span className="text-sm xl:text-lg">{disabled ? `Wait ${countdown}s...` : width < 400 ? "Ask Gideon" : "Ask Sir Gideon Ofnir, The All-Knowing"}</span>
 						</button>
 					</div>
 					<div className="flex flex-col lg:flex-row justify-center items-center w-80 2xl:w-1/3 gap-5">
@@ -317,11 +319,7 @@ export default function AI(): JSX.Element {
 							</button>
 						</div>
 						<div className="dropdown">
-							<div
-								tabIndex={0}
-								role="button"
-								className="btn btn-lg w-64 sm:w-80 text-sm 3xl:text-md lg:w-40 xl:w-44 m-3"
-							>
+							<div tabIndex={0} role="button" className="btn btn-lg w-64 sm:w-80 text-sm 3xl:text-md lg:w-40 xl:w-44 m-3">
 								Show Stats{" "}
 							</div>
 							<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
@@ -329,10 +327,7 @@ export default function AI(): JSX.Element {
 									<table className="table table-auto table-zebra text-lg">
 										<thead>
 											<tr className="border-b">
-												<th
-													className="h-12 text-left relative rounded-t-lg align-middle text-sm lg:text-lg xl:text-xl bg-gray-100 py-1 px-3"
-													colSpan={2}
-												>
+												<th className="h-12 text-left relative rounded-t-lg align-middle text-sm lg:text-lg xl:text-xl bg-gray-100 py-1 px-3" colSpan={2}>
 													Stats
 												</th>
 											</tr>
@@ -343,9 +338,7 @@ export default function AI(): JSX.Element {
 													<tr className="border-b" key={i}>
 														{!["name", "summary", "strengths", "weaknesses", "items"].includes(key) && (
 															<>
-																<td className="p-4 align-middle font-medium py-2 px-3 ">
-																	{key[0].toUpperCase() + key.slice(1)}
-																</td>
+																<td className="p-4 align-middle font-medium py-2 px-3 ">{key[0].toUpperCase() + key.slice(1)}</td>
 																<td className="p-4 align-middle text-right py-2 px-3">{build[key]}</td>
 															</>
 														)}
@@ -357,10 +350,7 @@ export default function AI(): JSX.Element {
 							</ul>
 						</div>
 						<div>
-							<button
-								className="btn btn-lg w-64 sm:w-80 lg:w-44 xl:w-44 text-sm 3xl:text-md"
-								onClick={() => setShowDescription(!showDescription)}
-							>
+							<button className="btn btn-lg w-64 sm:w-80 lg:w-44 xl:w-44 text-sm 3xl:text-md" onClick={() => setShowDescription(!showDescription)}>
 								Show Description
 							</button>
 						</div>
@@ -373,17 +363,8 @@ export default function AI(): JSX.Element {
 				<div className={`max-w-[85vw] 2xl:max-w-[60vw] mb-20 ${showDescription ? "" : "hidden"}`}>
 					<div className="w-full bg-gray-100 text-center p-2 relative">
 						<h1 className="font-bold text-slate-800 sm:text-2xl self-start px-8">{build.name}</h1>
-						<button
-							className="btn btn-sm btn-square absolute right-1.5 top-1.5"
-							onClick={() => setShowDescription(false)}
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="h-6 w-6"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
+						<button className="btn btn-sm btn-square absolute right-1.5 top-1.5" onClick={() => setShowDescription(false)}>
+							<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
 							</svg>
 						</button>

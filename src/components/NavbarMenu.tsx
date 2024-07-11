@@ -4,9 +4,9 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import BuildGenerator from "@/classes/BuildGenerator";
 import { ItemCategory } from "@/types/enums";
-import { BuildGenerationConfig } from "@/types/types";
+import { BuildGenerationConfig, defaultBuildGenerationConfig } from "@/types/types";
 import { themes } from "@/types/constants";
-
+import { toast } from "sonner";
 /**
  * The NavbarMenu component displays a menu with various options for the user.
  * It allows the user to navigate to different pages, change the theme, and change
@@ -66,6 +66,15 @@ export default function NavbarMenu({ generator, theme, setTheme }: { generator: 
 		setConfig(newConfig);
 	}
 
+	const navigateTo = (path: string) => {
+		generator._buildGenerationConfig = structuredClone(defaultBuildGenerationConfig);
+		generator._baseGameItems = generator.initBaseGameItems();
+		generator._dlcItems = generator.initDlcItems();
+
+		toast.dismiss();
+		navigate(path);
+	};
+
 	// Update the width state whenever the window is resized
 	React.useEffect(() => {
 		function handleResize() {
@@ -99,7 +108,7 @@ export default function NavbarMenu({ generator, theme, setTheme }: { generator: 
 			<li className="h-16 flex justify-center items-center">
 				<button
 					className="btn btn-ghost text-center w-60 lg:w-28 tracking-widest font-semibold"
-					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}>
+					onClick={regexp.test(window.location.href) ? () => navigateTo("/") : () => navigateTo("/ai")}>
 					{regexp.test(window.location.href) ? "Randomizer" : "AI Builds"}
 				</button>
 			</li>
