@@ -1,17 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { IoSettingsOutline } from "react-icons/io5";
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import BuildGenerator from "@/classes/BuildGenerator";
 import { ItemCategory } from "@/types/enums";
-import { BuildGenerationConfig } from "@/types/types";
+import { BuildGenerationConfig, defaultBuildGenerationConfig } from "@/types/types";
 import { themes } from "@/types/constants";
 
 /**
@@ -25,15 +18,7 @@ import { themes } from "@/types/constants";
  * @param {function} props.setTheme - The function to set the theme.
  * @returns {JSX.Element} The rendered NavbarMenu component.
  */
-export default function NavbarMenu({
-	generator,
-	theme,
-	setTheme,
-}: {
-	generator: BuildGenerator;
-	theme: string;
-	setTheme: (theme: string) => void;
-}) {
+export default function NavbarMenu({ generator, theme, setTheme }: { generator: BuildGenerator; theme: string; setTheme: (theme: string) => void }) {
 	// The current build generation configuration
 	const [config, setConfig] = React.useState<BuildGenerationConfig>(generator._buildGenerationConfig);
 	// The current value of the toggle button
@@ -76,12 +61,8 @@ export default function NavbarMenu({
 		e.preventDefault();
 		const newConfig: BuildGenerationConfig = { ...config };
 
-		newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled =
-			!newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled;
-		generator.setExcludePreviouslyRolledForCategory(
-			c,
-			newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled
-		);
+		newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled = !newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled;
+		generator.setExcludePreviouslyRolledForCategory(c, newConfig.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled);
 		setConfig(newConfig);
 	}
 
@@ -95,21 +76,11 @@ export default function NavbarMenu({
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
-	// Render the NavbarMenu component
 	return (
-		<div
-			className={`flex flex-col lg:flex-row flex-wrap justify-center items-center gap-4 ${
-				width < 1032 ? "flex-col-reverse" : ""
-			}`}
-		>
+		<div className={`flex flex-col lg:flex-row flex-wrap justify-center items-center gap-4 ${width < 1032 ? "flex-col-reverse" : ""}`}>
 			{/* Render the Buy me a coffee button */}
 			<div className="h-16 flex justify-center items-center w-60 lg:h-16 lg:w-52">
-				<a
-					className="h-full w-full flex justify-center items-center"
-					href="https://www.buymeacoffee.com/bobbyrust"
-					target="_blank"
-					rel="noreferrer"
-				>
+				<a className="h-full w-full flex justify-center items-center" href="https://www.buymeacoffee.com/bobbyrust" target="_blank" rel="noreferrer">
 					<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=bobbyrust&button_colour=efb809&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" />
 				</a>
 			</div>
@@ -128,8 +99,7 @@ export default function NavbarMenu({
 			<li className="h-16 flex justify-center items-center">
 				<button
 					className="btn btn-ghost text-center w-60 lg:w-28 tracking-widest font-semibold"
-					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}
-				>
+					onClick={regexp.test(window.location.href) ? () => navigate("/") : () => navigate("/ai")}>
 					{regexp.test(window.location.href) ? "Randomizer" : "AI Builds"}
 				</button>
 			</li>
@@ -151,8 +121,7 @@ export default function NavbarMenu({
 							<DropdownMenuCheckboxItem
 								key={c}
 								onClick={(e) => handleConfigChange(e, c as ItemCategory)}
-								checked={config.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled}
-							>
+								checked={config.buildInfo.categoryConfigs.get(c as ItemCategory)!.excludePreviouslyRolled}>
 								{c}
 							</DropdownMenuCheckboxItem>
 						))}
@@ -162,13 +131,7 @@ export default function NavbarMenu({
 
 			{/* Render the theme selection dropdown */}
 			<li className="h-16 flex justify-center items-center w-60 lg:w-28">
-				<select
-					className="select z-50 select-secondary select-bordered w-full"
-					data-choose-theme
-					data-theme
-					value={theme}
-					onChange={(e) => setTheme(e.target.value)}
-				>
+				<select className="select z-50 select-secondary select-bordered w-full" data-choose-theme data-theme value={theme} onChange={(e) => setTheme(e.target.value)}>
 					<option disabled value="Select a theme">
 						Select a theme
 					</option>

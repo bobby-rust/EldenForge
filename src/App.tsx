@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { quotes } from "./types/constants";
-import { ToastCategories } from "./types/types";
+import { defaultBuildGenerationConfig, ToastCategories } from "./types/types";
 import { getIncludeDlcStorageValue } from "./lib/utils";
 
 // A random quote is rendered on the landing page.
@@ -126,6 +126,13 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 				}
 			/>
 		);
+	};
+
+	const navigateToAi = () => {
+		generator._buildGenerationConfig = structuredClone(defaultBuildGenerationConfig);
+		generator._baseGameItems = generator.initBaseGameItems();
+		generator._dlcItems = generator.initDlcItems();
+		navigate("/ai");
 	};
 
 	// Event handlers
@@ -382,7 +389,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 								</button>
 							)}
 							{build?.size === 0 && (
-								<button className={`btn btn-secondary hover:animate-wiggle ${build?.size === 0 && "btn-lg"}`} onClick={() => navigate("/ai")}>
+								<button className={`btn btn-secondary hover:animate-wiggle ${build?.size === 0 && "btn-lg"}`} onClick={() => navigateToAi()}>
 									<h1 className="lg:text-2xl">Ask Gideon</h1>
 								</button>
 							)}

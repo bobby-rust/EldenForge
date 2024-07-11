@@ -285,7 +285,7 @@ export default class BuildGenerator {
 		return this._buildGenerationConfig.includeDlc ? this._baseGameItems[category].length + this._dlcItems[category].length : this._baseGameItems[category].length;
 	}
 
-	private initBaseGameItems(): Items {
+	public initBaseGameItems(): Items {
 		const baseGameItems: Items = {
 			[ItemCategory.Helm]: [],
 			[ItemCategory.Chest]: [],
@@ -312,7 +312,7 @@ export default class BuildGenerator {
 		return baseGameItems;
 	}
 
-	private initDlcItems(): Items {
+	public initDlcItems(): Items {
 		const dlcItems: Items = {
 			[ItemCategory.Helm]: [],
 			[ItemCategory.Chest]: [],
