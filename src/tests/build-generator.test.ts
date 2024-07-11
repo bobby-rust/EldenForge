@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import BuildGenerator from "../classes/BuildGenerator";
 import { ItemCategory, UIItemCategory } from "../types/enums";
 import data from "../data/data.json";
+import { defaultBuildGenerationConfig } from "@/types/types";
 
 describe("generator", () => {
 	let generator: BuildGenerator;
@@ -25,8 +26,7 @@ describe("generator", () => {
 	describe("generateRandom", () => {
 		it("should generate a random build"),
 			() => {
-				generator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Seals)!.excludePreviouslyRolled =
-					false;
+				generator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Seals)!.excludePreviouslyRolled = false;
 
 				let isNonUnique = false;
 				const rolledItems = new Map<UIItemCategory, Set<number>>();
@@ -48,16 +48,22 @@ describe("generator", () => {
 
 		it("should generate a unique build", () => {
 			let isUnique = true;
+			generator._buildGenerationConfig = structuredClone(defaultBuildGenerationConfig);
 			generator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Seals)!.buildNums = 1;
+			generator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Seals)!.excludePreviouslyRolled = true;
 			const rolledSeals = new Set<number>();
 
 			for (let i = 0; i < data[ItemCategory.Seals]["count"]; ++i) {
+				// console.log("available items before generating: ", generator._baseGameItems[ItemCategory.Seals].concat(generator._dlcItems[ItemCategory.Seals]));
 				const url = generator.generateUrl();
 				generator.generateBuildFromUrl(url);
 				const seals = generator._build._items.get(ItemCategory.Seals);
 				expect(seals).toBeDefined();
 				expect(seals).not.toBeNull();
 				expect(seals?.length).toBe(1);
+				console.log("Generated seal: ", seals?.[0]);
+
+				console.log("available items after generating: ", generator._baseGameItems[ItemCategory.Seals].concat(generator._dlcItems[ItemCategory.Seals]));
 
 				if (rolledSeals.has(seals?.[0] ?? -1)) {
 					isUnique = false;
@@ -121,6 +127,13 @@ describe("generator", () => {
 			const numBaseGameHelms = generator._baseGameItems[ItemCategory.Helm].length;
 			const numDlcHelms = generator._dlcItems[ItemCategory.Helm].length;
 			expect(numBaseGameHelms + numDlcHelms).toBe(0);
+		});
+
+		it("should generate only the categories specified", () => {
+			generator._buildGenerationConfig.buildInfo.enabledCategories.delete(ItemCategory.Spirits);
+			const url = generator.generateUrl();
+			const build = generator.generateBuildFromUrl(url);
+			expect(build.get(UIItemCategory.Spirits)?.length).toBe(0);
 		});
 	});
 });

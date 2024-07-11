@@ -90,6 +90,26 @@ export default class BuildGenerator {
 		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums = numItems;
 	}
 
+	/**
+	 * Enables the generation of a category in the build generation configuration.
+	 *
+	 * @param {ItemCategory} category - The category to enable.
+	 * @return {void}
+	 */
+	public enableCategory(category: ItemCategory): void {
+		this._buildGenerationConfig.buildInfo.enabledCategories.add(category);
+	}
+
+	/**
+	 * Disables the generation of a category in the build generation configuration.
+	 *
+	 * @param {ItemCategory} category - The category to disable.
+	 * @return {void}
+	 */
+	public disableCategory(category: ItemCategory): void {
+		this._buildGenerationConfig.buildInfo.enabledCategories.delete(category);
+	}
+
 	private generateArmors() {
 		let newBuild;
 		for (const c in [ItemCategory.Helm, ItemCategory.Chest, ItemCategory.Gauntlets, ItemCategory.Leg]) {
@@ -99,13 +119,18 @@ export default class BuildGenerator {
 		return newBuild;
 	}
 
+	/**
+	 * Generates and adds items for a specific item category to the build.
+	 *
+	 * @param {ItemCategory} category - The category for which items are generated.
+	 * @return {Map<ItemCategory, number[]>} The updated map of item category to item indices in the build.
+	 */
 	private generateItemsForItemCategory(category: ItemCategory) {
 		// If there are items for the category, they will be reset.
 		this._build._items.set(category, []);
 
 		// Reset the number of items to generate and the available items
-		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums =
-			defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums = defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
 		this._baseGameItems = { ...this._baseGameItems, [category]: this.initBaseGameItems()[category] }; // reset base game items for the category
 		this._dlcItems = { ...this._dlcItems, [category]: this.initDlcItems()[category] };
 
@@ -257,9 +282,7 @@ export default class BuildGenerator {
 		if (category === "classes") return 0;
 		// If `includeDlc` is true, return the count of all items in the category
 
-		return this._buildGenerationConfig.includeDlc
-			? this._baseGameItems[category].length + this._dlcItems[category].length
-			: this._baseGameItems[category].length;
+		return this._buildGenerationConfig.includeDlc ? this._baseGameItems[category].length + this._dlcItems[category].length : this._baseGameItems[category].length;
 	}
 
 	private initBaseGameItems(): Items {
@@ -308,11 +331,7 @@ export default class BuildGenerator {
 		};
 
 		for (const [key, val] of Object.entries(dlcItems)) {
-			for (
-				let i = data[key as ItemCategory]["count"] - NUM_SOTE_ITEMS[key];
-				i < data[key as ItemCategory]["count"];
-				++i
-			) {
+			for (let i = data[key as ItemCategory]["count"] - NUM_SOTE_ITEMS[key]; i < data[key as ItemCategory]["count"]; ++i) {
 				val.push(i);
 			}
 		}
@@ -320,7 +339,7 @@ export default class BuildGenerator {
 		return dlcItems;
 	}
 
-	private getRandomIndex(category: ItemCategory): { localItemIndex: number; dataItemIndex: number } | undefined {
+	private getRandomIndex(category: ItemCategory): { localIndex: number; dataItemIndex: number } | undefined {
 		const count = this.calculateCount(category);
 		if (count === 0) return;
 
@@ -343,7 +362,7 @@ export default class BuildGenerator {
 			dataItemIndex = this._baseGameItems[category][adjustedLocalIndex];
 		}
 
-		return { localItemIndex: adjustedLocalIndex, dataItemIndex: dataItemIndex };
+		return { localIndex: localIndex, dataItemIndex: dataItemIndex };
 	}
 
 	/**
@@ -367,7 +386,7 @@ export default class BuildGenerator {
 		}
 
 		// This function will not add the item if excludePreviouslyRolled is false, so we don't have to check here
-		this.removeItemFromAvailableItems(category, indices?.localItemIndex);
+		this.removeItemFromAvailableItems(category, indices?.localIndex);
 
 		// Return the generated index
 		return indices.dataItemIndex;
@@ -465,8 +484,13 @@ export default class BuildGenerator {
 
 		// Loop over all categories and generate the specified number of items for each category
 		for (const category of Object.keys(this._itemData)) {
+			// initialize the array of rolled items for the current category
+			buildMap.set(category as ItemCategory, []);
+
+			// Do not generate items for disabled categories
+			if (!this._buildGenerationConfig.buildInfo.enabledCategories.has(category as ItemCategory)) continue;
+
 			const numItemsToRoll = this.getBuildNumsForCategory(category as ItemCategory);
-			buildMap.set(category as ItemCategory, []); // initialize the array of rolled items for the current category
 			for (let i = 0; i < numItemsToRoll; ++i) {
 				const itemIndex = this.generateItem(category as ItemCategory);
 				if (typeof itemIndex === "undefined") {
@@ -507,11 +531,14 @@ export default class BuildGenerator {
 	 * @param item the index of the item
 	 */
 	private removeItemFromAvailableItems(category: ItemCategory, localIndex: number) {
-		if (!this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled) return;
+		if (!this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.excludePreviouslyRolled) {
+			console.log("no removing item");
+			return;
+		}
 
 		let adjustedLocalIndex = localIndex;
 		if (localIndex > this._baseGameItems[category].length - 1) {
-			adjustedLocalIndex = localIndex - this._baseGameItems[category].length;
+			adjustedLocalIndex -= this._baseGameItems[category].length;
 			this._dlcItems[category].splice(adjustedLocalIndex, 1);
 		} else {
 			this._baseGameItems[category].splice(adjustedLocalIndex, 1);
@@ -524,13 +551,13 @@ export default class BuildGenerator {
 	 * @param {Map<ItemCategory, number[]>} items - The map containing items to add to the previously rolled items list.
 	 * @return {void}
 	 */
-	public addItemsToPreviouslyRolled(items: Map<ItemCategory, number[]>) {
-		items.forEach((items, category) => {
-			items.forEach((item) => {
-				this.removeItemFromAvailableItems(category, item);
-			});
-		});
-	}
+	// private addItemsToPreviouslyRolled(items: Map<ItemCategory, number[]>) {
+	// 	items.forEach((items, category) => {
+	// 		items.forEach((item) => {
+	// 			this.removeItemFromAvailableItems(category, item);
+	// 		});
+	// 	});
+	// }
 
 	/**
 	 * Adds a map of categories to indices to this._build.

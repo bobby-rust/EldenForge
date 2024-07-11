@@ -1,5 +1,5 @@
 import { Item } from "../classes/Item";
-import { ItemCategory, UIItemCategory } from "./enums";
+import { ItemCategories, ItemCategory, UIItemCategory } from "./enums";
 
 /**
  * An item category has `count` items and a list of that category's items
@@ -43,7 +43,8 @@ type CategoryBuildInfo = {
 
 type BuildInfo = {
 	categoryConfigs: Map<ItemCategory, CategoryBuildInfo>;
-	[key: string]: Map<ItemCategory, CategoryBuildInfo>;
+	enabledCategories: Set<ItemCategory>;
+	[key: string]: Map<ItemCategory, CategoryBuildInfo> | Set<ItemCategory>;
 };
 
 type BuildGenerationConfig = {
@@ -70,6 +71,7 @@ for (const c of Object.values(ItemCategory)) {
 }
 const defaultBuildInfo: BuildInfo = {
 	categoryConfigs: defaultCategoryBuildInfo,
+	enabledCategories: new Set([...ItemCategories]),
 };
 
 const defaultBuildGenerationConfig: BuildGenerationConfig = {
