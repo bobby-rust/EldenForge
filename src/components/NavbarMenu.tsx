@@ -4,7 +4,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import BuildGenerator from "@/classes/BuildGenerator";
 import { ItemCategory } from "@/types/enums";
-import { BuildGenerationConfig, defaultBuildGenerationConfig } from "@/types/types";
+import { BuildGenerationConfig } from "@/types/types";
 import { themes } from "@/types/constants";
 
 /**
