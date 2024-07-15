@@ -79,6 +79,11 @@ export default function NavbarMenu({ generator, theme, setTheme }: { generator: 
 			<li className="h-16 flex justify-center items-center w-60 lg:w-28">
 				<Themes theme={theme} setTheme={setTheme} />
 			</li>
+			<li className="h-16 flex justify-center items-center">
+				<button className="btn btn-ghost text-center w-60 lg:w-28 tracking-widest font-semibold" onClick={() => navigateTo("/contact")}>
+					Contact
+				</button>
+			</li>
 		</div>
 	);
 }
