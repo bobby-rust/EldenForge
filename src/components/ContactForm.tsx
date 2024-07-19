@@ -1,4 +1,4 @@
-import { FaDiscord, FaEnvelope, FaReddit } from "react-icons/fa";
+import { FaDiscord, FaEnvelope, FaReddit, FaGithub } from "react-icons/fa";
 
 export default function ContactForm() {
 	return (
@@ -16,7 +16,7 @@ export default function ContactForm() {
 					Leave Feedback
 				</a>
 			</div>
-			<div className="flex gap-10 sm:gap-20">
+			<div className="flex gap-5 sm:gap-20">
 				<a className="" href="https://discord.com/users/162738736042475520" target="_blank" rel="noreferrer">
 					<FaDiscord size={50} />
 				</a>
@@ -27,6 +27,9 @@ export default function ContactForm() {
 
 				<a className="" href="mailto:erbgfeedback@gmail.com" target="_blank" rel="noreferrer">
 					<FaEnvelope size={50} />
+				</a>
+				<a className="" href="https://github.com/bobby-rust" target="_blank" rel="noreferrer">
+					<FaGithub size={50} />
 				</a>
 			</div>
 		</div>
