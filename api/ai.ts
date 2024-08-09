@@ -45,50 +45,51 @@ If you generate any incantations, be sure to generate a necessary Sacred Seal us
 Make sure the items generated have the required stats to use them.`;
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
-	const API_KEY = process.env.API_KEY;
-	if (!API_KEY) {
-		response.status(500).json({
-			body: {
-				error: "API key not found",
-			},
-		});
-		return;
-	}
+  const API_KEY = process.env.API_KEY;
+  if (!API_KEY) {
+    response.status(500).json({
+      body: {
+        error: "API key not found",
+      },
+    });
+    return;
+  }
 
-	const genAI = new GoogleGenerativeAI(API_KEY);
+  const genAI = new GoogleGenerativeAI(API_KEY);
 
-	const buildTypes = [
-		"Strength",
-		"Dexterity",
-		"Faith",
-		"Arcane",
-		"Intelligence",
-		"Lightning Damage",
-		"Holy Damage",
-		"Strike Damage",
-		"Slash Damage",
-		"Pierce Damage",
-		"Magic Damage",
-		"Fire Damage",
-	];
+  const buildTypes = [
+    "Strength",
+    "Dexterity",
+    "Faith",
+    "Arcane",
+    "Intelligence",
+    "Lightning Damage",
+    "Holy Damage",
+    "Strike Damage",
+    "Slash Damage",
+    "Pierce Damage",
+    "Magic Damage",
+    "Fire Damage",
+  ];
 
-	const buildType = request.body.build_type ?? buildTypes[Math.floor(Math.random() * buildTypes.length)];
+  const buildType =
+    request.body.build_type ?? buildTypes[Math.floor(Math.random() * buildTypes.length)];
 
-	const prompt = `Generate a unique and creative ${buildType} Elden Ring build.`;
+  const prompt = `Generate a unique and creative ${buildType} Elden Ring build.`;
 
-	const model: any = genAI.getGenerativeModel({
-		model: "gemini-1.5-pro",
-		systemInstruction: sysPrompt,
-	});
+  const model: any = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
+    systemInstruction: sysPrompt,
+  });
 
-	const chat = model.startChat();
+  const chat = model.startChat();
 
-	const result = await chat.sendMessage(prompt);
-	const res = await result.response;
+  const result = await chat.sendMessage(prompt);
+  const res = await result.response;
 
-	response.status(200).json({
-		body: {
-			build: res,
-		},
-	});
+  response.status(200).json({
+    body: {
+      build: res,
+    },
+  });
 }
