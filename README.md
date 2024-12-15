@@ -4,6 +4,7 @@ A web app dedicated to generating challenging Elden Ring scenarios and builds fo
 
 ## TODO
 - Add option to combine weapons, staves, and seals + only generate incants IF a seal was rolled + only generate sorcs IF a staff was rolled
+- Get most recent update data
 
 ## Future Roadmap
 
