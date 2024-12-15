@@ -2,6 +2,9 @@
 
 A web app dedicated to generating challenging Elden Ring scenarios and builds for players.
 
+## TODO
+- Add option to combine weapons, staves, and seals
+
 ## Future Roadmap
 
 -   Build generation config (certain item types, scaling levels, required attributes, etc.)
