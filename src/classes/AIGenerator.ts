@@ -187,6 +187,9 @@ export default class AI {
 
 	/**
 	 * Calculates the Levenshtein distance between two strings.
+	 * I copied and pasted this function from the internet. 
+  	 * I do not like this function. I do not like the way it is written. 
+    	 * It should be rewritten to address readability concerns.
 	 *
 	 * @param {string} s - The first string.
 	 * @param {string} t - The second string.
