@@ -331,6 +331,9 @@ export default class BuildGenerator {
 		};
 
 		for (const [key, val] of Object.entries(dlcItems)) {
+			// FIX: This appears to be wrong. I'm not sure why it works (maybe due to defensive coding elsewhere?)
+			// This should just be NUM_SOTE_ITEMS[key], we are initializing the arrays with the number of base
+			// game items, but these are the DLC items.
 			for (let i = data[key as ItemCategory]["count"] - NUM_SOTE_ITEMS[key]; i < data[key as ItemCategory]["count"]; ++i) {
 				val.push(i);
 			}
