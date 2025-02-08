@@ -19,7 +19,7 @@
 		"@radix-ui/react-popover": "^1.1.1",
 		"@radix-ui/react-slot": "^1.1.0",
 		"@radix-ui/react-switch": "^1.1.0",
-		"@vercel/node": "^3.0.1",
+		"@vercel/node": "^5.1.2",
 		"autoprefixer": "^10.4.19",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
