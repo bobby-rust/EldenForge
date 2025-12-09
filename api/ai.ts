@@ -48,6 +48,7 @@ export default async function handler(
     request: VercelRequest,
     response: VercelResponse,
 ) {
+    console.log("Handler called");
     const API_KEY = process.env.API_KEY;
     if (!API_KEY) {
         response.status(500).json({
@@ -58,7 +59,9 @@ export default async function handler(
         return;
     }
 
-    const genAI = new GoogleGenerativeAI(API_KEY);
+    
+
+    // const genAI = new GoogleGenerativeAI(API_KEY);
 
     const buildTypes = [
         "Strength",
@@ -81,19 +84,48 @@ export default async function handler(
 
     const prompt = `Generate a unique and creative ${buildType} Elden Ring build.`;
 
-    const model = genAI.getGenerativeModel({
-        model: "gemini-2.0-pro-exp-02-05",
-        systemInstruction: sysPrompt,
+    // const model = genAI.getGenerativeModel({
+    //     model: "gemini-2.0-flash-exp",
+    //     systemInstruction: sysPrompt,
+    // });
+
+    // const chat = model.startChat();
+
+    // const result = await chat.sendMessage(prompt);
+    // const res = await result.response;
+
+    const url = "https://openrouter.ai/api/v1/chat/completions";
+    const headers = {
+        "Authorization": `Bearer ${process.env.API_KEY}`,
+        "Content-Type": "application/json"
+    };
+    const payload = {
+        "model": "tngtech/tng-r1t-chimera:free",
+        "messages": [
+            {
+                "role": "system",
+                "content": sysPrompt
+            },
+            {
+                "role": "user",
+                "content": prompt 
+            }
+        ]
+    };
+
+    const res = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload)
     });
 
-    const chat = model.startChat();
-
-    const result = await chat.sendMessage(prompt);
-    const res = await result.response;
+    const data = await res.json();
+    console.log(data);
+    console.log(data.choices[0].message);
 
     response.status(200).json({
         body: {
-            build: res,
+            build: data.choices[0].message.content,
         },
     });
 }

@@ -27,7 +27,9 @@ export default class AI {
 
 		const res = await r.json();
 
-		return this.parseResponse(res.body.build.candidates[0].content.parts[0].text);
+		console.log("Res from backend: ", res);
+
+		return this.parseResponse(res.body.build);
 	}
 
 	/**
@@ -227,7 +229,9 @@ export default class AI {
 				return "helms";
 			case "chest armor":
 				return "chests";
-			case "gauntlets" || "gauntlet":
+			case "gauntlet":
+				return "gauntlets";
+			case "gauntlets":
 				return "gauntlets";
 			case "leg armor":
 				return "legs";
