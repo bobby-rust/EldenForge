@@ -27,8 +27,6 @@ export default class AI {
 
 		const res = await r.json();
 
-		console.log("Res from backend: ", res);
-
 		return this.parseResponse(res.body.build);
 	}
 

@@ -120,8 +120,6 @@ export default async function handler(
     });
 
     const data = await res.json();
-    console.log(data);
-    console.log(data.choices[0].message);
 
     response.status(200).json({
         body: {

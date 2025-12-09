@@ -294,9 +294,10 @@ export default function AI(): JSX.Element {
                         <h1 className="md:text-2xl 2xl:text-5xl font-bold text-center">
                             Asking Gideon for a build...
                         </h1>
+                        <p>This can take up to 60 seconds</p>
                         <div className="loading loading-spinner xl:h-12 xl:w-12"></div>
                         <blockquote className="md:text-xl 2xl:text-3xl italic text-gray-600 text-center w-[50vw] tracking-wide">
-                            "{quote[0]}"<br />- {quote[1]}{" "}
+                            "{quote[0]}"<br /> - {quote[1]}{" "}
                         </blockquote>
                         <button
                             className="btn lg:btn-lg btn-ghost"
