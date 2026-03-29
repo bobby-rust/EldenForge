@@ -1,4 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import dotenv from "dotenv";
 
@@ -325,8 +324,6 @@ export default async function handler(
         });
         return;
     }
-
-    // const genAI = new GoogleGenerativeAI(API_KEY);
 
     const buildTypes = [
         "Strength",
