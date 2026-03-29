@@ -3,13 +3,14 @@ import { Item } from "../classes/Item";
 import { ItemCategory } from "../types/enums";
 import { GiBroadsword, GiWeight } from "react-icons/gi";
 import { TbDropletDown } from "react-icons/tb";
+import { FaLock, FaLockOpen } from "react-icons/fa";
 
 /**
  * Renders a Card component based on the item data passed as props.
  *
  * @param {Item} item - The item object containing information for the card.
  * @param {Function | null} reroll - A function to reroll the item or null if not available.
- * @param {boolean} isAIBuild - Boolean flag indicating if it's an AI build.
+ * @param {boolean} isAIBuild - Boolean flag indicating if it's an AI generated build.
  * @return {JSX.Element} The Card component JSX to be rendered.
  */
 export default function Card(props: {
@@ -18,6 +19,7 @@ export default function Card(props: {
     isAIBuild: boolean;
 }) {
     const [loading, setLoading] = React.useState(true);
+    const [locked, setLocked] = React.useState(false);
     if (props.item.category === ItemCategory.Classes) return null;
 
     /**
@@ -187,17 +189,20 @@ export default function Card(props: {
                 <div className="flex flex-col justify-center items-center text-center w-full bg-secondary rounded-b-lg">
                     <div className="w-full h-10 flex justify-end items-center p-2">
                         {!props.isAIBuild && (
-                            <button
-                                onClick={() =>
-                                    props.reroll?.(
-                                        props.item.category,
-                                        props.item.index,
-                                    )
-                                }
-                                className="btn btn-primary btn-sm h-6 min-h-6"
-                            >
-                                Reroll Item
-                            </button>
+                            <div className="flex justify-between items-center w-full">
+                                <button onClick={() => setLocked(!locked)} className="text-white flex align-center p-2 rounded-lg hover:bg-black hover:bg-opacity-50">{locked ? <FaLock /> : <FaLockOpen className="h-full" />}</button>
+                                <button
+                                    onClick={() =>
+                                        props.reroll?.(
+                                            props.item.category,
+                                            props.item.index,
+                                        )
+                                    }
+                                    className="btn btn-primary btn-sm h-6 min-h-6"
+                                >
+                                    Reroll Item
+                                </button>
+                            </div>
                         )}
                     </div>
                 </div>

@@ -13,9 +13,6 @@ import { NUM_SOTE_ITEMS } from "@/types/constants";
  *
  * This object will also keep track of the state of generated items
  * and a boolean flag `_excludePreviouslyRolled`
- * which are used to determine if generated items are valid.
- * If a generated item is not valid (i.e. _excludePreviouslyRolled is false and the item has already been generated),
- * it will keep regenerating items until a valid item is found or there are no more valid items.
  */
 export default class BuildGenerator {
 	_itemData: ItemData = data;
@@ -57,7 +54,7 @@ export default class BuildGenerator {
 	}
 
 	/**
-	 * Generates a URL representing an AI build. Uses Google Gemini.
+	 * Generates a URL representing an AI build.
 	 *
 	 * @param {AbortSignal} signal - The signal to abort the AI generation request.
 	 * @returns {Promise<string | null>} A promise that resolves to the generated URL or null if there was an error.
@@ -71,7 +68,7 @@ export default class BuildGenerator {
 		try {
 			build = await this._ai?.getAIBuild(this._buildType, signal);
 		} catch (e) {
-			// TODO: generate useful error messages and error page for user, this error is likely to be an exhausted quota error from gemini
+			// TODO: generate useful error messages and error page for user, this error is likely to be an exhausted quota error
 			console.error(e);
 		}
 		if (!build) return null;
@@ -87,7 +84,7 @@ export default class BuildGenerator {
 	 * @return {void}
 	 */
 	public setNumItems(category: ItemCategory, numItems: number): void {
-		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums = numItems;
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.numItemsToGenerate = numItems;
 	}
 
 	/**
@@ -130,11 +127,11 @@ export default class BuildGenerator {
 		this._build._items.set(category, []);
 
 		// Reset the number of items to generate and the available items
-		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums = defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.numItemsToGenerate = defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.numItemsToGenerate;
 		this._baseGameItems = { ...this._baseGameItems, [category]: this.initBaseGameItems()[category] }; // reset base game items for the category
 		this._dlcItems = { ...this._dlcItems, [category]: this.initDlcItems()[category] };
 
-		const numItemsToRoll = defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
+		const numItemsToRoll = defaultBuildGenerationConfig.buildInfo.categoryConfigs.get(category)!.numItemsToGenerate;
 		for (let i = 0; i < numItemsToRoll; i++) {
 			const item = this.generateItem(category);
 			if (typeof item === "undefined") {
@@ -402,7 +399,7 @@ export default class BuildGenerator {
 	 * @return {number} The number of items to be generated for the specified category.
 	 */
 	public getBuildNumsForCategory(category: ItemCategory) {
-		return this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums;
+		return this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.numItemsToGenerate;
 	}
 
 	/**
@@ -412,7 +409,7 @@ export default class BuildGenerator {
 	 * @param {number} buildNums - The number of items to set for the category.
 	 */
 	public setBuildNumsForCategory(category: ItemCategory, buildNums: number) {
-		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.buildNums = buildNums;
+		this._buildGenerationConfig.buildInfo.categoryConfigs.get(category)!.numItemsToGenerate = buildNums;
 	}
 
 	/**

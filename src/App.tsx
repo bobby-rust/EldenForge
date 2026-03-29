@@ -154,7 +154,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 		newBuild.forEach((i, c) => {
 			const itemCategory = UICategoryToItemCategory.get(c);
 			if (typeof itemCategory === "undefined") return;
-			if (!showedHint && i.length === 0 && c !== UIItemCategory.Classes && generator._buildGenerationConfig.buildInfo.categoryConfigs.get(itemCategory)!.buildNums > 0) {
+			if (!showedHint && i.length === 0 && c !== UIItemCategory.Classes && generator._buildGenerationConfig.buildInfo.categoryConfigs.get(itemCategory)!.numItemsToGenerate > 0) {
 				toast(
 					ToastMessage({
 						title: "Hint",
@@ -366,7 +366,7 @@ export default function App(props: { generator: BuildGenerator }): JSX.Element {
 								</DialogTrigger>
 								<DialogContent className="max-w-[90vw] sm:w-auto">
 									<DialogHeader>
-										<DialogTitle className="text-xl">Would you like to include DLC content?</DialogTitle>
+										<DialogTitle className="text-xl">Would you like to include DLC items?</DialogTitle>
 										<DialogDescription className="text-lg">You'll be able to toggle this setting later on the build page.</DialogDescription>
 									</DialogHeader>
 									<DialogFooter className="justify-center items-center gap-3 flex-col sm:flex-row">

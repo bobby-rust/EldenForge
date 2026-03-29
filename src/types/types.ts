@@ -37,8 +37,9 @@ type ItemData = {
 
 type CategoryBuildInfo = {
 	excludePreviouslyRolled: boolean;
-	buildNums: number;
+	numItemsToGenerate: number;
 	previouslyRolled: Set<number>;
+	lockedItems: Set<number>;
 };
 
 type BuildInfo = {
@@ -58,14 +59,16 @@ for (const c of Object.values(ItemCategory)) {
 	if ([ItemCategory.Helm, ItemCategory.Chest, ItemCategory.Gauntlets, ItemCategory.Leg].includes(c)) {
 		defaultCategoryBuildInfo.set(c, {
 			excludePreviouslyRolled: true,
-			buildNums: 1,
+			numItemsToGenerate: 1,
 			previouslyRolled: new Set<number>(),
+			lockedItems: new Set<number>()
 		});
 	} else {
 		defaultCategoryBuildInfo.set(c, {
 			excludePreviouslyRolled: true,
-			buildNums: 2,
+			numItemsToGenerate: 2,
 			previouslyRolled: new Set<number>(),
+			lockedItems: new Set<number>()
 		});
 	}
 }

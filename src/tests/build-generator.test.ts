@@ -49,7 +49,7 @@ describe("generator", () => {
 		it("should generate a unique build", () => {
 			let isUnique = true;
 			generator._buildGenerationConfig = structuredClone(defaultBuildGenerationConfig);
-			generator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Seals)!.buildNums = 1;
+			generator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Seals)!.numItemsToGenerate = 1;
 			generator._buildGenerationConfig.buildInfo.categoryConfigs.get(ItemCategory.Seals)!.excludePreviouslyRolled = true;
 			const rolledSeals = new Set<number>();
 
